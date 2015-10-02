@@ -1,9 +1,16 @@
-/*jsonDatas format
-jsonDatas = {"title":"灾害类型：",//下拉框的标签 灾害类型：[  ]
-"cite":"请选择类型",//下拉框没有默认项时显示的内容
-'id' : 'type',//下拉框标识，用于判断回调函数返回值的对应关系
-"defaultCheck" : "",//默认选中的项
-"list":[{"text":"显示的值","value":"值对应的属性值"}]};*/
+/**
+ * 使用div模拟的下拉框组件
+ * divWidth:下拉框的宽度
+ * jsonDatas:= {"title":"灾害类型：", "cite":"请选择类型", 'id' : 'type',
+      "defaultCheck" : "",
+      "list":[{"text":"显示的值","value":"值对应的属性值"}]};
+ *    title:标签名称   cite:默认显示的文字 defaultCheck：默认选中项，对应value值
+ * callBack:用户选择下拉框内容时触发的回调函数，返回当前选中项数据
+ * ------example------
+ * var selectDiv = selectComp.init('100',jsonDatas,callBack);
+ * compTools.addComps(focusId,[selectDiv]);
+ * ps:focusId : 需要将组件添加到的div的id值
+ */
 var selectComp = {
       init : function(divWidth,jsonDatas,callBack){
             var divNWidth = parseInt(divWidth) + 36;

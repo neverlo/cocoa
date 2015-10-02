@@ -5,6 +5,8 @@
  * 								{"value":"send","text":"发送"}]};
  * className:按钮的样式，定义在baseComps.css
  * callback:接收按钮状态的回调函数
+ * ------example------
+ * var btn = buttonComp.init(btnDatas,'tempTarget-btn');
  */
 var buttonComp = {
 	init : function(jsonDatas,className,callback){
@@ -25,7 +27,3 @@ var buttonComp = {
 		return btnDiv;
 	}
 };
-/**
- * example
- * var btn = buttonComp.init(btnDatas,'tempTarget-btn');
- */

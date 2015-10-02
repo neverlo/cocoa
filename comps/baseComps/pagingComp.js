@@ -1,3 +1,9 @@
+/**
+ * 分页组件
+ * focusId:分布信息div的id值
+ * arrComps:需要分布的组件数据
+ * pCount:每页显示的个数
+ */
 var pagingComp = {
 	init : function(focusId,arrComps,pCount){
 		if(typeof(this.pageE) !== 'undefined'){

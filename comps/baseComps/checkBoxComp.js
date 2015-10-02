@@ -10,6 +10,8 @@
 		title即标签名 消息渠道：XXXX
 		dufaultChecked:默认选中项，为value值的对应数组
 * callback:回调函数，当用户点击checkbox时返回当前所有处于选中状态的checkbox数据
+* ------example------
+* var checkBox = checkBoxComp.init(jsonDatas,callback);
  */
 var checkBoxComp = {
 	init : function(jsonDatas,callback){
@@ -125,7 +127,3 @@ var checkBoxComp = {
 		}
 	}
 };
-/**
- * example
- * var checkBox = checkBoxComp.init(jsonDatas,callback);
- */
