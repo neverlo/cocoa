@@ -7,9 +7,7 @@ $(function(){
 		"list":[{"text":"广东省","value":"1"},
 		{"text":"福建省","value":"2"},
 		{"text":"湖南省","value":"3"}]};
-		console.profile('性能分析一');
 	var selectDiv = selectComp.init('100',selectDatas,selectBack);
-	console.profileEnd();
 	function selectBack(sBack){
 		console.info(sBack);
 	}
@@ -24,5 +22,6 @@ $(function(){
 	function sendBack(sBack){
 		console.info(sBack);
 	}
-    windowDragComp.init(0,0);
+    windowDragComp.init('one');
+	windowDragComp.init('tow');
 });

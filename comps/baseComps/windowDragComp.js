@@ -1,25 +1,26 @@
 // create a window can drag
 var windowDragComp = {
-	init : function(wx,wy){
-		var parentE = document.createElement('div');
+	init : function(divId,wx,wy){
+		var parentE = CC().CDE('div');
+		// parentE.setAttribute('id',divId);
 		parentE.setAttribute('class','wdc-parent');
 		parentE.style.position = 'absolute';
-		parentE.style.left = wx;
-		parentE.style.top = wy;
+		parentE.style.left = '100px';
+		parentE.style.top = '100px';
 		parentE.style.width = '400px';
 		parentE.style.height = '100px';
-		var titleDiv = document.createElement('div');
+		var titleDiv = CC().CDE('div');
 		titleDiv.style.cursor = 'pointer';
 		titleDiv.setAttribute('class','wdc-dragTitle');
-		var titleSpan = document.createElement('span');
+		var titleSpan = CC().CDE('span');
 		titleSpan.innerHTML = '可拖动的窗口标题';
 		titleDiv.appendChild(titleSpan);
-		var dragContentDiv = document.createElement('div');
+		var dragContentDiv = CC().CDE('div');
 		dragContentDiv.style.cursor = 'default';
 		parentE.appendChild(titleDiv);
 		parentE.appendChild(dragContentDiv);
 		document.body.appendChild(parentE);
-		this.parentE = parentE;
+		this.parentE = CC(this.parentE).compRecord(divId,parentE);
 		this.addDrag(titleDiv,parentE);
 	},
 	remove : function(){
@@ -27,7 +28,7 @@ var windowDragComp = {
 			CC(this.parentE).remove();
 		}
 	},
-	addDrag : function(titleE,parentE){
+	addDrag : function(titleDiv,parentE){
 		var _move = false; //移动标记
 		var _x, _y; //鼠标离控件左上角的相对位置
 		var _nx,_ny;//新的位置
@@ -35,7 +36,7 @@ var windowDragComp = {
 		var currentWH = document.body.scrollHeight;
 		var windowDivWidth = parentE.style.width;
 		var windowDivHeight = parentE.style.height;
-		CC(titleE).mousedown(function(tObj){
+		CC(titleDiv).mousedown(function(tObj){
 			_move = true;
 			_x = tObj.pageX - parseInt(parentE.style.left);
 			_y = tObj.pageY - parseInt(parentE.style.top);
