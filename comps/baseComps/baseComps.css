@@ -1,0 +1,31 @@
+/*控件间距控制*/
+.marTpad{
+	margin-top:10px;
+	padding:0 10px;
+	width:auto;
+}
+
+.marR10{ margin-right:10px;}
+
+.paddLR10{ padding:0 10px;}
+
+.alarmColor{ color:#ff0000}
+
+.floatR10{
+	float:right;
+	margin-right:10px;
+}
+
+/*windowDragComp*/
+.wdc-parent{
+	z-index: 99999;
+	border:1px solid #000;
+}
+.wdc-dragTitle{
+	cursor: pointer;
+	width: 100%;
+	height: 25px;
+	line-height: 25px;
+	border-bottom: 1px solid #000;
+	background: blue;
+}

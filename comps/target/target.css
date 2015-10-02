@@ -1,3 +1,10 @@
+body,div{
+	-moz-user-select: none;
+　　-webkit-user-select: none;
+　　-ms-user-select: none;
+　　-khtml-user-select: none;
+　　user-select: none;
+}
 .tempTargetPop{
 	 height:auto;
 	 overflow:hidden;
@@ -159,20 +166,26 @@
 	/*margin-left:20px;*/
 	line-height:32px;
 }
+.influenceArea-box{
+	display: inline-block;
+    width: 480px;
+    vertical-align: top;
+}
 .influenceArea-box-ul{
 	/* float:left; */
 	height:auto;
 	overflow:hidden;
 	width:auto;
   	margin-top: 0;
- 	margin-left: 30px;
+ /*	margin-left: 30px;*/
 }
 .influenceArea-box-ul-li{
 	float:left;
 	list-style:none;
-	margin-right:-2px;
-	margin-bottom:2px;
-	border-bottom: 1px solid #eee;
+	margin-right:4px;
+/*	margin-right:-2px;*/
+	margin-bottom:3px;
+/*	border-bottom: 1px solid #eee;*/
 }
 .influenceArea-box-ul-li-a{
 	float:left;
@@ -216,7 +229,7 @@
 	float:left;
 	margin-left:20px;
 	line-height:60px;
-	width:85px;
+	width:64px;
 	text-align:left;
 }
 .messageBox-textarea{
@@ -232,9 +245,11 @@
 .tempTarget-btn{
 	height:auto;
 	overflow:hidden;
-	width:94%;
+	width:auto;
 	margin:auto;
 	text-align:right;
+    float: right;
+    margin-right: 10px;
 }
 .tempTarget-btn button{
 	margin-left:20px;
@@ -256,6 +271,31 @@
 	color:#f5b828
 }
 
+.msgTrack-btn{
+	height:auto;
+	overflow:hidden;
+	margin:auto;
+}
+.msgTrack-btn button{
+	margin-left:20px;
+	height:26px;
+	line-height:26px;
+	width:60px;
+	color:#fff;
+	cursor:pointer;
+	font-size:12px;
+	background:#1f7ed0;
+	font-family:"΢���ź�";
+	border:0;
+	border-radius:5px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	-o-border-radius:5px;
+}
+.msgTrack-btn button:hover{
+	color:#f5b828
+}
+
 /* ������Ϣ׷�� */
 div.inforTracking{
 	width:320px;
@@ -268,22 +308,24 @@ div.inforTracking-big{
 	width:664px;
 	left:50%;
 	top:50%;
-	margin-top:-322px;
+	margin-top:-282px;
 	margin-left:-332px;
 }
 div.inforTracking-big .inforTracking-con{
-	height:480px;
+	height:auto;
 }
 
 /* ����� */
 .progress-bar{
-	height:40px;
 	margin:auto;
 	background:#1f7ed0;
 	border:1px solid #1f7ed0;
 	color:#fff;
 	width:94%;
 	margin-top:5px;
+}
+.progress-bar img{
+	width:100%;
 }
 /* ׷����Ϣ�� */
 .inforTracking-con{
@@ -322,8 +364,22 @@ div.inforTracking-big .inforTracking-con{
 .inforTracking-box-num a:hover{
 	color:#1f7ed0
 }
-
-
+.inforTracking-chose-select,
+.inforTracking-centenBtn{
+	vertical-align:top;
+	display:inline-block;
+}
+.inforTracking-centenBtn{ vertical-align:middle}
+/*弹出框确认按钮*/
+.popBtn button{
+	background: #4089C9;
+    color: #fff;
+    display: inline-block;
+    cursor: pointer;
+}
+.popBtn button:hover{
+	background:#7CB7EA;
+}
 
 
 

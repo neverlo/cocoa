@@ -8,16 +8,16 @@ var trackComp = {
 		var tempInVal = {};
 		for(var key in dataList){
 			var liE = document.createElement('li');
-			liE.innerText = dataList[key].text;
+			liE.innerHTML = dataList[key].text;
 			var spanE = document.createElement('span');
-			spanE.innerText = dataList[key].value;
+			spanE.innerHTML = dataList[key].value;
 			liE.appendChild(spanE);
 			if(dataList[key].text === '日期：'){
 				var statusE = document.createElement('span');
+				statusE.setAttribute('class','floatR10');
 				statusE.style.color = 'red';
 				liE.appendChild(statusE);
 				
-				var intervals = {};
 				tempInVal[jsonDatas.id] = parentE;
 				parentE.belongsChild = statusE;
 				statusE.attributes.msg = jsonDatas.msg;
@@ -30,17 +30,35 @@ var trackComp = {
 		if(typeof(this.intervals) !== 'undefined'){
 			clearInterval(this.intervals);
 		}
+		var url = 'http://127.0.0.1:8080/dss-data/track/track!getTrackMsgById.action';
 		var parInterval = setInterval(function(){
+			var idArray = [];
 			for(var bKey in trackComp.compsRecord){
 				if(!trackComp.compsRecord[bKey].hidden){
 					var comspChild = trackComp.compsRecord[bKey].belongsChild;
 					if(comspChild.attributes.status === '0'){
-						console.info(comspChild.attributes.msg);
-						comspChild.innerText = comspChild.attributes.msg;
+						idArray.push(comspChild.attributes.msgId);
 					}
 				}
 			}
-		},2000);
+			var reqDatas = {"idArray":idArray.toString()};
+			$.ajax({type:'GET',data:reqDatas,url:url,success:function(rDatas){
+				for(var bKey in trackComp.compsRecord){
+					if(!trackComp.compsRecord[bKey].hidden){
+						var comspChild = trackComp.compsRecord[bKey].belongsChild;
+						if(comspChild.attributes.status === '0'){
+							for(var key in rDatas){//判断是否同一对象
+								if(rDatas[key].id === comspChild.attributes.msgId){
+									comspChild.innerHTML = rDatas[key].msg;
+									comspChild.attributes.status = rDatas[key].status;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}});
+		},5000);
 		parentE.appendChild(ulE);
 		this.intervals = parInterval;
 		return parentE;

@@ -1,9 +1,11 @@
 var radioComp = {
 	init : function(jsonDatas,callback){
 		var radioDiv = document.createElement('div');
+		radioDiv.setAttribute('class','marTpad');
 		if(typeof(jsonDatas.title) !== 'undefined'){
 			var labelE = document.createElement('label');
-			labelE.innerText = jsonDatas.title;
+			labelE.setAttribute('class','marR10');
+			labelE.innerHTML = jsonDatas.title;
 			radioDiv.appendChild(labelE);
 		}
 		var listDatas = jsonDatas.list;
@@ -22,25 +24,24 @@ var radioComp = {
 			radioInput.setAttribute('value',rValue);
 			radioInput.setAttribute('text',rText);
 			var tSpan = document.createElement('span');
+			tSpan.setAttribute('class','marR10');
 			tSpan.innerHTML = rText;
 			radioDiv.appendChild(radioInput);
 			radioDiv.appendChild(tSpan);
 		}
 		radioDiv.addEventListener('click',function(iObj){
-			var nodeName = iObj.srcElement.nodeName;
+			var cObj = compTools.getEventTarget(iObj);
+			var nodeName = cObj.nodeName;
 			if(nodeName === 'INPUT'){
-				defMap.value = iObj.srcElement.attributes.value.value;
-				defMap.text = iObj.srcElement.attributes.text.value;
+				defMap.value = cObj.attributes.value.value;
+				defMap.text = cObj.attributes.text.value;
 				var callDatas = {"radio":defMap};
 				radioDiv.attributes.tempdatas = callDatas;
 				if(callback){
-					backEvent(callDatas);
+					return callback(callDatas);
 				}
 			}
 		});
-		function backEvent(callDatas){
-			callback(callDatas);
-		}
 		var defDatas = {"radio":defMap};
 		radioDiv.attributes.tempdatas = defDatas;
 		return radioDiv;

@@ -10,7 +10,7 @@ var compTools={
 		if(submitComp){
 			var countComp = document.getElementById(cDivId).children[0].childNodes;
 			submitComp.addEventListener('click',function(iObj){
-				var iObjVal = iObj.srcElement.attributes.value.value;
+				var iObjVal = compTools.getEventTarget(iObj).attributes.value.value;
 				if(submitVal !== '' && submitVal !== null){
 					if(iObjVal === submitVal){
 						var dataMap = {};
@@ -31,25 +31,24 @@ var compTools={
 								}
 							}
 						}
-						backEvent(dataMap);
+						if(callback){
+							return callback(dataMap);
+						}
 					}else{
-						backEvent(iObjVal);
+						if(callback){
+							return callback(iObjVal);
+						}
 					}
 				}
 			});
-			if(callback){
-				function backEvent(rDatas){
-					callback(rDatas);
-				}
-			}
 		}
 	},
 	appendTo : function(focusComp,curComp){
-		focusComp.insertAdjacentElement('afterend',curComp);
+		compTools.insertAdjacentElement(curComp,'afterend',focusComp);
 	},
 	removeComp : function(curComp){
 		curComp.hidden = true;
-		curComp.remove();
+		curComp.parentNode.removeChild(curComp);
 	},
 	removeComps : function(arrComp){
 		for(var key in arrComp){
@@ -74,13 +73,12 @@ var compTools={
 				}
 			}
 		}else{
-			var ocns = document.getElementById(arrFoId).childNodes[0];
-			if(typeof(ocns) !== 'undefined'){
-				var ocnsList = ocns.childNodes;
-				for(var i=ocnsList.length-1;i>=0;i--){
-					ocnsList[i].hidden = true;
+			if(typeof(document.getElementById(arrFoId).childNodes[0]) !== 'undefined'){
+				var singleocn = document.getElementById(arrFoId).childNodes[0].childNodes;
+				for(var j=singleocn.length-1;j>=0;j--){
+					singleocn[j].hidden = true;
+					document.getElementById(arrFoId).removeChild(singleocn[j]);
 				}
-				document.getElementById(arrFoId).removeChild(ocns);
 			}
 		}
 	},
@@ -96,12 +94,11 @@ var compTools={
 			tempList.push(curComp);
 			focusComp.attributes.compList = tempList;
 		}
-		focusComp.insertAdjacentElement('beforeend',curComp);
+		compTools.insertAdjacentElement(curComp,'beforeend',focusComp);
 	},
 	resetComp : function(newComp,oldComp){
 		compTools.appendTo(oldComp,newComp);
 		compTools.removeComp(oldComp);
-		// document.getElementById(focusId).replaceChild(oldComps.attributes.resetComp,oldComps);
 	},
 	getCompsDataById : function(compsId,submitComp,callback){
 		if(submitComp){
@@ -122,18 +119,14 @@ var compTools={
 						}
 					}
 				}
-				backEvent(dataMap);
-			});
-			if(callback){
-				function backEvent(rDatas){
-					callback(rDatas);
+				if(callback){
+					callback(dataMap);
 				}
-			}
+			});
 		}
 	},
 	blindTo : function(bComp,focusComp,blindId){
 		console.info(focusComp);
-		// focusComp.attributes.blindComps = bComp;
 	},
 	compRecord : function(compPro,mapKey,mapValue){
 		if(typeof(compPro) !== 'undefined'){
@@ -146,5 +139,24 @@ var compTools={
 			compPro = compsRecord;
 		}
 		return compPro;
+	},
+	getEventTarget : function(cEvent){
+		cEvent = cEvent ? cEvent : window.cEvent;
+        return cEvent.srcElement ? cEvent.srcElement : cEvent.target;
+	},
+	insertAdjacentElement : function(parsedNode,where,focusNode){//解决各浏览器的兼容问题
+		if(where === 'beforebegin'){
+			focusNode.parentNode.insertBefore(parsedNode,focusNode);
+		}else if(where === 'afterbegin'){
+			focusNode.insertBefore(parsedNode,focusNode.firstChild);
+		}else if(where === 'beforeend'){
+			focusNode.appendChild(parsedNode);
+		}else if(where === 'afterend'){
+			if(focusNode.nextSibling){
+				focusNode.parentNode.insertBefore(parsedNode,focusNode.nextSibling);
+			}else{
+				focusNode.parentNode.appendChild(parsedNode);
+			}
+		}
 	}
 };

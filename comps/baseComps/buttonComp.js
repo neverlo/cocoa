@@ -1,7 +1,7 @@
 var buttonComp = {
-	init : function(jsonDatas,callback){
+	init : function(jsonDatas,className,callback){
 		var btnDiv = document.createElement('div');
-		btnDiv.setAttribute('class','tempTarget-btn');
+		btnDiv.setAttribute('class',className);
 		var btnDatas = jsonDatas.list;
 		for(var key in btnDatas){
 			var btnE = document.createElement('button');
@@ -11,11 +11,8 @@ var buttonComp = {
 		}
 		if(callback){
 			btnDiv.addEventListener('click',function(iObj){
-				backEvent(iObj.srcElement.attributes.value.value);
+				return callback(compTools.getEventTarget(iObj).attributes.value.value);
 			});
-			function backEvent(type){
-				callback(type);
-			}
 		}
 		return btnDiv;
 	}

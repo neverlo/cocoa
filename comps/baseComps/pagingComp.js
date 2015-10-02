@@ -1,5 +1,10 @@
 var pagingComp = {
 	init : function(focusId,arrComps,pCount){
+		if(typeof(this.pageE) !== 'undefined'){
+			if(this.pageE[focusId]){
+				compTools.removeComp(this.pageE[focusId]);
+			}
+		}
 		this.focusId = focusId;
 		this.bgIndex = 0;
 		this.endIndex = pCount;
@@ -52,24 +57,26 @@ var pagingComp = {
 		parentE.style.display = 'inline-block';
 		parentE.style.width = '100%';
 		var countE = document.createElement('div');
-		countE.style.cssFloat = 'left';
-		countE.style.marginLeft = '18px';
+		countE.style.float = 'left';
+		countE.style.marginLeft = '20px';
 		var ccurrPageE = document.createElement('span');
-		ccurrPageE.innerText = '第1页/共'+this.allPage+'页 '+this.compsLength+'条记录';
+		ccurrPageE.innerHTML = '第1页/共'+this.allPage+'页 '+this.compsLength+'条记录';
 		countE.appendChild(ccurrPageE);
 		
 		var pgaeE = document.createElement('div');
-		pgaeE.style.cssFloat = 'left';
-		pgaeE.style.cssFloat = 'right';
+		pgaeE.style.float = 'left';
+		pgaeE.style.float = 'right';
 		pgaeE.style.marginRight = '20px';
 		var prevPage = document.createElement('span');
-		prevPage.innerText = '上一页';
-		prevPage.style.cursor = 'pointer';
-		prevPage.style.color = 'red';
+		prevPage.innerHTML = '上一页';
+		prevPage.style.cursor = 'default';
+		prevPage.style.color = '#9d9d9d';
+		prevPage.style.marginRight="10px";
 		prevPage.onclick = function(){
 			if(pagingComp.currPage !== 1){
 				prevPage.style.color = 'black';
 				nextPage.style.color = 'black';
+				nextPage.style.cursor = 'pointer';
 				var bgPag = parseInt(pagingComp.bgIndex)-parseInt(pagingComp.pCount);
 				var edPag = parseInt(pagingComp.endIndex)-parseInt(pagingComp.pCount);
 				var currPag = parseInt(pagingComp.currPage)-parseInt('1');
@@ -77,21 +84,22 @@ var pagingComp = {
 				pagingComp.bgIndex = bgPag;
 				pagingComp.endIndex = edPag;
 				pagingComp.startPage();
-				ccurrPageE.innerText = '第'+currPag+'页/共'+pagingComp.allPage+'页 '+pagingComp.compsLength+'条记录';
+				ccurrPageE.innerHTML = '第'+currPag+'页/共'+pagingComp.allPage+'页 '+pagingComp.compsLength+'条记录';
 				if(pagingComp.currPage === 1){
-					prevPage.style.color = 'red';
+					prevPage.style.color = '#9d9d9d';
+					prevPage.style.cursor = 'default';
 				}
-				// trackComp.initTrackStatus(pagingComp.arrComps);
 			}else{
-				prevPage.style.color = 'red';
+				nextPage.style.color = 'black';
 			}
-		}
+		};
 		var nextPage = document.createElement('span');
-		nextPage.innerText = '下一页';
+		nextPage.innerHTML = '下一页';
 		nextPage.style.cursor = 'pointer';
 		nextPage.onclick = function(){
 			if(pagingComp.currPage !== pagingComp.allPage){
 				prevPage.style.color = 'black';
+				prevPage.style.cursor = 'pointer';
 				var bgPag = parseInt(pagingComp.bgIndex)+parseInt(pagingComp.pCount);
 				var edPag = parseInt(pagingComp.endIndex)+parseInt(pagingComp.pCount);
 				var currPag = parseInt(pagingComp.currPage)+parseInt('1');
@@ -99,25 +107,26 @@ var pagingComp = {
 				pagingComp.endIndex = edPag;
 				pagingComp.currPage = currPag;
 				pagingComp.startPage();
-				ccurrPageE.innerText = '第'+currPag+'页/共'+pagingComp.allPage+'页 '+pagingComp.compsLength+'条记录';
+				ccurrPageE.innerHTML = '第'+currPag+'页/共'+pagingComp.allPage+'页 '+pagingComp.compsLength+'条记录';
 				if(pagingComp.currPage === pagingComp.allPage){
-					nextPage.style.color = 'red';
+					nextPage.style.color = '#9d9d9d';
+					nextPage.style.cursor = 'default';
 				}
-				// trackComp.initTrackStatus(pagingComp.arrComps);
 			}else{
 				prevPage.style.color = 'black';
 			}
-		}
+		};
 		pgaeE.appendChild(prevPage);
 		pgaeE.appendChild(nextPage);
 		parentE.appendChild(countE);
 		parentE.appendChild(pgaeE);
+		this.pageE = compTools.compRecord(this.pageE,this.focusId,parentE);
 		return parentE;
 	},
 	getPageButton : function(focusId){
 		return this.pageButton[focusId];
 	},
 	getPageComp : function(focusId){
-		return this.getPageComp[focusId];
+		return this.pageE[focusId];
 	}
 };

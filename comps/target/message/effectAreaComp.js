@@ -1,11 +1,12 @@
 var effectAreaComp = {
 	init : function(jsonDatas){
 		var parentDiv = document.createElement('div');
-		parentDiv.setAttribute('class','influenceArea');
+		parentDiv.setAttribute('class','influenceArea marTpad');
 		if(typeof(jsonDatas.title) !== 'undefined'){
 			var labelE = document.createElement('label');
 			labelE.setAttribute('class','EAlabel');
-			labelE.innerText = jsonDatas.title;
+			labelE.setAttribute('class','marR10');
+			labelE.innerHTML = jsonDatas.title;
 			parentDiv.appendChild(labelE);
 		}
 		var listAreaE = document.createElement('div');
@@ -20,26 +21,40 @@ var effectAreaComp = {
 			liE.setAttribute('value',dataList[key].value);
 			liE.setAttribute('text',dataList[key].text);
 			valueList += dataList[key].value + ',';
-			liE.onclick = function(liObj){
-				if(typeof(liObj.srcElement.attributes.value) !== 'undefined'){
-					var liV = liObj.srcElement.attributes.value.value;
-					var recordMap = parentDiv.attributes.tempdatas.areaList;
-					recordMap = recordMap.replace(liV+',','');
-					parentDiv.attributes.tempdatas.areaList = recordMap;
-					this.remove();
-				}
-			};
+			// liE.onclick = function(liObj){
+        	// 	var clickObj = compTools.getEventTarget(liObj);
+			// 	if(typeof(clickObj.attributes.value) !== 'undefined'){
+			// 		var liV = clickObj.attributes.value.value;
+			// 		var recordMap = parentDiv.attributes.tempdatas.areaList;
+			// 		recordMap = recordMap.replace(liV+',','');
+			// 		parentDiv.attributes.tempdatas.areaList = recordMap;
+			// 		compTools.removeComp(this);
+			// 	}
+			// };
 			var aE = document.createElement('a');
 			aE.setAttribute('class','influenceArea-box-ul-li-a');
 			aE.innerHTML = dataList[key].text;
 			var iE = document.createElement('i');
 			iE.setAttribute('class','influenceArea-box-ul-li-a-i');
 			iE.setAttribute('value',dataList[key].value);
-			iE.innerText = 'x';
+			iE.innerHTML = 'x';
 			aE.appendChild(iE);
 			liE.appendChild(aE);
 			areaUlE.appendChild(liE);
 		}
+		areaUlE.addEventListener('click',function(ulObj){
+			var targetObj = compTools.getEventTarget(ulObj);
+			if(targetObj.nodeName === 'I'){
+				var focusObj = targetObj.parentElement.parentElement;
+				if(typeof(focusObj.attributes.value) !== 'undefined'){
+					var liV = focusObj.attributes.value.value;
+					var recordMap = parentDiv.attributes.tempdatas.areaList;
+					recordMap = recordMap.replace(liV+',','');
+					parentDiv.attributes.tempdatas.areaList = recordMap;
+					compTools.removeComp(focusObj);
+				}
+			}
+		});
 		listAreaE.appendChild(areaUlE);
 		parentDiv.appendChild(listAreaE);
 		var tempMap = {'areaList':valueList};

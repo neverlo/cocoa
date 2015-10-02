@@ -1,6 +1,7 @@
 var checkBoxComp = {
 	init : function(jsonDatas,callback){
 		var boxDiv = document.createElement('div');
+		boxDiv.setAttribute('class', 'marTpad');
 		var listDatas = jsonDatas.list;
 		var defaultV = [];
 		if(typeof(jsonDatas.defaultChecked) !== 'undefined'){
@@ -8,7 +9,8 @@ var checkBoxComp = {
 		}
 		if(typeof(jsonDatas.title) !== 'undefined'){
 			var labelE = document.createElement('label');
-			labelE.innerText = jsonDatas.title;
+			labelE.setAttribute('class','marR10');
+			labelE.innerHTML = jsonDatas.title;
 			boxDiv.appendChild(labelE);
 		}
 		var defList = [];
@@ -30,21 +32,23 @@ var checkBoxComp = {
 			cbInput.setAttribute('value',listDatas[key].value);
 			cbInput.setAttribute('text',listDatas[key].text);
 			var spanDiv = document.createElement('span');
+			spanDiv.setAttribute('class','marR10');
 			spanDiv.innerHTML = listDatas[key].text;
 			boxDiv.appendChild(cbInput);
 			boxDiv.appendChild(spanDiv);
 		}
 		this.defaultSelect = deSelectList;
 		boxDiv.addEventListener('click',function(iObj){
-			var nodeName = iObj.srcElement.nodeName;
+			var cIobj = compTools.getEventTarget(iObj);
+			var nodeName = cIobj.nodeName;
 			var backValue = '';
 			var backText = '';
 			var checkStatus = true;
 			var tmepObj = null;
 			var blindComs = null;
 			if(nodeName === 'INPUT'){
-				var objStatus = iObj.srcElement.attributes.status;
-				tmepObj = iObj.srcElement;
+				var objStatus = cIobj.attributes.status;
+				tmepObj = cIobj;
 				if(objStatus.value === 'selected'){
 					objStatus.value = ''; 
 					checkStatus = false;
@@ -54,8 +58,8 @@ var checkBoxComp = {
 				if(typeof(tmepObj.attributes.blindComp) !== 'undefined'){
 					blindComs = tmepObj.attributes.blindComp;
 				}
-				backValue = iObj.srcElement.attributes.value.value;
-				backText = iObj.srcElement.attributes.text.value;
+				backValue = cIobj.attributes.value.value;
+				backText = cIobj.attributes.text.value;
 				var tempDatas = [];
 				var iList = boxDiv.children;
 				
@@ -84,13 +88,10 @@ var checkBoxComp = {
 					backObj.obj = tmepObj;
 					backObj.blindComp = blindComs;
 					backObj.checked = checkStatus;
-					backEvent(backObj);
+					return callback(backObj);
 				}
 			}
 		});
-		function backEvent(callDatas){
-			callback(callDatas);
-		}
 		var defDatas = {"checkBox":defList};
 		boxDiv.attributes.tempdatas = defDatas;
 		this.boxDiv = boxDiv;
