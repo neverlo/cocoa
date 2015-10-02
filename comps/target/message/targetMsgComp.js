@@ -57,7 +57,7 @@ var targetMsgComp = {
 		
 		var btnDatas = {"list":[{"value":"reset","text":"重置"},{"value":"send","text":"发送"}]}; 
 		var btn = buttonComp.init(btnDatas,'tempTarget-btn');
-		cocoa.addComps(focusId,[checkBoxC,selectDiv,radioDiv,areaDiv,spanComp,btn],btn,'send',sendBack);
+		CC(focusId).addComps([checkBoxC,selectDiv,radioDiv,areaDiv,spanComp,btn],btn,'send',sendBack);
 		
 		var cbList = cbDatas.list;
 		for(var ckey in cbList){
@@ -65,18 +65,18 @@ var targetMsgComp = {
 			if(cbDatas.defaultChecked.indexOf(cValue) !== -1){
 				var defTextAreaDiv = textAreaComp.init(cbList[ckey].text);
 				checkBoxComp.blindTo(defTextAreaDiv,cbList[ckey].value);
-				cocoa.appendTo(areaDiv,defTextAreaDiv);
+				CC(defTextAreaDiv).appendTo(areaDiv);
 			}
 		}
 		
 		function cheackBoxBack(compDatas){
 			if(compDatas.checked){
 				var textDiv = textAreaComp.init(compDatas.text);
-				cocoa.appendTo(areaDiv,textDiv);
+				CC(textDiv).appendTo(areaDiv);
 				checkBoxComp.blindTo(textDiv,compDatas.value);
 			}else{
 				if(typeof(compDatas.blindComp) !== 'undefined'){
-					cocoa.removeComp(compDatas.blindComp);
+					CC(compDatas.blindComp).remove();
 				}
 			}
 		}
@@ -89,11 +89,11 @@ var targetMsgComp = {
 				kindDatas.list = rDatas;
 			}});
 			if(dKindDiv){
-				cocoa.removeComp(dKindDiv);
+				CC(dKindDiv).remove();
 			}
 			if(kindDatas.list.length > 0){
 				dKindDiv = selectComp.init('100',kindDatas);
-				cocoa.insertTo(selectDiv,dKindDiv);
+				CC(dKindDiv).insertTo(selectDiv);
 			}
 		}
 	

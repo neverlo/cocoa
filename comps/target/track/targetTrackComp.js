@@ -7,30 +7,30 @@ var targetTrackComp = {
 			for(var key in rDatas){
 				trackmins.push(trackComp.init(rDatas[key]));
 			}
-			cocoa.addComps(focusDivId,trackmins);
+			CC(focusDivId).addComps(trackmins);
 		}});
 	},
 	initMax : function(focusDivId){
-		cocoa.clearCompsById(['trackMax','tragetType','tragetKind','tragetChose']);
+		CC().clearCompsById(['trackMax','tragetType','tragetKind','tragetChose']);
 		var typeDatas = {
 			"cite":"请选择类型",'id' : 'demageType',"defaultCheck" : "",
 			"list":[{ "value" : "1", "text" : "渠道"},{"value" : "2", "text" : "灾害"},
 			{"value" : "3", "text" : "内容"}]
 		};
 		var selectDiv = selectComp.init('100',typeDatas,typeBack);
-		cocoa.addComps('tragetType',[selectDiv]);
+		CC('tragetType').addComps([selectDiv]);
 		var btnDatas = {"list":[{"value":"sure","text":"确定"}]}; 
 		var tcbtn = buttonComp.init(btnDatas,'msgTrack-btn');
 		tcbtn.style.float = 'left';
-		cocoa.addComps('tragetChose',[tcbtn]);
-		cocoa.getCompsDataById(['tragetType','tragetKind'],tcbtn,btonBack);
+		CC('tragetChose').addComps([tcbtn]);
+		CC(['tragetType','tragetKind']).getCompsDataById(tcbtn,btonBack);
 		
 		var spanE = document.createElement('span');
 		spanE.setAttribute('class','paddLR10 alarmColor');
 		spanE.style.float = 'left';
 		spanE.style.marginTop = '3px';
 		spanE.innerHTML = '';
-		cocoa.appendTo(tcbtn,spanE);
+		CC(spanE).appendTo(tcbtn);
 		
 		function btonBack(rDatas){
 			var showMsg = '';
@@ -87,9 +87,9 @@ var targetTrackComp = {
 			var reqDatas = {"filter":reqText};
 			$.getJSON(url,reqDatas,function(reData){
 				tempDatas.list = reData;
-				cocoa.clearCompsById(['tragetKind']);
+				CC().clearCompsById(['tragetKind']);
 				var kindSelect = selectComp.init('100',tempDatas);
-				cocoa.addComps('tragetKind',[kindSelect]);
+				CC('tragetKind').addComps([kindSelect]);
 			});
 		}
 		

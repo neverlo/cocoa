@@ -1,49 +1,38 @@
 var effectAreaComp = {
 	init : function(jsonDatas){
 		var parentDiv = document.createElement('div');
-		parentDiv.setAttribute('class','influenceArea marTpad');
+		CC(parentDiv).setClass('influenceArea marTpad');
 		if(typeof(jsonDatas.title) !== 'undefined'){
 			var labelE = document.createElement('label');
-			labelE.setAttribute('class','EAlabel');
-			labelE.setAttribute('class','marR10');
+			CC(labelE).setClass('EAlabel marR10');
 			labelE.innerHTML = jsonDatas.title;
 			parentDiv.appendChild(labelE);
 		}
 		var listAreaE = document.createElement('div');
-		listAreaE.setAttribute('class','influenceArea-box');
+		CC(listAreaE).setClass('influenceArea-box');
 		var areaUlE = document.createElement('ul');
-		areaUlE.setAttribute('class','influenceArea-box-ul');
+		CC(areaUlE).setClass('influenceArea-box-ul');
 		var dataList = jsonDatas.list;
 		var valueList = '';
 		for(var key in dataList){
 			var liE = document.createElement('li');
-			liE.setAttribute('class','influenceArea-box-ul-li');
+			CC(liE).setClass('influenceArea-box-ul-li');
 			liE.setAttribute('value',dataList[key].value);
 			liE.setAttribute('text',dataList[key].text);
 			valueList += dataList[key].value + ',';
-			// liE.onclick = function(liObj){
-        	// 	var clickObj = cocoa.getEventTarget(liObj);
-			// 	if(typeof(clickObj.attributes.value) !== 'undefined'){
-			// 		var liV = clickObj.attributes.value.value;
-			// 		var recordMap = parentDiv.attributes.tempdatas.areaList;
-			// 		recordMap = recordMap.replace(liV+',','');
-			// 		parentDiv.attributes.tempdatas.areaList = recordMap;
-			// 		cocoa.removeComp(this);
-			// 	}
-			// };
 			var aE = document.createElement('a');
-			aE.setAttribute('class','influenceArea-box-ul-li-a');
+			CC(aE).setClass('influenceArea-box-ul-li-a');
 			aE.innerHTML = dataList[key].text;
 			var iE = document.createElement('i');
-			iE.setAttribute('class','influenceArea-box-ul-li-a-i');
+			CC(iE).setClass('influenceArea-box-ul-li-a-i');
 			iE.setAttribute('value',dataList[key].value);
 			iE.innerHTML = 'x';
 			aE.appendChild(iE);
 			liE.appendChild(aE);
 			areaUlE.appendChild(liE);
 		}
-		areaUlE.addEventListener('click',function(ulObj){
-			var targetObj = cocoa.getEventTarget(ulObj);
+		CC(areaUlE).click(function(ulObj){
+			var targetObj = CC(ulObj).getEventTarget();
 			if(targetObj.nodeName === 'I'){
 				var focusObj = targetObj.parentElement.parentElement;
 				if(typeof(focusObj.attributes.value) !== 'undefined'){
@@ -51,7 +40,7 @@ var effectAreaComp = {
 					var recordMap = parentDiv.attributes.tempdatas.areaList;
 					recordMap = recordMap.replace(liV+',','');
 					parentDiv.attributes.tempdatas.areaList = recordMap;
-					cocoa.removeComp(focusObj);
+					CC(focusObj).remove();
 				}
 			}
 		});

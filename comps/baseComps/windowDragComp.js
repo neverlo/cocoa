@@ -24,49 +24,40 @@ var windowDragComp = {
 	},
 	remove : function(){
 		if(this.parentE){
-			cocoa.removeComp(this.parentE);
+			CC(this.parentE).remove();
 		}
 	},
 	addDrag : function(titleE,parentE){
 		var _move = false; //移动标记
 		var _x, _y; //鼠标离控件左上角的相对位置
+		var _nx,_ny;//新的位置
 		var currentWW = document.body.scrollWidth;
 		var currentWH = document.body.scrollHeight;
 		var windowDivWidth = parentE.style.width;
 		var windowDivHeight = parentE.style.height;
-		titleE.onmousedown = function(tObj){
+		CC(titleE).mousedown(function(tObj){
 			_move = true;
 			_x = tObj.pageX - parseInt(parentE.style.left);
 			_y = tObj.pageY - parseInt(parentE.style.top);
-		};
-		document.body.onmousemove = function(dObj){
+		});
+		CC(document).mousemove(function(cObj){
 			if (_move){
-				var x = dObj.pageX - _x; //移动时根据鼠标位置计算控件左上角的绝对位置
-				var y = dObj.pageY - _y;
+				var _nx = cObj.pageX - _x; //移动时根据鼠标位置计算控件左上角的绝对位置
+				var _ny = cObj.pageY - _y;
 				var xWidth = currentWW - parseInt(windowDivWidth);
 				var yHeight = currentWH - parseInt(windowDivHeight);
-				if(x>0 && x<xWidth && y>0 && y<yHeight){
-					parentE.style.left = x + 'px';
-					parentE.style.top = y + 'px';
+				if(_nx>0 && _nx<xWidth && _ny>0 && _ny<yHeight){
+					parentE.style.left = _nx + 'px';
+					parentE.style.top = _ny + 'px';
 				}
 			}
-		};
-		document.body.onmouseup = function(){
-			_move = false;
-		};
-		titleE.onmouseout = function(tObj){
-			console.info('out');
+		}).mouseout(function(){
 			if(_move){
-				var x = tObj.pageX - _x;
-				var y = tObj.pageY - _y;
-				var xWidth = currentWW - parseInt(windowDivWidth);
-				var yHeight = currentWH - parseInt(windowDivHeight);
-				if(x>0 && x<xWidth && y>0 && y<yHeight){
-					parentE.style.left = x + 'px';
-					parentE.style.top = y + 'px';
-				}
+				parentE.style.left = _nx + 'px';
+				parentE.style.top = _ny + 'px';
 			}
-			// _move = false;
-		};
+		}).mouseup(function(){
+			_move = false;
+		});
 	}
 };

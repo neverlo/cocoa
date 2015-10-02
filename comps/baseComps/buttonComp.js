@@ -10,18 +10,18 @@
  */
 var buttonComp = {
 	init : function(jsonDatas,className,callback){
-		var btnDiv = document.createElement('div');
-		btnDiv.setAttribute('class',className);
+		var btnDiv = CC().CDE('div');
+		CC(btnDiv).setClass(className);
 		var btnDatas = jsonDatas.list;
 		for(var key in btnDatas){
-			var btnE = document.createElement('button');
+			var btnE = CC().CDE('button');
 			btnE.setAttribute('value',btnDatas[key].value);
 			btnE.innerHTML = btnDatas[key].text;
 			btnDiv.appendChild(btnE);
 		}
 		if(callback){
-			btnDiv.addEventListener('click',function(iObj){
-				return callback(cocoa.getEventTarget(iObj).attributes.value.value);
+			CC(btnDiv).click(function(iObj){
+				return callback(CC(iObj).getEventTarget(iObj).attributes.value.value);
 			});
 		}
 		return btnDiv;

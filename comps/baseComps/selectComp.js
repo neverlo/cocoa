@@ -8,21 +8,21 @@
  * callBack:用户选择下拉框内容时触发的回调函数，返回当前选中项数据
  * ------example------
  * var selectDiv = selectComp.init('100',jsonDatas,callBack);
- * cocoa.addComps(focusId,[selectDiv]);
+ * CC(focusId).addComps([selectDiv]);
  * ps:focusId : 需要将组件添加到的div的id值
  */
 var selectComp = {
       init : function(divWidth,jsonDatas,callBack){
             var divNWidth = parseInt(divWidth) + 36;
             var ulWidth = parseInt(divWidth) + 34;
-            var divE = document.createElement('div');
+            var divE = CC().CDE('div');
             divE.style.width = divNWidth + 'px';
             divE.style.position = 'relative';
             divE.style.zIndex = '10000';
             divE.style.margin = '0';
             divE.style.padding = '0';
             divE.style.fontSize = '13px';
-            var citeE = document.createElement('cite');
+            var citeE = CC().CDE('cite');
             citeE.innerHTML = jsonDatas.cite;
             citeE.style.width = divWidth + 'px';
             citeE.style.height = '24px';
@@ -36,7 +36,7 @@ var selectComp = {
             citeE.style.border ='1px solid #333';
             citeE.style.overflowX = 'hidden';
             citeE.style.background = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAMCAMAAABcOc2zAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAJUExURXt7e3p6ev////MnDfwAAAADdFJOU///ANfKDUEAAAAiSURBVHjaYmBCAwzUEWCAACQVyHyIFgYGRjQzGCiyFiDAAI3WAWIk9jYnAAAAAElFTkSuQmCC) no-repeat right center';
-            var ulE = document.createElement('ul');
+            var ulE = CC().CDE('ul');
             ulE.style.maxHeight = '193px';
             ulE.style.overflowY = 'scroll';
             citeE.onclick = function(ce){
@@ -63,7 +63,7 @@ var selectComp = {
             var defaultValue = '';
             var defaultText = '';
             for(var key in listDatas){
-                  var liE = document.createElement('li');
+                  var liE = CC().CDE('li');
                   liE.style.height = '24px';
                   liE.style.lineHeight = '24px';
                   liE.style.listStyle = 'none';
@@ -71,8 +71,7 @@ var selectComp = {
                   liE.style.padding = '0px';
                   liE.style.fontSize = '13px';
                   liE.style.width = '100%';
-                  var liAE = document.createElement('span');
-                  // liAE.setAttribute('href','javascript:;');
+                  var liAE = CC().CDE('span');
                   liAE.setAttribute('value',listDatas[key].value);
                   liAE.innerHTML = listDatas[key].text;
                   liAE.style.background = '#fff';
@@ -94,23 +93,21 @@ var selectComp = {
                         } 
                   }
             }
-            ulE.addEventListener('mouseover',function(ulObj){
-                  var targetObj = cocoa.getEventTarget(ulObj);
+            CC(ulE).mouseover(function(uObj){
+                  var targetObj = CC(uObj).getEventTarget();
                   if(targetObj.nodeName === 'SPAN'){
                         targetObj.style.background = '#ccc';
                   }
-            });
-            ulE.addEventListener('mouseout',function(ulObj){
-                  var targetObj = cocoa.getEventTarget(ulObj);
+            }).mouseout(function(uObj){
+                  var targetObj = CC(uObj).getEventTarget();
                   if(targetObj.nodeName === 'SPAN'){
                         targetObj.style.background = '#fff';
                   }
-            });
-            ulE.onclick = function(uObj){
-                  var nodeName = cocoa.getEventTarget(uObj).nodeName;
+            }).click(function(uObj){
+                  var nodeName = CC(uObj).getEventTarget().nodeName;
                   if(nodeName === 'SPAN'){
                         ulE.style.display = 'none';
-                        var aValue = uObj.target.attributes.value.value;
+                        var aValue = CC(uObj.target).CAT().value.value;
                         var aText = uObj.target.innerHTML;
                         citeE.innerHTML = aText;
                         var rDatas = {
@@ -121,12 +118,12 @@ var selectComp = {
                         nObj.id = jsonDatas.id;
                         nObj.value = aValue;
                         nObj.text = aText;
-                        divE.attributes.tempdatas = cocoa.compRecord(divE.attributes.tempdatas,'select'+jsonDatas.id,nObj);
+                        CC(divE).CAT().tempdatas = CC(CC(divE).CAT().tempdatas).compRecord('select'+jsonDatas.id,nObj);
                         if(callBack){
                               return callBack(rDatas);
                         }
-                  }
-            };
+                  } 
+            });
             var initObj = new Object({});
             var mapId = 'select'+jsonDatas.id;
             initObj.id = jsonDatas.id;
@@ -135,11 +132,11 @@ var selectComp = {
             divE.appendChild(citeE);
             divE.appendChild(ulE);
             if(typeof(jsonDatas.title) !== 'undefined'){
-                  var titDiv = document.createElement('div');
-                  titDiv.setAttribute('class', 'marTpad');
+                  var titDiv = CC().CDE('div');
+                  CC(titDiv).setClass('marTpad');
                   titDiv.style.display = 'inline-block';
-                  var labelE = document.createElement('label');
-                  labelE.setAttribute('class','marR10');
+                  var labelE = CC().CDE('label');
+                  CC(labelE).setClass('marR10');
                   labelE.style.float = 'left';
                   labelE.innerHTML = jsonDatas.title;
                   divE.style.float = 'left';
@@ -149,7 +146,7 @@ var selectComp = {
             }else{
                   divE.style.float = 'left';
             }
-            divE.attributes.tempdatas = cocoa.compRecord(divE.attributes.tempdatas,mapId,initObj);
+            CC(divE).CAT().tempdatas = CC(CC(divE).CAT().tempdatas).compRecord(mapId,initObj);
             return divE;
       }
 };

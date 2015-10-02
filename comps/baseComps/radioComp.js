@@ -29,8 +29,8 @@ var radioComp = {
 			radioDiv.appendChild(radioInput);
 			radioDiv.appendChild(tSpan);
 		}
-		radioDiv.addEventListener('click',function(iObj){
-			var cObj = cocoa.getEventTarget(iObj);
+		CC(radioDiv).click(function(iObj){
+			var cObj = CC(iObj).getEventTarget();
 			var nodeName = cObj.nodeName;
 			if(nodeName === 'INPUT'){
 				defMap.value = cObj.attributes.value.value;

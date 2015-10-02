@@ -15,7 +15,7 @@
  */
 var checkBoxComp = {
 	init : function(jsonDatas,callback){
-		var boxDiv = document.createElement('div');
+		var boxDiv = CC().CDE('div');
 		boxDiv.setAttribute('class', 'marTpad');
 		var listDatas = jsonDatas.list;
 		var defaultV = [];
@@ -23,7 +23,7 @@ var checkBoxComp = {
 			defaultV = jsonDatas.defaultChecked;
 		}
 		if(typeof(jsonDatas.title) !== 'undefined'){
-			var labelE = document.createElement('label');
+			var labelE = CC().CDE('label');
 			labelE.setAttribute('class','marR10');
 			labelE.innerHTML = jsonDatas.title;
 			boxDiv.appendChild(labelE);
@@ -31,7 +31,7 @@ var checkBoxComp = {
 		var defList = [];
 		var deSelectList = [];
 		for(var key in listDatas){
-			var cbInput = document.createElement('input');
+			var cbInput = CC().CDE('input');
 			if(defaultV.indexOf(listDatas[key].value) !== -1){
 				cbInput.setAttribute('checked','checked');
 				cbInput.setAttribute('status','selected');
@@ -53,8 +53,8 @@ var checkBoxComp = {
 			boxDiv.appendChild(spanDiv);
 		}
 		this.defaultSelect = deSelectList;
-		boxDiv.addEventListener('click',function(iObj){
-			var cIobj = cocoa.getEventTarget(iObj);
+		CC(boxDiv).click(function(iObj){
+			var CIobj = CC(iObj).getEventTarget();
 			var nodeName = cIobj.nodeName;
 			var backValue = '';
 			var backText = '';
