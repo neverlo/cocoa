@@ -55,11 +55,6 @@ var compTools={
 			this.removeComp(arrComp[key]);
 		}
 	},
-	clearComps : function(arrComps){
-		for(var key in arrComps){
-			this.removeComp(arrComps[key]);
-		}
-	},
 	clearCompsById : function(arrFoId){
 		if(arrFoId instanceof Array){
 			for(var key in arrFoId){
