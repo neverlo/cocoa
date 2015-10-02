@@ -1,4 +1,4 @@
-var compTools={
+var cocoa={
 	addComps : function(cDivId,compsArr,submitComp,submitVal,callback){
 		var cDiv = document.createElement('div');
 		for(var key in compsArr){
@@ -10,7 +10,7 @@ var compTools={
 		if(submitComp){
 			var countComp = document.getElementById(cDivId).children[0].childNodes;
 			submitComp.addEventListener('click',function(iObj){
-				var iObjVal = compTools.getEventTarget(iObj).attributes.value.value;
+				var iObjVal = cocoa.getEventTarget(iObj).attributes.value.value;
 				if(submitVal !== '' && submitVal !== null){
 					if(iObjVal === submitVal){
 						var dataMap = {};
@@ -44,7 +44,7 @@ var compTools={
 		}
 	},
 	appendTo : function(focusComp,curComp){
-		compTools.insertAdjacentElement(curComp,'afterend',focusComp);
+		cocoa.insertAdjacentElement(curComp,'afterend',focusComp);
 	},
 	removeComp : function(curComp){
 		curComp.hidden = true;
@@ -89,11 +89,11 @@ var compTools={
 			tempList.push(curComp);
 			focusComp.attributes.compList = tempList;
 		}
-		compTools.insertAdjacentElement(curComp,'beforeend',focusComp);
+		cocoa.insertAdjacentElement(curComp,'beforeend',focusComp);
 	},
 	resetComp : function(newComp,oldComp){
-		compTools.appendTo(oldComp,newComp);
-		compTools.removeComp(oldComp);
+		cocoa.appendTo(oldComp,newComp);
+		cocoa.removeComp(oldComp);
 	},
 	getCompsDataById : function(compsId,submitComp,callback){
 		if(submitComp){

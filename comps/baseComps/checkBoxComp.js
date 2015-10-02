@@ -54,7 +54,7 @@ var checkBoxComp = {
 		}
 		this.defaultSelect = deSelectList;
 		boxDiv.addEventListener('click',function(iObj){
-			var cIobj = compTools.getEventTarget(iObj);
+			var cIobj = cocoa.getEventTarget(iObj);
 			var nodeName = cIobj.nodeName;
 			var backValue = '';
 			var backText = '';

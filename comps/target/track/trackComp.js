@@ -23,7 +23,7 @@ var trackComp = {
 				statusE.attributes.msg = jsonDatas.msg;
 				statusE.attributes.msgId = jsonDatas.id;
 				statusE.attributes.status = jsonDatas.status;
-				this.compsRecord = compTools.compRecord(this.compsRecord,jsonDatas.id,parentE);
+				this.compsRecord = cocoa.compRecord(this.compsRecord,jsonDatas.id,parentE);
 			}
 			ulE.appendChild(liE);
 		}

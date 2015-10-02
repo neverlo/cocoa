@@ -21,7 +21,7 @@ var buttonComp = {
 		}
 		if(callback){
 			btnDiv.addEventListener('click',function(iObj){
-				return callback(compTools.getEventTarget(iObj).attributes.value.value);
+				return callback(cocoa.getEventTarget(iObj).attributes.value.value);
 			});
 		}
 		return btnDiv;

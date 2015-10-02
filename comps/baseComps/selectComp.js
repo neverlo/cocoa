@@ -8,7 +8,7 @@
  * callBack:用户选择下拉框内容时触发的回调函数，返回当前选中项数据
  * ------example------
  * var selectDiv = selectComp.init('100',jsonDatas,callBack);
- * compTools.addComps(focusId,[selectDiv]);
+ * cocoa.addComps(focusId,[selectDiv]);
  * ps:focusId : 需要将组件添加到的div的id值
  */
 var selectComp = {
@@ -95,19 +95,19 @@ var selectComp = {
                   }
             }
             ulE.addEventListener('mouseover',function(ulObj){
-                  var targetObj = compTools.getEventTarget(ulObj);
+                  var targetObj = cocoa.getEventTarget(ulObj);
                   if(targetObj.nodeName === 'SPAN'){
                         targetObj.style.background = '#ccc';
                   }
             });
             ulE.addEventListener('mouseout',function(ulObj){
-                  var targetObj = compTools.getEventTarget(ulObj);
+                  var targetObj = cocoa.getEventTarget(ulObj);
                   if(targetObj.nodeName === 'SPAN'){
                         targetObj.style.background = '#fff';
                   }
             });
             ulE.onclick = function(uObj){
-                  var nodeName = compTools.getEventTarget(uObj).nodeName;
+                  var nodeName = cocoa.getEventTarget(uObj).nodeName;
                   if(nodeName === 'SPAN'){
                         ulE.style.display = 'none';
                         var aValue = uObj.target.attributes.value.value;
@@ -121,7 +121,7 @@ var selectComp = {
                         nObj.id = jsonDatas.id;
                         nObj.value = aValue;
                         nObj.text = aText;
-                        divE.attributes.tempdatas = compTools.compRecord(divE.attributes.tempdatas,'select'+jsonDatas.id,nObj);
+                        divE.attributes.tempdatas = cocoa.compRecord(divE.attributes.tempdatas,'select'+jsonDatas.id,nObj);
                         if(callBack){
                               return callBack(rDatas);
                         }
@@ -149,7 +149,7 @@ var selectComp = {
             }else{
                   divE.style.float = 'left';
             }
-            divE.attributes.tempdatas = compTools.compRecord(divE.attributes.tempdatas,mapId,initObj);
+            divE.attributes.tempdatas = cocoa.compRecord(divE.attributes.tempdatas,mapId,initObj);
             return divE;
       }
 };

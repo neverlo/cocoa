@@ -8,7 +8,7 @@ var pagingComp = {
 	init : function(focusId,arrComps,pCount){
 		if(typeof(this.pageE) !== 'undefined'){
 			if(this.pageE[focusId]){
-				compTools.removeComp(this.pageE[focusId]);
+				cocoa.removeComp(this.pageE[focusId]);
 			}
 		}
 		this.focusId = focusId;
@@ -28,7 +28,7 @@ var pagingComp = {
 		pagingComp.startPage();
 		var focomp = document.getElementById(focusId);
 		var btn = pagingComp.pageButton();
-		compTools.appendTo(focomp,btn);
+		cocoa.appendTo(focomp,btn);
 		if(typeof(this.pageButton) !== 'undefined'){
 			var tempRe = this.pageButton;
 			tempRe[this.focusId] = btn;
@@ -46,7 +46,7 @@ var pagingComp = {
 		}
 	},
 	startPage : function(){
-		compTools.clearCompsById([this.focusId]);
+		cocoa.clearCompsById([this.focusId]);
 		var tempArr = [];
 		var tempEnd = this.endIndex;
 		if(tempEnd>this.compsLength){
@@ -56,7 +56,7 @@ var pagingComp = {
 			this.arrComps[i].hidden = false;
 			tempArr.push(this.arrComps[i]);
 		}
-		compTools.addComps(this.focusId,tempArr);
+		cocoa.addComps(this.focusId,tempArr);
 	},
 	pageButton : function(){
 		var parentE = document.createElement('div');
@@ -126,7 +126,7 @@ var pagingComp = {
 		pgaeE.appendChild(nextPage);
 		parentE.appendChild(countE);
 		parentE.appendChild(pgaeE);
-		this.pageE = compTools.compRecord(this.pageE,this.focusId,parentE);
+		this.pageE = cocoa.compRecord(this.pageE,this.focusId,parentE);
 		return parentE;
 	},
 	getPageButton : function(focusId){

@@ -24,7 +24,7 @@ var windowDragComp = {
 	},
 	remove : function(){
 		if(this.parentE){
-			compTools.removeComp(this.parentE);
+			cocoa.removeComp(this.parentE);
 		}
 	},
 	addDrag : function(titleE,parentE){

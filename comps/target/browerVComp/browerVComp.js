@@ -61,7 +61,7 @@ var browerVComp = {
 	},
 	close : function(){
 		if(typeof(this.parentE) !== 'undefined'){
-			compTools.removeComp(this.parentE);
+			cocoa.removeComp(this.parentE);
 		}
 	}
 };

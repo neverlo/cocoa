@@ -22,13 +22,13 @@ var effectAreaComp = {
 			liE.setAttribute('text',dataList[key].text);
 			valueList += dataList[key].value + ',';
 			// liE.onclick = function(liObj){
-        	// 	var clickObj = compTools.getEventTarget(liObj);
+        	// 	var clickObj = cocoa.getEventTarget(liObj);
 			// 	if(typeof(clickObj.attributes.value) !== 'undefined'){
 			// 		var liV = clickObj.attributes.value.value;
 			// 		var recordMap = parentDiv.attributes.tempdatas.areaList;
 			// 		recordMap = recordMap.replace(liV+',','');
 			// 		parentDiv.attributes.tempdatas.areaList = recordMap;
-			// 		compTools.removeComp(this);
+			// 		cocoa.removeComp(this);
 			// 	}
 			// };
 			var aE = document.createElement('a');
@@ -43,7 +43,7 @@ var effectAreaComp = {
 			areaUlE.appendChild(liE);
 		}
 		areaUlE.addEventListener('click',function(ulObj){
-			var targetObj = compTools.getEventTarget(ulObj);
+			var targetObj = cocoa.getEventTarget(ulObj);
 			if(targetObj.nodeName === 'I'){
 				var focusObj = targetObj.parentElement.parentElement;
 				if(typeof(focusObj.attributes.value) !== 'undefined'){
@@ -51,7 +51,7 @@ var effectAreaComp = {
 					var recordMap = parentDiv.attributes.tempdatas.areaList;
 					recordMap = recordMap.replace(liV+',','');
 					parentDiv.attributes.tempdatas.areaList = recordMap;
-					compTools.removeComp(focusObj);
+					cocoa.removeComp(focusObj);
 				}
 			}
 		});
