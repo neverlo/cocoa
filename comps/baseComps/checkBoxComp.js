@@ -1,3 +1,16 @@
+/**
+ * checkbox组件
+ * jsonDatas: = {
+			"title" : "消息渠道：","defaultChecked" : [],
+			"list" : [{"value" : "1","text" : "短信"},
+	            {"value" : "2","text" : "大喇叭"},
+	            {"value" : "3","text" : "LED显示屏"}
+			]
+		};
+		title即标签名 消息渠道：XXXX
+		dufaultChecked:默认选中项，为value值的对应数组
+* callback:回调函数，当用户点击checkbox时返回当前所有处于选中状态的checkbox数据
+ */
 var checkBoxComp = {
 	init : function(jsonDatas,callback){
 		var boxDiv = document.createElement('div');
@@ -97,6 +110,11 @@ var checkBoxComp = {
 		this.boxDiv = boxDiv;
 		return boxDiv;
 	},
+	/**
+	 * 将checkbox与任意其他组件进行绑定
+	 * focuComp : 需要绑定的组件（绑定）
+	 * comValue : 对应Value值的checkbox（被绑定）
+	 */
 	blindTo : function(focuComp,compValue){
 		var cbList = this.boxDiv.getElementsByTagName('input');
 		for(var i=cbList.length-1;i>=0;i--){
@@ -107,3 +125,7 @@ var checkBoxComp = {
 		}
 	}
 };
+/**
+ * example
+ * var checkBox = checkBoxComp.init(jsonDatas,callback);
+ */

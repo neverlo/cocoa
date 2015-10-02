@@ -1,3 +1,11 @@
+/**
+ * 按钮组件，用于自动生成按钮
+ * --默认绑定点击事件，回调函数返回用户当前点击的按钮
+ * jsonDatas: = {"list":[{"value":"reset","text":"重置"},
+ * 								{"value":"send","text":"发送"}]};
+ * className:按钮的样式，定义在baseComps.css
+ * callback:接收按钮状态的回调函数
+ */
 var buttonComp = {
 	init : function(jsonDatas,className,callback){
 		var btnDiv = document.createElement('div');
@@ -17,3 +25,7 @@ var buttonComp = {
 		return btnDiv;
 	}
 };
+/**
+ * example
+ * var btn = buttonComp.init(btnDatas,'tempTarget-btn');
+ */
