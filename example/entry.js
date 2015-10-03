@@ -24,11 +24,11 @@ $(function(){
 	}
 	
 	// 加载可拖动的窗口
-	var winDatasA = {"title":"窗口A","id":"one","wx":300,"wy":300};
+	var winDatasA = {"title":"可拖动窗口A","id":"one","wx":300,"wy":300};
 	var conDEA = T().CDE('div');
 	conDEA.innerHTML = 'A的内容对象';
     windowDragComp.init(winDatasA,conDEA);
-	var winDatasB = {"title":"窗口B","id":"one","wx":300,"wy":100};
+	var winDatasB = {"title":"可拖动窗口B","id":"one","wx":300,"wy":100};
 	var conDEB = T().CDE('div');
 	conDEB.innerHTML = 'B的内容对象';
 	windowDragComp.init(winDatasB,conDEB);
