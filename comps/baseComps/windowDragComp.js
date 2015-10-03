@@ -1,6 +1,14 @@
 // create a window can drag
+/**
+ * 生成带拖动功能的div窗口
+ * jsonDatas:{"title":"窗口A","id":"one","wx":300,"wy":300};
+ * 	title:窗口标题 id:窗口ID值 
+ * wx:窗口弹出的像素位置X
+ * wy:窗口弹出的像素位置Y
+ * contentDE:内容元素DOM对象
+ */
 var windowDragComp = {
-	init : function(jsonDatas,wx,wy){
+	init : function(jsonDatas,contentDE){
 		var parentE = T().CDE('div');
 		// parentE.setAttribute('id',divId);
 		parentE.setAttribute('class','wdc-parent');
@@ -16,6 +24,9 @@ var windowDragComp = {
 		titleSpan.innerHTML = jsonDatas.title;
 		titleDiv.appendChild(titleSpan);
 		var dragContentDiv = T().CDE('div');
+		if(typeof(contentDE) !== 'undefined'){
+			dragContentDiv.appendChild(contentDE);
+		}
 		dragContentDiv.style.cursor = 'default';
 		parentE.appendChild(titleDiv);
 		parentE.appendChild(dragContentDiv);

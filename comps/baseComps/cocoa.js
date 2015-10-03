@@ -189,6 +189,34 @@
 					}
 				});
 			}
+		},
+		autoLoad : function(arrComps,loadLine,totalLine,ulE){//滚动条按需加载
+			totalLine = totalLine < loadLine ? loadLine : totalLine;//防止总数少于每次加载数
+			for(var i=0;i<loadLine;i++){
+				ulE.appendChild(arrComps[i]);
+			}
+			this.elem.appendChild(ulE);
+			var firIndex = loadLine;
+			var loadBoolen = true;
+			this.elem.onscroll = function(sObj){
+				sObj = T(sObj).getEventTarget();
+				var pdivH = sObj.clientHeight;//div高度
+				var scTop = sObj.scrollTop;//距离顶部的高度
+				var totalH = sObj.scrollHeight;//总高度
+				if(pdivH+scTop >= totalH){
+					if(loadBoolen){
+						var lastIndex = firIndex+loadLine;
+						if(lastIndex > totalLine){
+							lastIndex = totalLine;
+							loadBoolen = false;
+						}
+						for(var i = firIndex; i<lastIndex;i++){
+							ulE.appendChild(arrComps[i]);
+						}
+						firIndex += loadLine;
+					}
+				}
+			}
 		}
 	};
 })(Window);
