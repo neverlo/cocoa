@@ -1,26 +1,26 @@
 // create a window can drag
 var windowDragComp = {
-	init : function(divId,wx,wy){
+	init : function(jsonDatas,wx,wy){
 		var parentE = CC().CDE('div');
 		// parentE.setAttribute('id',divId);
 		parentE.setAttribute('class','wdc-parent');
 		parentE.style.position = 'absolute';
-		parentE.style.left = '100px';
-		parentE.style.top = '100px';
+		parentE.style.left = jsonDatas.wx+'px';
+		parentE.style.top = jsonDatas.wy+'px';
 		parentE.style.width = '400px';
 		parentE.style.height = '100px';
 		var titleDiv = CC().CDE('div');
 		titleDiv.style.cursor = 'pointer';
 		titleDiv.setAttribute('class','wdc-dragTitle');
 		var titleSpan = CC().CDE('span');
-		titleSpan.innerHTML = '可拖动的窗口标题';
+		titleSpan.innerHTML = jsonDatas.title;
 		titleDiv.appendChild(titleSpan);
 		var dragContentDiv = CC().CDE('div');
 		dragContentDiv.style.cursor = 'default';
 		parentE.appendChild(titleDiv);
 		parentE.appendChild(dragContentDiv);
 		document.body.appendChild(parentE);
-		this.parentE = CC(this.parentE).compRecord(divId,parentE);
+		this.parentE = CC(this.parentE).compRecord(jsonDatas.id,parentE);
 		this.addDrag(titleDiv,parentE);
 	},
 	remove : function(){
@@ -28,37 +28,34 @@ var windowDragComp = {
 			CC(this.parentE).remove();
 		}
 	},
-	addDrag : function(titleDiv,parentE){
-		var _move = false; //移动标记
-		var _x, _y; //鼠标离控件左上角的相对位置
-		var _nx,_ny;//新的位置
-		var currentWW = document.body.scrollWidth;
-		var currentWH = document.body.scrollHeight;
-		var windowDivWidth = parentE.style.width;
-		var windowDivHeight = parentE.style.height;
-		CC(titleDiv).mousedown(function(tObj){
-			_move = true;
-			_x = tObj.pageX - parseInt(parentE.style.left);
-			_y = tObj.pageY - parseInt(parentE.style.top);
-		});
-		CC(document).mousemove(function(cObj){
-			if (_move){
-				var _nx = cObj.pageX - _x; //移动时根据鼠标位置计算控件左上角的绝对位置
-				var _ny = cObj.pageY - _y;
-				var xWidth = currentWW - parseInt(windowDivWidth);
-				var yHeight = currentWH - parseInt(windowDivHeight);
-				if(_nx>0 && _nx<xWidth && _ny>0 && _ny<yHeight){
-					parentE.style.left = _nx + 'px';
-					parentE.style.top = _ny + 'px';
-				}
-			}
-		}).mouseout(function(){
-			if(_move){
-				parentE.style.left = _nx + 'px';
-				parentE.style.top = _ny + 'px';
-			}
-		}).mouseup(function(){
-			_move = false;
-		});
+	addDrag : function(handle,oDrag){
+		handle = handle || oDrag;
+		handle.style.cursor = "move";
+		handle.onmousedown = function (event){
+			event = event || window.event;
+			var disX = event.clientX - oDrag.offsetLeft;
+			var disY = event.clientY - oDrag.offsetTop;
+			document.onmousemove = function (devent){
+				devent = devent || window.devent;
+				var iL = devent.clientX - disX;
+				var iT = devent.clientY - disY;
+				var maxL = document.documentElement.clientWidth - oDrag.offsetWidth;
+				var maxT = document.documentElement.clientHeight - oDrag.offsetHeight;
+				iL <= 0 && (iL = 0);
+				iT <= 0 && (iT = 0);
+				iL >= maxL && (iL = maxL);
+				iT >= maxT && (iT = maxT);
+				oDrag.style.left = iL + "px";
+				oDrag.style.top = iT + "px";
+				return false;
+			};
+			document.onmouseup = function (){
+				document.onmousemove = null;
+				document.onmouseup = null;
+				this.releaseCapture && this.releaseCapture();
+			};
+			this.setCapture && this.setCapture();
+			return false;
+		};
 	}
 };

@@ -22,6 +22,8 @@ $(function(){
 	function sendBack(sBack){
 		console.info(sBack);
 	}
-    windowDragComp.init('one');
-	windowDragComp.init('tow');
+	var winDatasA = {"title":"窗口A","id":"one","wx":100,"wy":200};
+    windowDragComp.init(winDatasA);
+	var winDatasB = {"title":"窗口B","id":"one","wx":200,"wy":100};
+	windowDragComp.init(winDatasB);
 });

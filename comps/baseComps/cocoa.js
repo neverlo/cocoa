@@ -84,7 +84,7 @@
 		},
 		addComps : function(compsArr,submitComp,submitVal,callback){
 			var addObj = document.getElementById(this.elem);
-			var cDiv = CC().CDE('div')
+			var cDiv = CC().CDE('div');
 			for(var key in compsArr){
 				compsArr[key].hidden = false;
 				cDiv.appendChild(compsArr[key]);
@@ -100,19 +100,23 @@
 							var dataMap = {};
 							for(var key in countComp){
 								if(countComp[key] !== submitComp && key !== 'length' && key !== 'item'){
-									if(typeof(countComp[key].attributes.mulComp) !== 'undefined'){
-										var cList = countComp[key].attributes.compList;
-										for(var tKey in cList){
-											var tempDatas = cList[tKey].attributes.tempdatas;
-											for(var tempKey in tempDatas){
-												dataMap[tempKey] = tempDatas[tempKey];
+									if(typeof(countComp[key].attributes)!=='undefined'){
+										if(typeof(countComp[key].attributes.mulComp) !== 'undefined'){
+											console.info(countComp[key]);
+											var cList = countComp[key].attributes.compList;
+											for(var tKey in cList){
+												var tempDatas = cList[tKey].attributes.tempdatas;
+												for(var tempKey in tempDatas){
+													dataMap[tempKey] = tempDatas[tempKey];
+												}
 											}
 										}
+										var coDatas = countComp[key].attributes.tempdatas;
+										for(var coKey in coDatas){
+											dataMap[coKey] = coDatas[coKey];
+										}
 									}
-									var coDatas = countComp[key].attributes.tempdatas;
-									for(var coKey in coDatas){
-										dataMap[coKey] = coDatas[coKey];
-									}
+									
 								}
 							}
 							if(callback){
