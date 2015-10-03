@@ -33,6 +33,7 @@ var windowDragComp = {
 		handle.style.cursor = "move";
 		handle.onmousedown = function (event){
 			event = event || window.event;
+			oDrag.style.zIndex = '999999';
 			var disX = event.clientX - oDrag.offsetLeft;
 			var disY = event.clientY - oDrag.offsetTop;
 			document.onmousemove = function (devent){
@@ -41,10 +42,14 @@ var windowDragComp = {
 				var iT = devent.clientY - disY;
 				var maxL = document.documentElement.clientWidth - oDrag.offsetWidth;
 				var maxT = document.documentElement.clientHeight - oDrag.offsetHeight;
-				iL <= 0 && (iL = 0);
-				iT <= 0 && (iT = 0);
-				iL >= maxL && (iL = maxL);
-				iT >= maxT && (iT = maxT);
+				iL = iL <= 0 ? 0 : iL;
+				iT = iT <= 0 ? 0 : iT;
+				iL = iL >= maxL ? maxL : iL;
+				iT = iT >= maxT ? maxT : iT;
+				// iL <= 0 && (iL = 0);
+				// iT <= 0 && (iT = 0);
+				// iL >= maxL && (iL = maxL);
+				// iT >= maxT && (iT = maxT);
 				oDrag.style.left = iL + "px";
 				oDrag.style.top = iT + "px";
 				return false;
@@ -52,9 +57,10 @@ var windowDragComp = {
 			document.onmouseup = function (){
 				document.onmousemove = null;
 				document.onmouseup = null;
-				this.releaseCapture && this.releaseCapture();
+				oDrag.style.zIndex = '99999';
+				// this.releaseCapture && this.releaseCapture();
 			};
-			this.setCapture && this.setCapture();
+			// this.setCapture && this.setCapture();
 			return false;
 		};
 	}
