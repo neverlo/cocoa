@@ -29,8 +29,8 @@ var radioComp = {
 			radioDiv.appendChild(radioInput);
 			radioDiv.appendChild(tSpan);
 		}
-		CC(radioDiv).click(function(iObj){
-			var cObj = CC(iObj).getEventTarget();
+		T(radioDiv).click(function(iObj){
+			var cObj = T(iObj).getEventTarget();
 			var nodeName = cObj.nodeName;
 			if(nodeName === 'INPUT'){
 				defMap.value = cObj.attributes.value.value;

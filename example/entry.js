@@ -18,7 +18,7 @@ $(function(){
 	
 	var btnDatas = {"list":[{"value":"reset","text":"重置"},{"value":"send","text":"发送"}]}; 
 	var btn = buttonComp.init(btnDatas,'tempTarget-btn');
-	CC('demo').addComps([selectDiv,areaDiv,btn],btn,'send',sendBack);
+	T('demo').addComps([selectDiv,areaDiv,btn],btn,'send',sendBack);
 	function sendBack(sBack){
 		console.info(sBack);
 	}

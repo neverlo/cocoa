@@ -1,7 +1,7 @@
 // create a window can drag
 var windowDragComp = {
 	init : function(jsonDatas,wx,wy){
-		var parentE = CC().CDE('div');
+		var parentE = T().CDE('div');
 		// parentE.setAttribute('id',divId);
 		parentE.setAttribute('class','wdc-parent');
 		parentE.style.position = 'absolute';
@@ -9,23 +9,23 @@ var windowDragComp = {
 		parentE.style.top = jsonDatas.wy+'px';
 		parentE.style.width = '400px';
 		parentE.style.height = '100px';
-		var titleDiv = CC().CDE('div');
+		var titleDiv = T().CDE('div');
 		titleDiv.style.cursor = 'pointer';
 		titleDiv.setAttribute('class','wdc-dragTitle');
-		var titleSpan = CC().CDE('span');
+		var titleSpan = T().CDE('span');
 		titleSpan.innerHTML = jsonDatas.title;
 		titleDiv.appendChild(titleSpan);
-		var dragContentDiv = CC().CDE('div');
+		var dragContentDiv = T().CDE('div');
 		dragContentDiv.style.cursor = 'default';
 		parentE.appendChild(titleDiv);
 		parentE.appendChild(dragContentDiv);
 		document.body.appendChild(parentE);
-		this.parentE = CC(this.parentE).compRecord(jsonDatas.id,parentE);
+		this.parentE = T(this.parentE).compRecord(jsonDatas.id,parentE);
 		this.addDrag(titleDiv,parentE);
 	},
 	remove : function(){
 		if(this.parentE){
-			CC(this.parentE).remove();
+			T(this.parentE).remove();
 		}
 	},
 	addDrag : function(handle,oDrag){

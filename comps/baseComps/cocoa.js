@@ -1,29 +1,29 @@
 (function(){
-	var CC = window.CC = function(elem){
-		return CC.fn.init(elem);
+	var T = window.T = function(elem){
+		return T.fn.init(elem);
 	};
-	CC.fn = CC.prototype={
+	T.fn = T.prototype={
 		elem:"",
 		init:function(elem){this.elem=elem;return this;},
 		mousemove:function(callback){
 			this.coEvent('mousemove',callback);
-			return CC.fn;
+			return T.fn;
 		},
 		mousedown:function(callback){
 			this.coEvent('mousedown',callback);
-			return CC.fn;
+			return T.fn;
 		},
 		mouseup:function(callback){
 			this.coEvent('mouseup',callback);
-			return CC.fn;
+			return T.fn;
 		},
 		mouseout:function(callback){
 			this.coEvent('mouseout',callback);
-			return CC.fn;
+			return T.fn;
 		},
 		mouseover:function(callback){
 			this.coEvent('mouseover',callback);
-			return CC.fn;
+			return T.fn;
 		},
 		click:function(callback){
 			this.coEvent('click',callback);	
@@ -35,7 +35,7 @@
 				this.elem.attachEvent("on" + type, function(eObj){return callback(eObj);});
 		},
 		appendTo:function(parsedNode){
-			CC.fn.insertAdjacentElement(this.elem,'afterend',parsedNode);
+			T.fn.insertAdjacentElement(this.elem,'afterend',parsedNode);
 		},
 		insertTo : function(focusComp){
 			focusComp.attributes.mulComp = true;
@@ -49,7 +49,7 @@
 				tempList.push(this.elem);
 				focusComp.attributes.compList = tempList;
 			}
-			CC.fn.insertAdjacentElement(this.elem,'beforeend',focusComp);
+			T.fn.insertAdjacentElement(this.elem,'beforeend',focusComp);
 		},
 		remove : function(){
 			(this.elem).parentNode.removeChild(this.elem);
@@ -84,7 +84,7 @@
 		},
 		addComps : function(compsArr,submitComp,submitVal,callback){
 			var addObj = document.getElementById(this.elem);
-			var cDiv = CC().CDE('div');
+			var cDiv = T().CDE('div');
 			for(var key in compsArr){
 				compsArr[key].hidden = false;
 				cDiv.appendChild(compsArr[key]);
@@ -93,8 +93,8 @@
 			
 			if(submitComp){
 				var countComp = addObj.children[0].childNodes;
-				CC(submitComp).click(function(iObj){
-					var iObjVal = CC(iObj).getEventTarget().attributes.value.value;
+				T(submitComp).click(function(iObj){
+					var iObjVal = T(iObj).getEventTarget().attributes.value.value;
 					if(submitVal !== '' && submitVal !== null){
 						if(iObjVal === submitVal){
 							var dataMap = {};
@@ -167,7 +167,7 @@
 		},
 		getCompsDataById : function(submitComp,callback){
 			if(submitComp){
-				CC(submitComp).click(function(iObj){
+				T(submitComp).click(function(iObj){
 					var arrComps = [];
 					for(var iKey in this.elem){
 						if(typeof( document.getElementById(this.elem[iKey]).children[0]) !== 'undefined'){

@@ -7,30 +7,30 @@ var targetTrackComp = {
 			for(var key in rDatas){
 				trackmins.push(trackComp.init(rDatas[key]));
 			}
-			CC(focusDivId).addComps(trackmins);
+			T(focusDivId).addComps(trackmins);
 		}});
 	},
 	initMax : function(focusDivId){
-		CC().clearCompsById(['trackMax','tragetType','tragetKind','tragetChose']);
+		T().clearCompsById(['trackMax','tragetType','tragetKind','tragetChose']);
 		var typeDatas = {
 			"cite":"请选择类型",'id' : 'demageType',"defaultCheck" : "",
 			"list":[{ "value" : "1", "text" : "渠道"},{"value" : "2", "text" : "灾害"},
 			{"value" : "3", "text" : "内容"}]
 		};
 		var selectDiv = selectComp.init('100',typeDatas,typeBack);
-		CC('tragetType').addComps([selectDiv]);
+		T('tragetType').addComps([selectDiv]);
 		var btnDatas = {"list":[{"value":"sure","text":"确定"}]}; 
 		var tcbtn = buttonComp.init(btnDatas,'msgTrack-btn');
 		tcbtn.style.float = 'left';
-		CC('tragetChose').addComps([tcbtn]);
-		CC(['tragetType','tragetKind']).getCompsDataById(tcbtn,btonBack);
+		T('tragetChose').addComps([tcbtn]);
+		T(['tragetType','tragetKind']).getCompsDataById(tcbtn,btonBack);
 		
 		var spanE = document.createElement('span');
 		spanE.setAttribute('class','paddLR10 alarmColor');
 		spanE.style.float = 'left';
 		spanE.style.marginTop = '3px';
 		spanE.innerHTML = '';
-		CC(spanE).appendTo(tcbtn);
+		T(spanE).appendTo(tcbtn);
 		
 		function btonBack(rDatas){
 			var showMsg = '';
@@ -87,9 +87,9 @@ var targetTrackComp = {
 			var reqDatas = {"filter":reqText};
 			$.getJSON(url,reqDatas,function(reData){
 				tempDatas.list = reData;
-				CC().clearCompsById(['tragetKind']);
+				T().clearCompsById(['tragetKind']);
 				var kindSelect = selectComp.init('100',tempDatas);
-				CC('tragetKind').addComps([kindSelect]);
+				T('tragetKind').addComps([kindSelect]);
 			});
 		}
 		

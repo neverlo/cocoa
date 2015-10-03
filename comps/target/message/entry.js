@@ -8,7 +8,7 @@ function loadTargetMsg(){
 	var url = "http://127.0.0.1:8080/dss-data/gisInfo/gis-info!getTownListByGemotry.action?geomtry="+lastPolygonVertices;
 	$.ajax({type:"GET",url:url,success:function(rDatas){
 		areaDatas.list = rDatas;
-		CC().clearCompsById(['yjddDiv']);
+		T().clearCompsById(['yjddDiv']);
 		targetMsgComp.init('yjddDiv',['短信','大喇叭'],'其他',areaDatas);
 	}});
 }
@@ -19,18 +19,18 @@ function msgTrackEvent(){
 	$('#msgMaxClose').unbind();
 	$('#msgMinClose').unbind();
 	$('#msgMinMax').click(function(){
-		CC().clearCompsById(['trackMin']);
+		T().clearCompsById(['trackMin']);
 		$('#msgMin').hide();
 		$('#msgMax').show();
 		targetTrackComp.initMax('trackMax');
 	});
 	$('#msgMaxClose').click(function(){
-		CC().clearCompsById(['tragetType','tragetKind','tragetChose']);
+		T().clearCompsById(['tragetType','tragetKind','tragetChose']);
 		$('#msgMax').hide();
 		targetTrackComp.clearTrackInterval();
 	});
 	$('#msgMinClose').click(function(){
-		CC().clearCompsById(['trackMin']);
+		T().clearCompsById(['trackMin']);
 		$('#msgMin').hide();
 		targetTrackComp.clearTrackInterval();
 	});

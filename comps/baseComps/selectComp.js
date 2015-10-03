@@ -8,21 +8,21 @@
  * callBack:用户选择下拉框内容时触发的回调函数，返回当前选中项数据
  * ------example------
  * var selectDiv = selectComp.init('100',jsonDatas,callBack);
- * CC(focusId).addComps([selectDiv]);
+ * T(focusId).addComps([selectDiv]);
  * ps:focusId : 需要将组件添加到的div的id值
  */
 var selectComp = {
       init : function(divWidth,jsonDatas,callBack){
             var divNWidth = parseInt(divWidth) + 36;
             var ulWidth = parseInt(divWidth) + 34;
-            var divE = CC().CDE('div');
+            var divE = T().CDE('div');
             divE.style.width = divNWidth + 'px';
             divE.style.position = 'relative';
             divE.style.zIndex = '10000';
             divE.style.margin = '0';
             divE.style.padding = '0';
             divE.style.fontSize = '13px';
-            var citeE = CC().CDE('cite');
+            var citeE = T().CDE('cite');
             citeE.innerHTML = jsonDatas.cite;
             citeE.style.width = divWidth + 'px';
             citeE.style.height = '24px';
@@ -36,7 +36,7 @@ var selectComp = {
             citeE.style.border ='1px solid #333';
             citeE.style.overflowX = 'hidden';
             citeE.style.background = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAMCAMAAABcOc2zAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAJUExURXt7e3p6ev////MnDfwAAAADdFJOU///ANfKDUEAAAAiSURBVHjaYmBCAwzUEWCAACQVyHyIFgYGRjQzGCiyFiDAAI3WAWIk9jYnAAAAAElFTkSuQmCC) no-repeat right center';
-            var ulE = CC().CDE('ul');
+            var ulE = T().CDE('ul');
             ulE.style.maxHeight = '193px';
             ulE.style.overflowY = 'scroll';
             citeE.onclick = function(ce){
@@ -63,7 +63,7 @@ var selectComp = {
             var defaultValue = '';
             var defaultText = '';
             for(var key in listDatas){
-                  var liE = CC().CDE('li');
+                  var liE = T().CDE('li');
                   liE.style.height = '24px';
                   liE.style.lineHeight = '24px';
                   liE.style.listStyle = 'none';
@@ -71,7 +71,7 @@ var selectComp = {
                   liE.style.padding = '0px';
                   liE.style.fontSize = '13px';
                   liE.style.width = '100%';
-                  var liAE = CC().CDE('span');
+                  var liAE = T().CDE('span');
                   liAE.setAttribute('value',listDatas[key].value);
                   liAE.innerHTML = listDatas[key].text;
                   liAE.style.background = '#fff';
@@ -93,21 +93,21 @@ var selectComp = {
                         } 
                   }
             }
-            CC(ulE).mouseover(function(uObj){
-                  var targetObj = CC(uObj).getEventTarget();
+            T(ulE).mouseover(function(uObj){
+                  var targetObj = T(uObj).getEventTarget();
                   if(targetObj.nodeName === 'SPAN'){
                         targetObj.style.background = '#ccc';
                   }
             }).mouseout(function(uObj){
-                  var targetObj = CC(uObj).getEventTarget();
+                  var targetObj = T(uObj).getEventTarget();
                   if(targetObj.nodeName === 'SPAN'){
                         targetObj.style.background = '#fff';
                   }
             }).click(function(uObj){
-                  var nodeName = CC(uObj).getEventTarget().nodeName;
+                  var nodeName = T(uObj).getEventTarget().nodeName;
                   if(nodeName === 'SPAN'){
                         ulE.style.display = 'none';
-                        var aValue = CC(uObj.target).CAT().value.value;
+                        var aValue = T(uObj.target).CAT().value.value;
                         var aText = uObj.target.innerHTML;
                         citeE.innerHTML = aText;
                         var rDatas = {
@@ -118,7 +118,7 @@ var selectComp = {
                         nObj.id = jsonDatas.id;
                         nObj.value = aValue;
                         nObj.text = aText;
-                        CC(divE).CAT().tempdatas = CC(CC(divE).CAT().tempdatas).compRecord('select'+jsonDatas.id,nObj);
+                        T(divE).CAT().tempdatas = T(T(divE).CAT().tempdatas).compRecord('select'+jsonDatas.id,nObj);
                         if(callBack){
                               return callBack(rDatas);
                         }
@@ -132,11 +132,11 @@ var selectComp = {
             divE.appendChild(citeE);
             divE.appendChild(ulE);
             if(typeof(jsonDatas.title) !== 'undefined'){
-                  var titDiv = CC().CDE('div');
-                  CC(titDiv).setClass('marTpad');
+                  var titDiv = T().CDE('div');
+                  T(titDiv).setClass('marTpad');
                   titDiv.style.display = 'inline-block';
-                  var labelE = CC().CDE('label');
-                  CC(labelE).setClass('marR10');
+                  var labelE = T().CDE('label');
+                  T(labelE).setClass('marR10');
                   labelE.style.float = 'left';
                   labelE.innerHTML = jsonDatas.title;
                   divE.style.float = 'left';
@@ -146,7 +146,7 @@ var selectComp = {
             }else{
                   divE.style.float = 'left';
             }
-            CC(divE).CAT().tempdatas = CC(CC(divE).CAT().tempdatas).compRecord(mapId,initObj);
+            T(divE).CAT().tempdatas = T(T(divE).CAT().tempdatas).compRecord(mapId,initObj);
             return divE;
       }
 };
