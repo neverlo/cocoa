@@ -1,5 +1,6 @@
 //just use to test the comps code
 $(function(){
+	console.profile('加载性能测试');
 	// 加载下拉框
 	var selectDatas = {"title":"灾害类型：","cite":"请选择类型",'id' : 'province',"defaultCheck" : "",
 		"list":[{"text":"广东省","value":"1"},
@@ -149,4 +150,5 @@ $(function(){
 			sLArrB.push(liE);
 		}
 	scroolLoadComp.init('autoLoadB',sLArrB,15);
+	console.profileEnd();
 });

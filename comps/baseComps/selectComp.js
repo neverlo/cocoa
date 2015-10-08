@@ -62,6 +62,7 @@ var selectComp = {
             var listDatas = jsonDatas.list;
             var defaultValue = '';
             var defaultText = '';
+            var tempUlE = document.createDocumentFragment();
             for(var key in listDatas){
                   var liE = T().CDE('li');
                   liE.style.height = '24px';
@@ -82,7 +83,7 @@ var selectComp = {
                   liAE.style.paddingLeft = '10px';
                   liAE.style.paddingRight = '10px';
                   liE.appendChild(liAE);
-                  ulE.appendChild(liE);
+                  tempUlE.appendChild(liE);
                   if(typeof(jsonDatas.defaultCheck) !== 'undefined'){
                         if(jsonDatas.defaultCheck !== ''){
                               if(jsonDatas.defaultCheck === listDatas[key].value){
@@ -93,6 +94,7 @@ var selectComp = {
                         } 
                   }
             }
+             ulE.appendChild(tempUlE);
             T(ulE).mouseover(function(uObj){
                   var targetObj = T(uObj).getEventTarget();
                   if(targetObj.nodeName === 'SPAN'){

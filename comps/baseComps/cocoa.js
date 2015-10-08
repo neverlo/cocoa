@@ -70,8 +70,9 @@
 			}
 		},
 		getEventTarget : function(){
-			this.elem = this.elem  ? this.elem  : window.this.elem;
-			return this.elem.srcElement ? this.elem.srcElement : this.elem.target;
+			var tempEle = this.elem;
+			tempEle = tempEle  ? tempEle  : window.tempEle;
+			return tempEle.srcElement ? tempEle.srcElement : tempEle.target;
 		},
 		CDE:function(etype){
 			return document.createElement(etype);
@@ -85,10 +86,13 @@
 		addComps : function(compsArr,submitComp,submitVal,callback){
 			var addObj = document.getElementById(this.elem);
 			var cDiv = T().CDE('div');
+			var tempDE = document.createDocumentFragment();
 			for(var key in compsArr){
 				compsArr[key].hidden = false;
-				cDiv.appendChild(compsArr[key]);
+				// cDiv.appendChild(compsArr[key]);
+				tempDE.appendChild(compsArr[key]);
 			}
+			cDiv.appendChild(tempDE);
 			addObj.appendChild(cDiv);
 			
 			if(submitComp){
@@ -102,7 +106,6 @@
 								if(countComp[key] !== submitComp && key !== 'length' && key !== 'item'){
 									if(typeof(countComp[key].attributes)!=='undefined'){
 										if(typeof(countComp[key].attributes.mulComp) !== 'undefined'){
-											console.info(countComp[key]);
 											var cList = countComp[key].attributes.compList;
 											for(var tKey in cList){
 												var tempDatas = cList[tKey].attributes.tempdatas;
@@ -166,12 +169,13 @@
 			}
 		},
 		getCompsDataById : function(submitComp,callback){
+			var idList = this.elem;
 			if(submitComp){
 				T(submitComp).click(function(iObj){
 					var arrComps = [];
-					for(var iKey in this.elem){
-						if(typeof( document.getElementById(this.elem[iKey]).children[0]) !== 'undefined'){
-							var curComps = document.getElementById(this.elem[iKey]).children[0].childNodes[0];
+					for(var iKey in idList){
+						if(typeof( document.getElementById(idList[iKey]).children[0]) !== 'undefined'){
+							var curComps = document.getElementById(idList[iKey]).children[0].childNodes[0];
 							arrComps.push(curComps);
 						}
 					}
@@ -185,16 +189,18 @@
 						}
 					}
 					if(callback){
-						callback(dataMap);
+						return callback(dataMap);
 					}
 				});
 			}
 		},
 		autoLoad : function(arrComps,loadLine,totalLine,ulE){//滚动条按需加载
 			totalLine = totalLine < loadLine ? loadLine : totalLine;//防止总数少于每次加载数
+			var firDE = document.createDocumentFragment();
 			for(var i=0;i<loadLine;i++){
-				ulE.appendChild(arrComps[i]);
+				firDE.appendChild(arrComps[i]);
 			}
+			ulE.appendChild(firDE);
 			this.elem.appendChild(ulE);
 			var firIndex = loadLine;
 			var loadBoolen = true;
@@ -205,18 +211,20 @@
 				var totalH = sObj.scrollHeight;//总高度
 				if(pdivH+scTop >= totalH){
 					if(loadBoolen){
+						var tempDE = document.createDocumentFragment();
 						var lastIndex = firIndex+loadLine;
 						if(lastIndex > totalLine){
 							lastIndex = totalLine;
 							loadBoolen = false;
 						}
 						for(var i = firIndex; i<lastIndex;i++){
-							ulE.appendChild(arrComps[i]);
+							tempDE.appendChild(arrComps[i]);
 						}
+						ulE.appendChild(tempDE);
 						firIndex += loadLine;
 					}
 				}
-			}
+			};
 		}
 	};
 })(Window);

@@ -8,4 +8,4 @@ var scroolLoadComp = {
 		T(parentDiv).autoLoad(arrComps,loadLine,arrComps.length,ulE);
 		T(divId).addComps([parentDiv]);
 	}
-}
+};
