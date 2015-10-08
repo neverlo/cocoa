@@ -93,9 +93,12 @@
 				// cDiv.appendChild(compsArr[key]);
 				tempDE.appendChild(compsArr[key]);
 			}
-			cDiv.appendChild(tempDE);
-			addObj.appendChild(cDiv);
-			
+			if(compsArr.length > 1){
+				cDiv.appendChild(tempDE);
+				addObj.appendChild(cDiv);
+			}else{
+				addObj.appendChild(tempDE);
+			}
 			if(submitComp){
 				var countComp = addObj.children[0].childNodes;
 				T(submitComp).click(function(iObj){

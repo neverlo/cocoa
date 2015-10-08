@@ -381,6 +381,36 @@ div.inforTracking-big .inforTracking-con{
 	background:#7CB7EA;
 }
 
+/*infoCountComp*/
+.infoCount{
+	height:auto;
+	clear:both;
+	overflow:hidden;
+	width:100%;
+	margin:auto;
+}
+.infoCC-box{
+	display: inline-block;
+    width: 480px;
+    vertical-align: top;
+}
+.infoCC-lable{
+	display: inline-block;
+    line-height: 25px;
+    margin-top: 3px;
+}
+.infoCC-ul{
+	height:auto;
+	overflow:hidden;
+	width:auto;
+  	margin-top: 7px;
+}
+.infoCC-ul-li{
+	float:left;
+	list-style:none;
+	margin-right:20px;
+	margin-bottom:3px;
+}
 
 
 
