@@ -1,3 +1,4 @@
+// 共用的方法
 (function(){
 	var T = window.T = function(elem){
 		return T.fn.init(elem);
