@@ -99,10 +99,41 @@ $(function(){
 	
 	var searchDatas = {"tab":[{"title":"POI","value":"poi","warn":"请输入POI名称"},
 		{"title":"观测站","value":"site","warn":"请输入站点编号或名称"},
-		{"title":"经纬度","value":"lonlat","warn":"请输入经纬度值"}],"defaultSelect":"POI","button":"搜索"};
+		{"title":"经纬度","value":"lonlat","warn":"请输入经纬度值，如：123.54;23.0...以;号分隔","erroe":"经纬度数据格式错误"}],"defaultSelect":"POI","button":"搜索"};
 	var searchComp = searchBarComp.init(searchDatas,searchBack);
 	T('searchBar').addComps([searchComp]);
 	function searchBack(rDatas){
-		console.info(rDatas);
+		var showInfo = '';
+		var status = true;
+		if(rDatas.type === 'lonlat'){
+			var item = searchBarComp.getSearchItem();
+			if((rDatas.value).indexOf(';') === -1){
+				showInfo = '格式错误，缺少\";\"号';
+			}else{
+				var lonlat = (rDatas.value).split(';');
+				if(lonlat.length === 2){
+					if(lonlat[0] !== '' && lonlat[1] !== ''){
+						if(isNaN(lonlat[0]) || isNaN(lonlat[1])){
+							showInfo = '格式错误，经纬度必须为数字';
+						}else if(lonlat[0]>180 || lonlat[0]<-180){
+							showInfo = '格式错误，经度不正确';
+						}else if(lonlat[1]>90 || lonlat[1]<-90){
+							showInfo = '格式错误，纬度不正确';
+						}else{
+							status = false;
+							console.info(lonlat);
+						}
+					}else{
+						showInfo = '格式错误，经纬度不正确';
+					}
+				}else{
+					showInfo = '格式错误，经纬度不正确';
+				}
+			}
+			item.span.innerHTML = showInfo;
+			if(status){
+				item.input.value = '';
+			}
+		}
 	}
 });

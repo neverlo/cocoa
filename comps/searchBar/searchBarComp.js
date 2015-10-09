@@ -19,6 +19,7 @@ var searchBarComp = {
 			if(tabTil === defaulTitle){//是否选中
 				tabLi.setAttribute('class','selected');
 				searchBarComp.defaultWarn = tabList[key].warn;
+				searchBarComp.searchType = tabList[key].value;
 			}
 			tempUl.appendChild(tabLi);
 		}
@@ -29,7 +30,7 @@ var searchBarComp = {
 		var serchDiv = document.createElement('div');
 		serchDiv.setAttribute('id','search-hd');
 		serchDiv.setAttribute('class','search-hd');
-		var searchSpan = this.createSearchBox(serchDiv);
+		var searchItem = this.createSearchBox(serchDiv);
 		
 		var searchButton = document.createElement('button');
 		searchButton.setAttribute('class','btn-search');
@@ -46,31 +47,35 @@ var searchBarComp = {
 				}
 			}
 			if(tabDatas.nodeName === 'LI'){
+				searchBarComp.searchContent = '';//清空上一次输入的结果
 				tabDatas.setAttribute('class','selected');//选中
 				var currentTab = tabDatas.getAttribute('value');
+				searchItem.input.value = '';
 				for(var key in tabList){
 					var tkTitle = tabList[key].title;
 					if(tkTitle === currentTab){
 						var newWarn = tabList[key].warn;
 						searchBarComp.defaultWarn = newWarn;
 						searchBarComp.searchType = tabList[key].value;
-						searchSpan.innerHTML = newWarn;
+						searchItem.span.innerHTML = newWarn;
 					}
 				}   
 			}
-		}
+		};
 		
 		//搜索按钮事件
 		searchButton.onclick = function(){
 			if(callback){
 				if(searchBarComp.searchContent !== ''){
-					var searchDatas = {};
-					searchDatas['type'] = searchBarComp.searchType;
-					searchDatas['value'] = searchBarComp.searchContent;
-					return callback(searchDatas);
+					if(typeof( searchBarComp.searchContent) !== 'undefined'){
+						var searchDatas = {};
+						searchDatas.type = searchBarComp.searchType;
+						searchDatas.value = searchBarComp.searchContent;
+						return callback(searchDatas);
+					}
 				}
 			}
-		}
+		};
 		
 		serchDiv.appendChild(searchButton);
 		
@@ -96,10 +101,18 @@ var searchBarComp = {
 			}else{
 				searchSpan.innerHTML = searchBarComp.defaultWarn;
 			}
-		}
+		};
 		serchDiv.appendChild(bgDiv);
 		serchDiv.appendChild(searchInput);
 		serchDiv.appendChild(searchSpan);
-		return searchSpan;
+		var searchItem = {};
+		searchItem.input = searchInput;
+		searchItem.span = searchSpan;
+		searchBarComp.input = searchInput;
+		searchBarComp.span = searchSpan;
+		return searchItem;
+	},
+	getSearchItem : function(){
+		return searchBarComp;
 	}
 };
