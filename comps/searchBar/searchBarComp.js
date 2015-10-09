@@ -1,7 +1,8 @@
 //带选项卡的搜索栏
 var searchBarComp = {
-	init : function(jsonDatas,callback){
+	init : function(jsonDatas,callback,hideBack){
 		var parentDiv = document.createElement('div');
+		this.bar = parentDiv;
 		parentDiv.setAttribute('class','lanren-search-form');
 		//选项卡部分
 		var tabDiv = document.createElement('div');
@@ -37,6 +38,23 @@ var searchBarComp = {
 		searchButton.setAttribute('varlue',jsonDatas.button);
 		searchButton.innerHTML = jsonDatas.button;
 		
+		var backButton = null;
+		if(typeof(jsonDatas.backButton) !== 'undefined'){
+			backButton = document.createElement('button');
+			backButton.setAttribute('class','btn-back');
+			backButton.setAttribute('varlue',jsonDatas.backButton);
+			backButton.innerHTML = jsonDatas.backButton;
+			backButton.onclick = function(){
+				T(backButton).remove();
+				parentDiv.style.width = '575px';
+				searchButton.style.width = '70px';
+				searchButton.style.right = '3px';
+				if(hideBack){
+					hideBack();
+				}
+			}
+		}
+		
 		tabUl.onclick = function(tabDatas){//选项切换
 			tabDatas = T(tabDatas).getEventTarget();
 			var tabLiList = tabUl.childNodes;
@@ -66,6 +84,12 @@ var searchBarComp = {
 		//搜索按钮事件
 		searchButton.onclick = function(){
 			if(callback){
+				if(backButton){
+					parentDiv.style.width = '600px';
+					searchButton.style.width = '45px';
+					searchButton.style.right = '50px';
+					serchDiv.appendChild(backButton);
+				}
 				if(searchBarComp.searchContent !== ''){
 					if(typeof( searchBarComp.searchContent) !== 'undefined'){
 						var searchDatas = {};
@@ -114,5 +138,10 @@ var searchBarComp = {
 	},
 	getSearchItem : function(){
 		return searchBarComp;
+	},
+	close : function(){
+		if(typeof(this.bar) !== 'undefined'){
+			T(this.bar).remove();
+		}
 	}
 };
