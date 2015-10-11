@@ -84,6 +84,15 @@
 		CAT:function(){
 			return this.elem.attributes;
 		},
+		groupComps:function(compsArr){//将多个组件组合
+			var DivE = document.createElement('div');
+			var tempDivE = document.createDocumentFragment();
+			for(var key in compsArr){
+				tempDivE.appendChild(compsArr[key]);
+			}
+			DivE.appendChild(tempDivE);
+			return DivE;
+		},
 		addComps : function(compsArr,submitComp,submitVal,callback){
 			var addObj = document.getElementById(this.elem);
 			var cDiv = T().CDE('div');
@@ -202,7 +211,12 @@
 			totalLine = totalLine < loadLine ? loadLine : totalLine;//防止总数少于每次加载数
 			var firDE = document.createDocumentFragment();
 			for(var i=0;i<loadLine;i++){
-				firDE.appendChild(arrComps[i]);
+				if(typeof(arrComps[i]) !== 'undefined'){
+					firDE.appendChild(arrComps[i]);
+					if(i % 2 !== 0){
+						arrComps[i].style.background = '#fff';
+					}
+				}
 			}
 			ulE.appendChild(firDE);
 			this.elem.appendChild(ulE);
@@ -223,6 +237,9 @@
 						}
 						for(var i = firIndex; i<lastIndex;i++){
 							tempDE.appendChild(arrComps[i]);
+							if(i % 2 !== 0){
+								arrComps[i].style.background = '#fff';
+							}
 						}
 						ulE.appendChild(tempDE);
 						firIndex += loadLine;

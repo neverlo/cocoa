@@ -145,4 +145,6 @@ $(function(){
 	function hideBack(){
 		console.info('hide');
 	}
+	
+	initToolBar('阳江市');
 });

@@ -4,6 +4,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>div模拟下拉菜单jquery插件 - 懒人建站</title>
     <link rel="stylesheet" type="text/css" href="../min/cocoa.min.css"/>
+    <style>
+        
+    </style>
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="../min/cocoa.min.js"></script>
     <script type="text/javascript" src="entry.js"></script>
@@ -26,6 +29,82 @@
     </div>
     <div id="searchBar"></div>
     
+    <!--<div style="width: 326px; height: 30px;">
+        <div class="cityBar">
+            <span>阳江市<span>
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAHCAYAAADTcMcaAAAAWklEQVR4AWNQ0DD+CMT/gfggAx4Akoeq+wgT+A4VmIJDwxSo/HdkQV0g/guVKEfTUA4Sh8rrQkQxNf4DsZHE/qFrQNcYgmRqCJLtIRiKcTjnH6ZzCWv8jUsDAExWM9Gq2hrlAAAAAElFTkSuQmCC" />
+            <div class="citySelect"></div>
+            <div class="caseShow">
+                <div>
+                    <ul>
+                        <li>
+                            <span style="width:12%">序号</span>
+                            <span style="width:24%">预案编码</span>
+                            <span style="width:63%">预案名称</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="toolBar">
+            <ul>
+                <li><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAABcElEQVR4AZWSA2ylURSE10awthmsbcRatI0aq3Ea1G6MRi+obdu2bdu2Ts88/ihPMj/ufHO9T1iXXSoPsPRZ0axB1or6HY12+EJeGLzMyr3t00CG2SNkkDtJn1In6X3yOD2P6ie0wwcnDR5nVT8N7SJF0zw5Nc7R57QpmeCDAy8M2zwIaCWjkhlyb5un90ljdMe3ia66VeNN7/gfYQgceGG46U38CBmXz9L39CkONAIwZ53C+7ZPozb8Jn6YwAvDq1ifBuARARxRe6euuFZpPebgrQnDPe8SR7XAXd8mzcgn8cZMNB5z8HqFYcWTkE4tgDXfVa8Z7/eCNYMDLwxf46kNv4obArCl3iSMEHNjzF+RHtfva+41q8JRhPrA533Ds3adub9bXRRTXAbh5kH4v+2tvCSO4LYK72eFPQhsFYXv+TUj6At/33bFwAlWgWYDHwW1I5imObodi8GzrOq7fk0IVuF/314KO8pKYJ3fitkALc6Dqqd/prcAAAAASUVORK5CYII="/></div></li>
+                <li><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAA10lEQVR42s3SMQsBYRzHcYNE1BkMN0jehM3uFVi4xSA2i0VkkRLKorwGk9F2k80iZcFCWcRwIZvzHZ7h6d9zm8FTn7q7b7+urgv9z3E2fhZbeCiLZmONJ2qm8Qi+chatozXPNC7CVxaiFfBRzTWNk7jihLhoMVxQh2Uad9HCCnnRGhgEfawEjkiigrnWItjDDho30VfXcdyRVvdVTIOGURyQ0p7N0EMYO2TkyIKDMSai5XDDDEvTG134SsnQPa0XZXxpsS22sg9lrOGNLeyAP+6hejb0q/MFHusAONrezFEAAAAASUVORK5CYII=" /></div></li>
+                <li><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAASklEQVR4AWOgGMRc+P8ViP+TiJ/ANN8B4r3ohsIUYhG/BMTrYJxjQGxKguZqIC6HcYxBNAmaJYBYFi5AWDMmGLqaRzUTStMM1AIASf+oWxkgWrEAAAAASUVORK5CYII=" /></div></li>
+                <li><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAaklEQVR4AWOgGYi58P8/LkyRARS5gFiNMUD8B1MzYY0JMI3oBhDSmArEf5E0xiJ7AZ/GTCD+B1IEpRPRwwCXxlw0jSnEBk4xWBNCYxaxGsvRQjSfWI01aBqLSEkEDUgaK2DipBpQx0AvAADQsNM8Yuz3HgAAAABJRU5ErkJggg==" /></div></li>
+                <li><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAmklEQVR4AWOgOoi58J8RiDuAeCsQq5CikRmI5wLxfyj+CcTtQMxDSCMnEG8Ea8LEz4A4EuQqbBoFgPgASCEBfASIDZE1SgDxBZAkkfgFsubzIEES8BZkzZNI1FyPrFkFiP+SoNkTPcA2kKBZFF2zA5Ea7+KK53NEaF6JS3McEZqLYOpZ0PSvAOJGKPsJFD8H4kcgGsq/TJUMBABfU4nUIZMyzQAAAABJRU5ErkJggg==" /></div></li>
+                <li><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAu0lEQVR4Ac3MoQrCYBhG4QUFm0sKljWD2MQqVq/AaJUFgzdhsNpkQRDEbBJhRcSmCM4LELNgcTpQPeEPQ96ZN3hg3w7vrPQ87vFTxRR2Qm9hlDTe4govoZ8wV8FBhDbuolfwQEmNfSzN+w3uT1/BV8MiIjjm9nCO9bzpZTVeYBO7C3ijbu4JDmpoq79yB1gjixBNNZ5hJ7538MIQFzXM4Ykap+qh6V0VxwjMqfoeETIqDtD4M+6hb6Xq+QJq9rw22/ol4AAAAABJRU5ErkJggg==" /></div></li>
+            </ul>
+        </div>
+        <div class="toolBar">
+            <ul>
+                <li><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAVUlEQVR4AWMAAb9t3/4TwuuvvwfjlhOfYhiggGTNk899vEq25tXX3v9rPP5JnFTNcNx9+tMSsjXPv/jhK4rmvY9/YcM4DUPRTCoebDYTxsPFZvprBgBg6FjHgmEKkAAAAABJRU5ErkJggg==" /></div></li>
+            </ul>
+        </div>
+        <div class="toolBar">
+            <ul>
+                <li><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAnUlEQVR4AWOgOZh2P6oeiHPI0ZgDxP+huJ4UjdFA/A+sEYEnAzEjIY1+QPwbrAETR+LT6ADEX3FonIWwGVOjIRB/wKFxDRAz49KoAsSvcGjcC8RsuDTKAPFjHBpPADEXLo3cQHwNh8ZLQCxMKHSLsETLXZCL8GtEKE4E4j9Q9ktQGBBMDGi2BUA16hKXkjD9yYMQx8TompdhGklYMwBiAQ1E1n946wAAAABJRU5ErkJggg==" /></div></li>
+                <li><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAO0lEQVR4AWMo6jz7nxTMgAxAAqRiqD5GuGYkQLQBZGhGYMo1o2P6ayYCYNVMtF+BALdmPICgZgJ41GYAyb+iHtR8EtgAAAAASUVORK5CYII=" /></div></li>
+            </ul>
+        </div>
+        
+        <div class="styleChange">
+            <div class="sizeSelect">
+                <ul>
+                    <li style="margin-top:8px;"><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAAHUlEQVR4AWNgqzrfCsSfQTSI8xOI/4MEYDJfQDQAYOgSrnnXsTEAAAAASUVORK5CYII="/></div></li>
+                    <li style="margin-top:8px;"><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAJUlEQVR42mNgqzrvCcTPoNiTAcr4D8XP0AWegwS8QAwgfgJiAwBWjyFDK4AINwAAAABJRU5ErkJggg==" /></div></li>
+                    <li style="margin-top:6px;"><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAPUlEQVR4AWMAAbaq82FAfAWIf0LpMJhECBD/R8dgBSCVOCSvgCR/4pD8SVBnKA7JcJijwoH4GhD/AtEwCQA3nWEED/iRXQAAAABJRU5ErkJggg==" /></div></li>
+                </ul>
+            </div>
+            <div class="colorList">
+                <div class="bigColor">
+                    <div></div>
+                </div>
+                <div class="colorSelect">
+                    <ul>
+                        <li><div style="background-color:#000000;"></div></li>
+                        <li><div style="background-color:#6f706b;"></div></li>
+                        <li><div style="background-color:#6f180e;"></div></li>
+                        <li><div style="background-color:#f28837;"></div></li>
+                        <li><div style="background-color:#266d28;"></div></li>
+                        <li><div style="background-color:#0e37b8;"></div></li>
+                        <li><div style="background-color:#6d0b62;"></div></li>
+                        <li><div style="background-color:#13807f;"></div></li>
+                    </ul>
+                    <ul>
+                        <li><div style="background-color:#ffffff;"></div></li>
+                        <li><div style="background-color:#b3b5ae;"></div></li>
+                        <li><div style="background-color:#ed3f2b;"></div></li>
+                        <li><div style="background-color:#968c0b;"></div></li>
+                        <li><div style="background-color:#96c130;"></div></li>
+                        <li><div style="background-color:#0a78c8;"></div></li>
+                        <li><div style="background-color:#d523c8;"></div></li>
+                        <li><div style="background-color:#1ac1ca;"></div></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>-->
     <div id="autoLoadA"></div>
     <div id="autoLoadB"></div>
       <div id="tempTarget"> 

@@ -12,7 +12,7 @@
  * ps:focusId : 需要将组件添加到的div的id值
  */
 var selectComp = {
-      init : function(divWidth,jsonDatas,callBack){
+      init : function(divWidth,divHeight,jsonDatas,callBack){
             var divNWidth = parseInt(divWidth) + 36;
             var ulWidth = parseInt(divWidth) + 34;
             var divE = T().CDE('div');
@@ -25,8 +25,8 @@ var selectComp = {
             var citeE = T().CDE('cite');
             citeE.innerHTML = jsonDatas.cite;
             citeE.style.width = divWidth + 'px';
-            citeE.style.height = '24px';
-            citeE.style.lineHeight = '24px';
+            citeE.style.height = divHeight+'px';
+            citeE.style.lineHeight = divHeight+'px';
             citeE.style.display = 'block';
             citeE.style.color = '#807a62';
             citeE.style.cursor = 'pointer';
@@ -65,8 +65,8 @@ var selectComp = {
             var tempUlE = document.createDocumentFragment();
             for(var key in listDatas){
                   var liE = T().CDE('li');
-                  liE.style.height = '24px';
-                  liE.style.lineHeight = '24px';
+                  liE.style.height = divHeight+'px';
+                  liE.style.lineHeight = divHeight+'px';
                   liE.style.listStyle = 'none';
                   liE.style.margin = '0px';
                   liE.style.padding = '0px';
@@ -77,7 +77,7 @@ var selectComp = {
                   liAE.innerHTML = listDatas[key].text;
                   liAE.style.background = '#fff';
                   liAE.style.display = 'block';
-                  liAE.style.height = '24px';
+                  liAE.style.height = divHeight+'px';
                   liAE.style.color = '#333';
                   liAE.style.textDecoration = 'none';
                   liAE.style.paddingLeft = '10px';

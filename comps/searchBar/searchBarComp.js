@@ -52,7 +52,7 @@ var searchBarComp = {
 				if(hideBack){
 					hideBack();
 				}
-			}
+			};
 		}
 		
 		tabUl.onclick = function(tabDatas){//选项切换

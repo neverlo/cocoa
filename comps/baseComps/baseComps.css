@@ -12,4 +12,4 @@
 }
 
 /*scrollLoadComp*/
-.wlc-parent{border:1px solid #000;background:#eee;width:200px;height:200px;scroll-y:auto;overflow-x:hidden;}
+.wlc-parent{background:#eee;width:100%;height: auto;min-height: 150px;max-height: 150px;scroll-y:auto;overflow-x:hidden;}
