@@ -3,7 +3,7 @@ function initToolBar(cityName){
 	var drawCom = drawComp.init(['dynamicLine','marker','text','arrow','polygon','staticLine'],drawEvent);
 	var docCom = docComp.init(['document'],drawEvent);
 	var controlCom = controlComp.init(['edit','save'],drawEvent);
-	var colorCom = colorComp.init();
+	var colorCom = colorComp.init(colorBack);
 	colorCom.setAttribute('class','toolBarColor');
 	colorCom.style.display = 'none';
 	var allDrawComp = T().groupComps([cityCom,drawCom,docCom,controlCom]);
@@ -11,14 +11,21 @@ function initToolBar(cityName){
 	allDrawComp.setAttribute('class','toolBarDiv');
 	(document.body).appendChild(resultComp);
 	function drawEvent(bDatas){
-		console.info(bDatas);
-		var status = 'none';
-		if(bDatas.status === 'selected'){
-			status = 'block';
+		console.info(bDatas);//点击工具类型
+		if(bDatas.value !== 'document' && bDatas.value !== 'edit' &&bDatas.value !== 'save'){
+			//控制色板
+			var status = 'none';
+			if(bDatas.status === 'selected'){
+				status = 'block';
+			}
+			colorCom.style.display = status;
+			console.info(colorComp.getResultJson());//工具初始状态
 		}
-		colorCom.style.display = status;
 	}
 	
+	function colorBack(coDatas){
+		console.info(coDatas);
+	}
 	var caseDiv = null;
 	function addCaseName(scrollBack){
 		var caseDatas = {"cite":"请选择预案",'id' : 'case','defaultCheck':'1',
