@@ -1,6 +1,6 @@
 function initToolBar(cityName){
 	var cityCom = cityComp.init(cityName,addCaseName);
-	var drawCom = drawComp.init(['dynamicLine','marker','text','arrow','polygon','staticLine'],drawEvent);
+	var drawCom = drawComp.init(['marker','dynamicLine','text','arrow','polygon','staticLine'],drawEvent);
 	var docCom = docComp.init(['document'],drawEvent);
 	var controlCom = controlComp.init(['edit','save'],drawEvent);
 	var colorCom = colorComp.init(colorBack);
