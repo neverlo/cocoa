@@ -3,11 +3,12 @@ var cityComp={
 		var divE = document.createElement('div');
 		divE.setAttribute('class','cityBar');
 		var spanE = document.createElement('span');
-		spanE.innerHTML = cityName;
+		spanE.innerHTML = cityName.name;
 		spanE.style.color = '#fff';
 		var imgE = document.createElement('img');
 		imgE.style.cursor = 'pointer';
 		imgE.setAttribute('status','');
+		imgE.setAttribute('code',cityName.code);
 		imgE.setAttribute('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAHCAYAAADTcMcaAAAAWklEQVR4AWNQ0DD+CMT/gfggAx4Akoeq+wgT+A4VmIJDwxSo/HdkQV0g/guVKEfTUA4Sh8rrQkQxNf4DsZHE/qFrQNcYgmRqCJLtIRiKcTjnH6ZzCWv8jUsDAExWM9Gq2hrlAAAAAElFTkSuQmCC');
 		imgE.onclick = function(){
 			var status = '';
@@ -17,6 +18,8 @@ var cityComp={
 				status = 'selected';
 				logo = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAHCAYAAADTcMcaAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACiSURBVChTY2bAAhQ0jMsFRKQOAPGvD2+eH4UKwwGGJpAGINUBxIxA7ArU+ANdIxOUBgOghhAgBdLwD4jDoHQHVBwO4JqAErpAaiUQ/wdigwc3zq4B0VD+Sqg8GIA1QQUuQPmVQA2XQeJQuhIqfgGmEWbTKSAGsacCFXaCRaAAyp8KxCB5kDoGRqDuj0CaD4gPARXYgwSxAaC6g0DKjoGB4RMAyr41T/QiwF4AAAAASUVORK5CYII=';
 				cityDivStatus = 'block';
+				//展开才输出当前地区编码
+				console.info(imgE.getAttribute('code'));
 			}
 			cityDiv.style.display = cityDivStatus;
 			caseDiv.style.display = cityDivStatus;
@@ -47,9 +50,14 @@ var cityComp={
 			if(townComp){
 				T(townComp).remove();
 			}
-			townComp = selectComp.init('86','34',selectTownDatas);
+			townComp = selectComp.init('86','34',selectTownDatas,changeCountry);
 			cityDiv.appendChild(townComp);
 		}
+		//选择镇事件
+		function changeCountry(coBack){
+			console.info(coBack);
+		}
+		
 		var caseDiv = document.createElement('div');
 		caseDiv.style.display = 'none';
 		caseDiv.setAttribute('class','caseShow');

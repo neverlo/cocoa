@@ -1,6 +1,7 @@
 function initToolBar(cityName){
 	var currentCaseId = '';//记录当前的预案ID
-	var cityCom = cityComp.init(cityName,addCaseName);
+	var cityInfo = {"name":"阳江市","code":"440117"};
+	var cityCom = cityComp.init(cityInfo,addCaseName);
 	var drawCom = drawComp.init(['marker','dynamicLine','text','arrow','polygon','staticLine'],drawEvent);
 	var docCom = docComp.init(['document'],drawEvent);
 	var controlCom = controlComp.init(['edit','save'],drawEvent);
