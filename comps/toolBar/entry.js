@@ -18,7 +18,10 @@ function initToolBar(cityName){
 	function drawEvent(bDatas){
 		var drawType = bDatas.value;
 		console.info(bDatas);//点击工具类型
+		console.info(mapComp.getDrawLayer());
+		
 		if(bDatas.value !== 'document' && bDatas.value !== 'add' && bDatas.value !== 'save' && bDatas.value !== 'delete' && bDatas.value !== 'undo'){
+			mapComp.clearHander();
 			//控制色板
 			var status = 'none';
 			var docListLeft = '245px';
@@ -28,9 +31,9 @@ function initToolBar(cityName){
 				var initDatas = colorComp.getResultJson();
 				if(drawType === 'polygon'){
 					mapComp.drawPolygon(initDatas.size,initDatas.color);
+				}else if(drawType === 'dynamicLine'){
+					mapComp.drawDynamicPath(initDatas.size,initDatas.color);
 				}
-			}else{
-				mapComp.clearHander();
 			}
 			documentList.style.marginLeft = docListLeft;
 			colorCom.style.display = status;
@@ -46,6 +49,8 @@ function initToolBar(cityName){
 			//当前的预案ID
 			console.info(currentCaseId);
 			// documentList.style.marginLeft = docListLeft;
+		}else if(bDatas.value === 'undo'){
+			mapComp.removeLasFeature();
 		}
 	}
 	

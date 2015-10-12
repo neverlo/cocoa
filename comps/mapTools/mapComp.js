@@ -22,8 +22,8 @@ var mapComp = {
 			styleMap: new OpenLayers.StyleMap({
 		        default: {
 					fillColor: '${color}',
-					fillOpacity:'1',
-					strokeColor: 'blue',
+					fillOpacity:'0.5',
+					strokeColor: '${strokeColor}',
 					strokeWidth:'${size}',
 					label:'${text}'
 				}
@@ -31,6 +31,13 @@ var mapComp = {
 		});
 		this.map.addLayer(drawLayer);
 		this.drawLayer = drawLayer;
+	},
+	getDrawLayer : function(){
+		return this.drawLayer;
+	},
+	removeLasFeature : function(){
+		var featureList = this.drawLayer.features;
+		this.drawLayer.removeFeatures([featureList[featureList.length-1]]);
 	},
 	drawPolygon : function(layerSize,layerColor){
 		//工具默认样式
@@ -43,11 +50,106 @@ var mapComp = {
 				'strokeWidth': 2,
 				'fillColor': '#FF0000',
 				'fillOpacity': 0.5,
-				'pointRadius': 6
+				'pointRadius': 6,
+				'freehand':true
 		};
 		this.layerSize = layerSize;
 		this.layerColor = layerColor;
 		this.initDraw(drawOptions,this.drawLayer,'Polygon');
+	},
+	drawDynamicPath : function(layerSize,layerColor){
+		//工具默认样式
+		var drawOptions =	{
+			'label':'画线',
+			'strokeColor': layerColor,
+			'strokeOpacity': 1,
+			'strokeWidth': layerSize,
+			'pointRadius': 6,
+			'freehand':true
+		};
+		this.layerSize = layerSize;
+		this.layerColor = layerColor;
+		this.initDraw(drawOptions,this.drawLayer,'LineString');
+	},
+	drawPoint : function(){
+		//工具默认样式
+		var drawOptions =	{
+				'strokeColor': 'green',
+				'strokeOpacity': 1,
+				'strokeWidth': 2,
+				'labelXOffset':'70',
+				'labelYOffset':'-12',
+				'pointRadius': 6,
+				'label':'${key}'
+				//  "single" : true,
+	            // "double" : false,
+	            // "pixelTolerance" : 0,
+	            // "stopSingle" : true,
+	            // "stopDouble" : false
+		};
+		var template = OpenLayers.Util.applyDefaults({
+	        graphicWidth: 35,
+	        graphicHeight: 46,
+	        graphicYOffset: -38,
+	        graphicOpacity: 1,
+	        // graphicZIndex: "${getZIndex}",
+	        externalGraphic: 'marker.png',
+	        strokeColor: 'blue',
+	        strokeWidth: 3,
+	        strokeOpacity: 0.5,
+			label:'${getLabel}'
+	    }, OpenLayers.Feature.Vector.style['default']);
+		var temporarystyle = OpenLayers.Util.applyDefaults({
+			labelXOffset:70,
+			labelYOffset:-12,
+			pointRadius: 6,
+			label:'点击地图进行标记',
+			strokeWidth: 3,
+		    strokeColor: 'red',
+		    graphicName: 'square'
+		}, OpenLayers.Feature.Vector.style.temporary);
+		var styleMap = new OpenLayers.StyleMap({
+		    "default": new OpenLayers.Style(template, {context: {
+				getLabel:function(feature){
+					return feature.attributes.key;
+				}
+			}}),
+		    "temporary": new OpenLayers.Style(temporarystyle)
+		});
+		var pointLayer = new OpenLayers.Layer.Vector('Point', {
+			styleMap: styleMap
+		});
+		// this.initDraw(drawOptions,pointLayer,'Point');
+		this.initDraw(drawOptions,this.drawLayer,'Point');
+	},
+	drawRegularPolygon : function(){
+		var sideCount = '';
+		if(shapeType === 'triange'){
+			sideCount = '3';
+		}else if(shapeType === 'square'){
+			sideCount = '4';
+		}else if(shapeType === 'pentagon'){
+			sideCount = '5';
+		}else if(shapeType === 'hexagon'){
+			sideCount = '6';
+		}else if(shapeType === 'circle'){
+			sideCount = '50';
+		}
+		//工具默认样式
+		var drawOptions =	{
+			'fillColor':'red',
+			'fillOpacity':'0',
+			'strokeColor': 'green',
+			'strokeOpacity': '0',
+			'strokeWidth': '0',
+			'label':'点击地图进行拖动',
+			'labelXOffset':'70',
+			'labelYOffset':'-12',
+			// 'pointRadius': 6,
+			'sides':sideCount,
+			'irregular': true
+		};
+		this.initDraw(drawOptions,this.drawLayer,'RegularPolygon');
 	},
 	setLayerPro : function(layerSize,layerColor){
 		this.layerSize = layerSize;
@@ -105,7 +207,14 @@ var mapComp = {
 				handlerOptions:drawOptions,
 				featureAdded:function(obj){//完成图形后的监听事件
 					console.info("finished");
-					polygon.handlerOptions.label = '';
+					polygon.handlerOptions.label = '画线';
+					obj.attributes = {
+						'color' : '',
+						'text' : '',
+						'size' : mapComp.layerSize,
+						'strokeColor' : mapComp.layerColor
+					};
+					drawLayer.redraw();
 					dragControl.activate();
 					clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 				}
@@ -114,11 +223,12 @@ var mapComp = {
 				handlerOptions:drawOptions,
 				featureAdded:function(obj){//完成图形后的监听事件
 					console.info("finished");
-					polygon.handlerOptions.label = '';
+					polygon.handlerOptions.label = '画多边形';
 					obj.attributes = {
 						'color' : mapComp.layerColor,
 						'text' : '',
-						'size' : mapComp.layerSize
+						'size' : mapComp.layerSize,
+						'strokeColor' : 'blue'
 					};
 					drawLayer.redraw();
 					dragControl.activate();
@@ -212,8 +322,10 @@ var mapComp = {
 		clickFeatureControl.activate();
 	},
 	clearHander : function(){//取消作图
-		this.layerHandler.deactivate();
-		this.dragControl.deactivate();
-		this.clickFeatureControl.deactivate();
+		if(typeof(this.layerHandler) !== 'undefined'){
+			this.layerHandler.deactivate();
+			this.dragControl.deactivate();
+			this.clickFeatureControl.deactivate();
+		}
 	}
 };
