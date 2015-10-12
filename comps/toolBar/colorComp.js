@@ -9,16 +9,16 @@ var colorComp = {
 		var sizeDiv = document.createElement('div');
 		sizeDiv.setAttribute('class','sizeSelect');
 		
-		var sizeJson = {"defaultCheck":"small","list":[{
-			"value":"small",
+		var sizeJson = {"defaultCheck":"1","list":[{
+			"value":"1",
 			"top":"0",
 			"logo":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAJ0lEQVR4AWMYDGAUsFWdbwXizyCaHM0/gfg/yABybf4CsXngwSgAAFoCEq7RbnUNAAAAAElFTkSuQmCC"
 		},{
-			"value":"middle",
+			"value":"3",
 			"top":"0",
 			"logo":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAMElEQVR4AWMYDGAUsFWd9wTiZ1DsSZJmqKb/UPyMEs3PSdXsBdIExE9AbCqExCgAAChRIUNxN8UfAAAAAElFTkSuQmCC"
 		},{
-			"value":"big",
+			"value":"5",
 			"top":"0",
 			"logo":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAQ0lEQVR4AWOAgFHAVnU+DIivAPFPKB1GrMYQIP6PjokyAGQTDs1XiNH8E4fmnzS3ORSH5nBiAy0ciK8B8S8QjdA4CgAnWmEE6X3rEwAAAABJRU5ErkJggg=="
 		}]};

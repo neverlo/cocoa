@@ -13,8 +13,10 @@ function initToolBar(cityName){
 	var allDrawComp = T().groupComps([cityCom,drawCom,docCom,controlCom]);
 	var resultComp = T().groupComps([allDrawComp,colorCom,documentList]);
 	allDrawComp.setAttribute('class','toolBarDiv');
+	resultComp.setAttribute('class','toolBarPosition');
 	(document.body).appendChild(resultComp);
 	function drawEvent(bDatas){
+		var drawType = bDatas.value;
 		console.info(bDatas);//点击工具类型
 		if(bDatas.value !== 'document' && bDatas.value !== 'add' && bDatas.value !== 'save' && bDatas.value !== 'delete' && bDatas.value !== 'undo'){
 			//控制色板
@@ -22,11 +24,18 @@ function initToolBar(cityName){
 			var docListLeft = '245px';
 			if(bDatas.status === 'selected'){
 				status = 'block';
-				docListLeft = '0px';
+				docListLeft = '304px';
+				var initDatas = colorComp.getResultJson();
+				if(drawType === 'polygon'){
+					mapComp.drawPolygon(initDatas.size,initDatas.color);
+				}
+			}else{
+				mapComp.clearHander();
 			}
 			documentList.style.marginLeft = docListLeft;
 			colorCom.style.display = status;
 			console.info(colorComp.getResultJson());//工具初始状态
+			
 		}else if(bDatas.value === 'document'){
 			//控制文档面板
 			var dstatus = 'none';
@@ -41,6 +50,7 @@ function initToolBar(cityName){
 	}
 	
 	function colorBack(coDatas){
+		mapComp.setLayerPro(coDatas.size,coDatas.color);
 		console.info(coDatas);
 	}
 	var caseDiv = null;
