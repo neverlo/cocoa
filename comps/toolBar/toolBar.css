@@ -29,7 +29,9 @@
 }
 .citySelect{
 	width:325px;
-	height:32px;
+	height:36px;
+	position: relative;
+    z-index: 990;
 }
 .caseShow{
 	width:325px;
@@ -106,4 +108,20 @@
 }
 .toolBarColor{
     margin-left: 77px;
+	position: relative;
+    z-index: 999;
+}
+
+.documentList{
+	width: 203px;
+    height: auto;
+    border: 1px solid #000;
+    float: left;
+    margin-left: 245px;
+	position: relative;
+}
+.documentList ul li span{
+    /*float: left;*/
+	display: inline-block;
+    margin-right: 5px;
 }

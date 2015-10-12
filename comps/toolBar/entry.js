@@ -1,13 +1,16 @@
 function initToolBar(cityName){
+	var currentCaseId = '';//记录当前的预案ID
 	var cityCom = cityComp.init(cityName,addCaseName);
 	var drawCom = drawComp.init(['marker','dynamicLine','text','arrow','polygon','staticLine'],drawEvent);
 	var docCom = docComp.init(['document'],drawEvent);
 	var controlCom = controlComp.init(['edit','save'],drawEvent);
 	var colorCom = colorComp.init(colorBack);
+	var documentList = docComp.createList();
+	documentList.style.display = 'none';
 	colorCom.setAttribute('class','toolBarColor');
 	colorCom.style.display = 'none';
 	var allDrawComp = T().groupComps([cityCom,drawCom,docCom,controlCom]);
-	var resultComp = T().groupComps([allDrawComp,colorCom]);
+	var resultComp = T().groupComps([allDrawComp,colorCom,documentList]);
 	allDrawComp.setAttribute('class','toolBarDiv');
 	(document.body).appendChild(resultComp);
 	function drawEvent(bDatas){
@@ -15,11 +18,24 @@ function initToolBar(cityName){
 		if(bDatas.value !== 'document' && bDatas.value !== 'edit' &&bDatas.value !== 'save'){
 			//控制色板
 			var status = 'none';
+			var docListLeft = '245px';
 			if(bDatas.status === 'selected'){
 				status = 'block';
+				docListLeft = '0px';
 			}
+			documentList.style.marginLeft = docListLeft;
 			colorCom.style.display = status;
 			console.info(colorComp.getResultJson());//工具初始状态
+		}else if(bDatas.value === 'document'){
+			//控制文档面板
+			var dstatus = 'none';
+			if(bDatas.status === 'selected'){
+				dstatus = 'block';
+			}
+			documentList.style.display = dstatus;
+			//当前的预案ID
+			console.info(currentCaseId);
+			// documentList.style.marginLeft = docListLeft;
 		}
 	}
 	
@@ -28,17 +44,20 @@ function initToolBar(cityName){
 	}
 	var caseDiv = null;
 	function addCaseName(scrollBack){
+		console.info(scrollBack);
+		currentCaseId = scrollBack.id;
 		var caseDatas = {"cite":"请选择预案",'id' : 'case','defaultCheck':'1',
-			"list":[{"text":'预案A',"value":'1'},
-				{"text":'预案B',"value":'2'},
-				{"text":'预案C',"value":'3'},
-				{"text":'预案D',"value":'4'}
+			"list":[{"text":'预案A',"value":'001'},
+				{"text":'预案B',"value":'002'},
+				{"text":'预案C',"value":'003'},
+				{"text":'预案D',"value":'004'}
 			]};
 		if(caseDiv){
 			T(caseDiv).remove();
 		}
-		caseDiv = selectComp.init('80','32',caseDatas,changeCase);
+		caseDiv = selectComp.init('150','32',caseDatas,changeCase);
 		function changeCase(cBack){
+			currentCaseId = cBack.value;
 			console.info(cBack);
 		}
 		T(caseDiv).appendTo(controlCom);

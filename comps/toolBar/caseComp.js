@@ -1,5 +1,5 @@
 var caseComp = {
 	init : function(){
-		
+               
 	}
 };

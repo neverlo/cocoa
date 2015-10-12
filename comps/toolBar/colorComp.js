@@ -108,7 +108,7 @@ var colorComp = {
 					return backEvent(colorComp.resultJson);
 				}
 			}
-		}
+		};
 		colorListDiv.appendChild(colorSelectDiv);
 		styleDiv.appendChild(colorListDiv);
 		parentE.appendChild(styleDiv);

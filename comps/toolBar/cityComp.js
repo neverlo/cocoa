@@ -33,7 +33,7 @@ var cityComp={
 				{"text":'江城区',"value":'江城区'},
 				{"text":'阳春县',"value":'阳春县'}
 			]};
-		var citySelectDiv = selectComp.init('84','30',selectDatas,changeTown);
+		var citySelectDiv = selectComp.init('85','34',selectDatas,changeTown);
 
 		var townComp = null;
 		function changeTown(cBack){
@@ -47,7 +47,7 @@ var cityComp={
 			if(townComp){
 				T(townComp).remove();
 			}
-			townComp = selectComp.init('84','30',selectTownDatas);
+			townComp = selectComp.init('86','34',selectTownDatas);
 			cityDiv.appendChild(townComp);
 		}
 		var caseDiv = document.createElement('div');
