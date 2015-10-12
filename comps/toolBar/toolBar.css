@@ -3,7 +3,8 @@
 	height: 30px;
 	line-height: 30px;
 	float: left;
-	border: 1px solid #000;
+	border: 2px solid #000;
+	background-color: #49586B;
 }
 .cityBar img{
 	margin-left: 7px;
@@ -11,8 +12,10 @@
 .toolBar{
 	width: auto;
 	height: 30px;
-	border: 1px solid #000;
+	border: 2px solid #000;
 	float:left;
+	background-color: #49586B;
+    color: #fff;
 }
 .toolBar ul li{
 	height: 30px;
@@ -31,7 +34,7 @@
 .caseShow{
 	width:325px;
 	height:auto;
-	border:1px solid #000;
+	border:2px solid #000;
 }
 .caseShow div ul li{
 	float:left;
@@ -52,12 +55,12 @@
 	width:auto;
 	height:30px;
 	float:left;
-	background-color: #eee;
-	border: 1px solid #000;
+	background-color: #DFE4E7;
+	border: 2px solid #B3CDDC;
 }
 .bigColor{
 	float:left;
-	border: 1px solid #8c8a8a;
+	border: 2px solid #B3CDDC;
 	margin:1px 1px;
 }
 .bigColor div{
@@ -80,19 +83,22 @@
 .sizeSelect{
 	float:left;
 	height: 30px;
-	background-color: #eee;
-	border: 1px solid #000;
+	background-color: #DFE4E7;
+	border: 2px solid #B3CDDC;
+	border-right: 1px solid #8A8888;
 }
 .sizeSelect ul li{
 	float: left;
-	margin-right: 10px;
-	width:16px;
+	width:26px;
 	height:auto;
 }
 .sizeSelect ul li div{
 	padding: 7px 3px;
 	width:16px;
 	height:auto;
+}
+.sizeSelect ul li div img{
+	margin-left: 3px;
 }
 .toolBarDiv{
 	display: inline-block;

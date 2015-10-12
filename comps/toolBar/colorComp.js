@@ -11,16 +11,16 @@ var colorComp = {
 		
 		var sizeJson = {"defaultCheck":"small","list":[{
 			"value":"small",
-			"top":"8",
-			"logo":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAAHUlEQVR4AWNgqzrfCsSfQTSI8xOI/4MEYDJfQDQAYOgSrnnXsTEAAAAASUVORK5CYII="
+			"top":"0",
+			"logo":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAJ0lEQVR4AWMYDGAUsFWdbwXizyCaHM0/gfg/yABybf4CsXngwSgAAFoCEq7RbnUNAAAAAElFTkSuQmCC"
 		},{
 			"value":"middle",
-			"top":"8",
-			"logo":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAJUlEQVR42mNgqzrvCcTPoNiTAcr4D8XP0AWegwS8QAwgfgJiAwBWjyFDK4AINwAAAABJRU5ErkJggg=="
+			"top":"0",
+			"logo":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAMElEQVR4AWMYDGAUsFWd9wTiZ1DsSZJmqKb/UPyMEs3PSdXsBdIExE9AbCqExCgAAChRIUNxN8UfAAAAAElFTkSuQmCC"
 		},{
 			"value":"big",
-			"top":"6",
-			"logo":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAPUlEQVR4AWMAAbaq82FAfAWIf0LpMJhECBD/R8dgBSCVOCSvgCR/4pD8SVBnKA7JcJijwoH4GhD/AtEwCQA3nWEED/iRXQAAAABJRU5ErkJggg=="
+			"top":"0",
+			"logo":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAQ0lEQVR4AWOAgFHAVnU+DIivAPFPKB1GrMYQIP6PjokyAGQTDs1XiNH8E4fmnzS3ORSH5nBiAy0ciK8B8S8QjdA4CgAnWmEE6X3rEwAAAABJRU5ErkJggg=="
 		}]};
 		colorComp.resultJson.size = sizeJson.defaultCheck;
 		var sizeUl = colorComp.createSizeLogo(sizeJson);
@@ -51,7 +51,7 @@ var colorComp = {
 			var backLogo = '';
 			if(parentLi.getAttribute('status') === ''){
 				status = 'selected';
-				backLogo = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAYAAADgKtSgAAAAJ0lEQVR4AWNQN7D/TyvMACZoAEYNHzV81HAKwajho4aPGj5qOK0wAFbmizmDuR5+AAAAAElFTkSuQmCC) no-repeat 2px 3px';
+				backLogo = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAYAAADgKtSgAAAAd0lEQVR4AWMAgZ6uLg0gngjEb4H4PwX4HdQcDZjB6kD8E4jzgFiIgQIA1C8IMgdqnjxIYAIQ56MrpNCSciDuYIAGhRCVDRcCmQti/GegPgCbO2o4Mhg1fNTwUcNHDadpeU6rmqgMiDvR61BBKtahCui1/ztq1v4AmPX5xpLTW40AAAAASUVORK5CYII=) no-repeat 2px 3px';
 			}
 			parentLi.setAttribute('status',status);
 			parentLi.style.background = backLogo;
@@ -129,7 +129,7 @@ var colorComp = {
 			sizeOLi.setAttribute('status','');
 			if(tempDatas.value === sizeJson.defaultCheck){
 				sizeOLi.setAttribute('status','selected');
-				sizeOLi.style.background = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAYAAADgKtSgAAAAJ0lEQVR4AWNQN7D/TyvMACZoAEYNHzV81HAKwajho4aPGj5qOK0wAFbmizmDuR5+AAAAAElFTkSuQmCC) no-repeat 2px 3px';
+				sizeOLi.style.background = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAYAAADgKtSgAAAAd0lEQVR4AWMAgZ6uLg0gngjEb4H4PwX4HdQcDZjB6kD8E4jzgFiIgQIA1C8IMgdqnjxIYAIQ56MrpNCSciDuYIAGhRCVDRcCmQti/GegPgCbO2o4Mhg1fNTwUcNHDadpeU6rmqgMiDvR61BBKtahCui1/ztq1v4AmPX5xpLTW40AAAAASUVORK5CYII=) no-repeat 2px 3px';
 			}
 			oLiDiv.appendChild(oLiImg);
 			sizeOLi.appendChild(oLiDiv);

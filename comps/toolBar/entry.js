@@ -37,7 +37,7 @@ function initToolBar(cityName){
 		if(caseDiv){
 			T(caseDiv).remove();
 		}
-		caseDiv = selectComp.init('80','30',caseDatas,changeCase);
+		caseDiv = selectComp.init('80','32',caseDatas,changeCase);
 		function changeCase(cBack){
 			console.info(cBack);
 		}

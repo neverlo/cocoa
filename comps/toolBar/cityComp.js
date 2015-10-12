@@ -4,6 +4,7 @@ var cityComp={
 		divE.setAttribute('class','cityBar');
 		var spanE = document.createElement('span');
 		spanE.innerHTML = cityName;
+		spanE.style.color = '#fff';
 		var imgE = document.createElement('img');
 		imgE.style.cursor = 'pointer';
 		imgE.setAttribute('status','');
