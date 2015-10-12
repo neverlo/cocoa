@@ -71,7 +71,8 @@ var drawComp = {
 			
 			var status = '';
 			var backLogo = '';
-			if(parentLi.getAttribute('status') === ''){
+			var logoValue = parentLi.getAttribute('value');
+			if(parentLi.getAttribute('status') === '' && logoValue !=='undo' && logoValue !=='add' && logoValue !=='delete' && logoValue !=='save'){
 				status = 'selected';
 				backLogo = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAYAAADgKtSgAAAAJ0lEQVR4AWNQN7D/TyvMACZoAEYNHzV81HAKwajho4aPGj5qOK0wAFbmizmDuR5+AAAAAElFTkSuQmCC) no-repeat 2px 3px';
 			}

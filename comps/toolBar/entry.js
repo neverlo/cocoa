@@ -4,7 +4,7 @@ function initToolBar(cityName){
 	var cityCom = cityComp.init(cityInfo,addCaseName);
 	var drawCom = drawComp.init(['marker','dynamicLine','text','arrow','polygon','staticLine'],drawEvent);
 	var docCom = docComp.init(['document'],drawEvent);
-	var controlCom = controlComp.init(['edit','save'],drawEvent);
+	var controlCom = controlComp.init(['undo','add','delete','save'],drawEvent);
 	var colorCom = colorComp.init(colorBack);
 	var documentList = docComp.createList();
 	documentList.style.display = 'none';
@@ -16,7 +16,7 @@ function initToolBar(cityName){
 	(document.body).appendChild(resultComp);
 	function drawEvent(bDatas){
 		console.info(bDatas);//点击工具类型
-		if(bDatas.value !== 'document' && bDatas.value !== 'edit' &&bDatas.value !== 'save'){
+		if(bDatas.value !== 'document' && bDatas.value !== 'add' && bDatas.value !== 'save' && bDatas.value !== 'delete' && bDatas.value !== 'undo'){
 			//控制色板
 			var status = 'none';
 			var docListLeft = '245px';
