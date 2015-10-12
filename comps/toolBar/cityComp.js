@@ -1,14 +1,14 @@
 var cityComp={
-	init:function(cityName,addCaseName){
+	init:function(cityJson,addCaseName){
 		var divE = document.createElement('div');
 		divE.setAttribute('class','cityBar');
 		var spanE = document.createElement('span');
-		spanE.innerHTML = cityName.name;
+		spanE.innerHTML = cityJson.name;
 		spanE.style.color = '#fff';
 		var imgE = document.createElement('img');
 		imgE.style.cursor = 'pointer';
 		imgE.setAttribute('status','');
-		imgE.setAttribute('code',cityName.code);
+		imgE.setAttribute('code',cityJson.code);
 		imgE.setAttribute('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAHCAYAAADTcMcaAAAAWklEQVR4AWNQ0DD+CMT/gfggAx4Akoeq+wgT+A4VmIJDwxSo/HdkQV0g/guVKEfTUA4Sh8rrQkQxNf4DsZHE/qFrQNcYgmRqCJLtIRiKcTjnH6ZzCWv8jUsDAExWM9Gq2hrlAAAAAElFTkSuQmCC');
 		imgE.onclick = function(){
 			var status = '';
@@ -30,28 +30,69 @@ var cityComp={
 		cityDiv.style.display = 'none';
 		cityDiv.setAttribute('class','citySelect');
 		
-		var selectDatas = {"cite":"请选择县区",'id' : 'city',
-			"list":[{"text":'阳东县',"value":'阳东县'},
-				{"text":'阳西县',"value":'阳西县'},
-				{"text":'江城区',"value":'江城区'},
-				{"text":'阳春县',"value":'阳春县'}
-			]};
-		var citySelectDiv = selectComp.init('85','34',selectDatas,changeTown);
-
+		var citySelectDiv = null;
 		var townComp = null;
+		var countryComp = null;
+		if(cityJson.type === 'province'){
+			var cityDatas = {"cite":"请选择城市",'id' : 'city',
+			"list":[{"text":'广州市',"value":'440100'},
+				{"text":'阳江市',"value":'441700'},
+				{"text":'惠州市',"value":'440500'},
+				{"text":'韶关市',"value":'440700'}
+			]};
+			citySelectDiv = selectComp.init('85','34',cityDatas,changeCity);
+		}else if(cityJson.type === 'city'){
+			var towntDatas = {"cite":"请选择县区",'id' : 'town',
+			"list":[{"text":'江城区',"value":'440100'},
+				{"text":'阳春县',"value":'441700'},
+				{"text":'阳东县',"value":'440500'},
+				{"text":'阳西县',"value":'440700'}
+			]};
+			citySelectDiv = selectComp.init('85','34',towntDatas,changeTown);
+		}else if(cityJson.type === 'town'){
+			var countrytDatas = {"cite":"请选择城镇",'id' : 'country',
+			"list":[{"text":'E镇',"value":'440100'},
+				{"text":'F镇',"value":'441700'},
+				{"text":'G镇',"value":'440500'},
+				{"text":'H镇',"value":'440700'}
+			]};
+			citySelectDiv = selectComp.init('108','34',countrytDatas,changeCountry);
+		}
+		
+		function changeCity(cityBack){
+			console.info(cityBack);
+			var townDatas = {"cite":"请选择县区",'id' : 'town',
+				"list":[{"text":'阳东县',"value":'阳东县'},
+					{"text":'阳西县',"value":'阳西县'},
+					{"text":'江城区',"value":'江城区'},
+					{"text":'阳春县',"value":'阳春县'}
+				]};
+			if(townComp){
+				T(townComp).remove();
+				townComp = null;
+			}
+			if(countryComp){
+				T(countryComp).remove();
+				countryComp = null;
+			}
+			townComp = selectComp.init('85','34',townDatas,changeTown);
+			cityDiv.appendChild(townComp);
+		}
+
 		function changeTown(cBack){
 			console.info(cBack);
-			var selectTownDatas = {"cite":"请选择镇街",'id' : 'town',
+			var selectCountryDatas = {"cite":"请选择镇街",'id' : 'town',
 			"list":[{"text":'A镇',"value":'A镇'},
 				{"text":'B镇',"value":'B镇'},
 				{"text":'C镇',"value":'C镇'},
 				{"text":'D镇',"value":'D镇'}
 			]};
-			if(townComp){
-				T(townComp).remove();
+			if(countryComp){
+				T(countryComp).remove();
+				countryComp = null;
 			}
-			townComp = selectComp.init('86','34',selectTownDatas,changeCountry);
-			cityDiv.appendChild(townComp);
+			countryComp = selectComp.init('108','34',selectCountryDatas,changeCountry);
+			cityDiv.appendChild(countryComp);
 		}
 		//选择镇事件
 		function changeCountry(coBack){
