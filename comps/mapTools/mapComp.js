@@ -150,8 +150,10 @@ var mapComp = {
 		this.initDraw(drawOptions,this.drawLayer,'RegularPolygon','RegularPolygon');
 	},
 	drawArrowPolygon : function(layerSize,layerColor){
+		var zoomValue = this.map.zoom;
+		var arrpwSize = layerSize * 0.00125 * zoomValue * (17-zoomValue);
 		var drawOptions =	{
-			'graphicSize':layerSize,
+			'graphicSize':arrpwSize,
 			'mode': 'direction',
 			 'mutiVertice':true
 		};
@@ -180,7 +182,9 @@ var mapComp = {
 		var cLogo = mapComp.getPointLogo(layerColor);
 		changeObj.externalGraphic = cLogo;
 		if(typeof(this.arrowPolygon) !== 'undefined'){
-			this.arrowPolygon.handler.graphicSize = layerSize;
+			var zoomValue = this.map.zoom;
+			var arrpwSize = layerSize * 0.00125 * zoomValue * (17-zoomValue);
+			this.arrowPolygon.handler.graphicSize = arrpwSize;
 		}
 	},
 	/**
@@ -270,11 +274,14 @@ var mapComp = {
 			arrowPolygon: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.VerticePolygon,{
 				handlerOptions:drawOptions,
 				featureAdded:function(obj){//完成图形后的监听事件
-					console.info("finished");
+					console.info("finished arrowPolygon");
+					var zoomValue = mapComp.map.zoom;
+					var arrpwSize = mapComp.layerSize * 0.00125 * zoomValue * (17-zoomValue)*(16/15);
+					console.info(arrpwSize);
 					obj.attributes = {
 						'color' : mapComp.layerColor,
 						'text' : '',
-						'size' : mapComp.layerSize,
+						'size' : arrpwSize,
 						'strokeColor' : 'blue',
 						'type' : layerType
 					};
