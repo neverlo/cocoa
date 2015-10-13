@@ -109,9 +109,15 @@ var mapComp = {
 		this.drawLayer.styleMap.styles.temporary = new OpenLayers.Style(temporarystyle);
 		this.initDraw(drawOptions,this.drawLayer,'Point','point');
 	},
-	drawRegularPolygon : function(layerSize,layerColor){
+	drawRegularPolygon : function(layerSize,layerColor,drawType){
+		var sides = 0;
+		if(drawType === 'RegularPolygon'){
+			sides = 4;
+		}else if(drawType === 'circle'){
+			sides = 50;
+		}
 		var drawOptions =	{
-			'sides':4,
+			'sides':sides,
 			'irregular': false
 		};
 		var temporarystyle = OpenLayers.Util.applyDefaults({
@@ -130,7 +136,7 @@ var mapComp = {
 	},
 	drawArrowPolygon : function(layerSize,layerColor){
 		var drawOptions =	{
-			'graphicSize':2,
+			'graphicSize':'1',
 			'mode': 'direction'
 		};
 		var temporarystyle = OpenLayers.Util.applyDefaults({
