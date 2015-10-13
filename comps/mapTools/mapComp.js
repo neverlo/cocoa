@@ -151,7 +151,7 @@ var mapComp = {
 	},
 	drawArrowPolygon : function(layerSize,layerColor){
 		var zoomValue = this.map.zoom;
-		var arrpwSize = layerSize * 0.00125 * zoomValue * (17-zoomValue);
+		var arrpwSize = layerSize * Math.pow(0.6,zoomValue-1);
 		var drawOptions =	{
 			'graphicSize':arrpwSize,
 			'mode': 'direction',
@@ -183,7 +183,7 @@ var mapComp = {
 		changeObj.externalGraphic = cLogo;
 		if(typeof(this.arrowPolygon) !== 'undefined'){
 			var zoomValue = this.map.zoom;
-			var arrpwSize = layerSize * 0.00125 * zoomValue * (17-zoomValue);
+			var arrpwSize = layerSize * Math.pow(0.6,zoomValue-1);
 			this.arrowPolygon.handler.graphicSize = arrpwSize;
 		}
 	},
@@ -276,8 +276,10 @@ var mapComp = {
 				featureAdded:function(obj){//完成图形后的监听事件
 					console.info("finished arrowPolygon");
 					var zoomValue = mapComp.map.zoom;
-					var arrpwSize = mapComp.layerSize * 0.00125 * zoomValue * (17-zoomValue)*(16/15);
-					console.info(arrpwSize);
+					var arrowHandler = mapComp.arrowPolygon.handler;
+					arrowHandler.graphicSize/2
+					var arrpwSize = mapComp.layerSize * Math.pow(0.6,zoomValue-1);
+					arrowHandler.graphicSize = arrpwSize;
 					obj.attributes = {
 						'color' : mapComp.layerColor,
 						'text' : '',
