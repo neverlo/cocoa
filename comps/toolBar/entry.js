@@ -1,10 +1,11 @@
 function initToolBar(cityName){
+	var showColor = ['marker','dynamicLine','text','arrow','polygon','staticLine'];
 	var currentCaseId = '';//记录当前的预案ID
 	var cityInfo = {"name":"阳春县","code":"440000",'type':'town'};
 	var cityCom = cityComp.init(cityInfo,addCaseName);
-	var drawCom = drawComp.init(['marker','dynamicLine','text','arrow','polygon','staticLine'],drawEvent);
+	var drawCom = drawComp.init(showColor,drawEvent);
 	var docCom = docComp.init(['document'],drawEvent);
-	var controlCom = controlComp.init(['undo','add','delete','save'],drawEvent);
+	var controlCom = controlComp.init(['pen','undo','add','delete','save'],drawEvent);
 	var colorCom = colorComp.init(colorBack);
 	var documentList = docComp.createList();
 	documentList.style.display = 'none';
@@ -20,7 +21,7 @@ function initToolBar(cityName){
 		console.info(bDatas);//点击工具类型
 		console.info(mapComp.getDrawLayer());
 		
-		if(bDatas.value !== 'document' && bDatas.value !== 'add' && bDatas.value !== 'save' && bDatas.value !== 'delete' && bDatas.value !== 'undo'){
+		if(T(bDatas.value).inArray(showColor)){
 			mapComp.clearHander();
 			//控制色板
 			var status = 'none';

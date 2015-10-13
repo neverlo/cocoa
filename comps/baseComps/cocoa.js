@@ -246,6 +246,15 @@
 					}
 				}
 			};
+		},
+		inArray : function(arry){//判断数组是否包含
+			var elem = this.elem;
+			for(var i=arry.length-1; i>=0; i--){
+				if(arry[i] === elem){
+					return true;
+				}
+			}
+			return false;
 		}
 	};
 })(Window);
