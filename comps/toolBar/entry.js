@@ -1,6 +1,7 @@
 function initToolBar(cityName){
-	var showColor = ['marker','dynamicLine','text','arrow','polygon','staticLine'];
+	var showColor = ['marker','dynamicLine','text','arrowPolygon','regularPolygon','polygon','staticLine'];
 	var currentCaseId = '';//记录当前的预案ID
+	var penModel = null;//记录当前画笔模式
 	var cityInfo = {"name":"阳春县","code":"440000",'type':'town'};
 	var cityCom = cityComp.init(cityInfo,addCaseName);
 	var drawCom = drawComp.init(showColor,drawEvent);
@@ -19,7 +20,6 @@ function initToolBar(cityName){
 	function drawEvent(bDatas){
 		var drawType = bDatas.value;
 		console.info(bDatas);//点击工具类型
-		console.info(mapComp.getDrawLayer());
 		
 		if(T(bDatas.value).inArray(showColor)){
 			mapComp.clearHander();
@@ -32,9 +32,20 @@ function initToolBar(cityName){
 				var initDatas = colorComp.getResultJson();
 				if(drawType === 'polygon'){
 					mapComp.drawPolygon(initDatas.size,initDatas.color);
+				}else if(drawType === 'regularPolygon'){
+					mapComp.drawRegularPolygon(initDatas.size,initDatas.color);
+				}else if(drawType === 'arrowPolygon'){
+					mapComp.drawArrowPolygon(initDatas.size,initDatas.color);
 				}else if(drawType === 'dynamicLine'){
-					mapComp.drawDynamicPath(initDatas.size,initDatas.color);
+					mapComp.drawPath(initDatas.size,initDatas.color,'dynamicLine');
+				}else if(drawType === 'staticLine'){
+					mapComp.drawPath(initDatas.size,initDatas.color,'staticLine');
+				}else if(drawType === 'marker'){
+					mapComp.drawPoint(initDatas.size,initDatas.color); 
 				}
+			}
+			if(penModel){
+				mapComp.changPenModel(penModel);
 			}
 			documentList.style.marginLeft = docListLeft;
 			colorCom.style.display = status;
@@ -52,6 +63,13 @@ function initToolBar(cityName){
 			// documentList.style.marginLeft = docListLeft;
 		}else if(bDatas.value === 'undo'){
 			mapComp.removeLasFeature();
+		}else if(bDatas.value === 'pen'){//切换画笔模式
+			var penStatus = false;
+			if(bDatas.status === 'selected'){
+				penStatus = true;
+			}
+			penModel = penStatus;
+			mapComp.changPenModel(penStatus);
 		}
 	}
 	
