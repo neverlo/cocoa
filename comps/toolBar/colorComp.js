@@ -80,7 +80,7 @@ var colorComp = {
 		colorListDiv.appendChild(bigCDiv);
 		
 		var colorJson = {"up":['000000','6f706b','6f180e','f28837','266d28','0e37b8','6d0b62','13807f'],
-						"down":['ffffff','b3b5ae','ed3f2b','968c0b','96c130','0a78c8','d523c8','1ac1ca']};
+						"down":['ffffff','b3b5ae','ed3f2b','ebde37','96c130','0a78c8','d523c8','1ac1ca']};
 		var colorSelectDiv = document.createElement('div');
 		colorSelectDiv.setAttribute('class','colorSelect');
 		for(var uKey in colorJson){
