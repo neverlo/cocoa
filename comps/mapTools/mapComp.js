@@ -101,6 +101,23 @@ var mapComp = {
 		this.drawLayer.styleMap.styles.temporary = new OpenLayers.Style(temporarystyle);
 		this.initDraw(drawOptions,this.drawLayer,'LineString',lineType);
 	},
+	drawDistance : function(layerSize,layerColor){
+		//工具默认样式
+		var drawOptions =	{};
+		var temporarystyle = OpenLayers.Util.applyDefaults({
+			pointRadius: 6,
+			label:'',
+			fillColor:layerColor,
+			strokeWidth: layerSize,
+			labelYOffset:25,
+		    strokeColor: 'red',
+		    graphicName: 'square'
+		}, OpenLayers.Feature.Vector.style.temporary);
+		this.layerSize = layerSize;
+		this.layerColor = layerColor;
+		this.drawLayer.styleMap.styles.temporary = new OpenLayers.Style(temporarystyle);
+		this.initDraw(drawOptions,this.drawLayer,'distance','distance');
+	},
 	drawPoint : function(layerSize,layerColor){
 		//工具默认样式
 		var size = layerSize*15;
@@ -277,7 +294,6 @@ var mapComp = {
 					console.info("finished arrowPolygon");
 					var zoomValue = mapComp.map.zoom;
 					var arrowHandler = mapComp.arrowPolygon.handler;
-					arrowHandler.graphicSize/2
 					var arrpwSize = mapComp.layerSize * Math.pow(0.6,zoomValue-1);
 					arrowHandler.graphicSize = arrpwSize;
 					obj.attributes = {
@@ -292,6 +308,27 @@ var mapComp = {
 					clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 				}
 			}),
+			distance: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Path,{
+				handlerOptions:drawOptions,
+				callbacks : {
+					point : function(cPoint){
+						console.info('callback');
+					}
+				},
+				featureAdded:function(obj){//完成图形后的监听事件
+					console.info("finished distance");
+					obj.attributes = {
+						'color' : '',
+						'text' : '',
+						'size' : mapComp.layerSize,
+						'strokeColor' : mapComp.layerColor,
+						'type' : layerType
+					};
+					drawLayer.redraw();
+					mapComp.dragControl.activate();
+					clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
+				}
+			})
         };
 		var polygon = '';
 		if(drawType === 'Polygon'){
@@ -305,9 +342,11 @@ var mapComp = {
 		}else if(drawType === 'arrowPolygon'){
 			polygon = drawControls.arrowPolygon;
 			this.arrowPolygon = polygon;
+		}else if(drawType === 'distance'){
+			polygon = drawControls.distance;
 		}
 		
-		if(drawType !== 'Point'){
+		if(drawType !== 'Point' && drawType !== 'distance' ){
 			polygon.handler.callbacks.point = function(pt){
 				console.log(pt);
 				console.info(layerType);
@@ -322,6 +361,8 @@ var mapComp = {
 		var dragType = 'OpenLayers.Geometry.'+drawType;
 		if(drawType === 'RegularPolygon' || drawType === 'arrowPolygon'){
 			dragType = 'OpenLayers.Geometry.Polygon';
+		}else if(drawType === 'distance'){
+			dragType = 'OpenLayers.Geometry.LineString';
 		}
 		var dragControl = new OpenLayers.Control.DragFeature(drawLayer, {
 		    geometryTypes: [dragType],

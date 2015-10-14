@@ -16,6 +16,8 @@ var drawComp = {
 			'title':'画多边形','sTitle':'取消画多边形','value':'polygon','logo':'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAmklEQVR4AWOgOoi58J8RiDuAeCsQq5CikRmI5wLxfyj+CcTtQMxDSCMnEG8Ea8LEz4A4EuQqbBoFgPgASCEBfASIDZE1SgDxBZAkkfgFsubzIEES8BZkzZNI1FyPrFkFiP+SoNkTPcA2kKBZFF2zA5Ea7+KK53NEaF6JS3McEZqLYOpZ0PSvAOJGKPsJFD8H4kcgGsq/TJUMBABfU4nUIZMyzQAAAABJRU5ErkJggg=='
 		},{
 			'title':'画静态线','sTitle':'取消画线','value':'staticLine','logo':'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAu0lEQVR4Ac3MoQrCYBhG4QUFm0sKljWD2MQqVq/AaJUFgzdhsNpkQRDEbBJhRcSmCM4LELNgcTpQPeEPQ96ZN3hg3w7vrPQ87vFTxRR2Qm9hlDTe4govoZ8wV8FBhDbuolfwQEmNfSzN+w3uT1/BV8MiIjjm9nCO9bzpZTVeYBO7C3ijbu4JDmpoq79yB1gjixBNNZ5hJ7538MIQFzXM4Ykap+qh6V0VxwjMqfoeETIqDtD4M+6hb6Xq+QJq9rw22/ol4AAAAABJRU5ErkJggg=='
+		},{
+			'title':'测距','sTitle':'取消测距','value':'distance','logo':'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAu0lEQVR4Ac3MoQrCYBhG4QUFm0sKljWD2MQqVq/AaJUFgzdhsNpkQRDEbBJhRcSmCM4LELNgcTpQPeEPQ96ZN3hg3w7vrPQ87vFTxRR2Qm9hlDTe4govoZ8wV8FBhDbuolfwQEmNfSzN+w3uT1/BV8MiIjjm9nCO9bzpZTVeYBO7C3ijbu4JDmpoq79yB1gjixBNNZ5hJ7538MIQFzXM4Ykap+qh6V0VxwjMqfoeETIqDtD4M+6hb6Xq+QJq9rw22/ol4AAAAABJRU5ErkJggg=='
 		}];
 		// var parentE = document.createElement('div');
 		var drawCom = drawComp.createLogo(jsonDatas,logoList,backEvent);

@@ -1,5 +1,5 @@
 function initToolBar(cityName){
-	var showColor = ['marker','dynamicLine','text','arrowPolygon','circle','regularPolygon','polygon','staticLine'];
+	var showColor = ['marker','dynamicLine','text','arrowPolygon','circle','regularPolygon','polygon','staticLine','distance'];
 	var currentCaseId = '';//记录当前的预案ID
 	var penModel = null;//记录当前画笔模式
 	var cityInfo = {"name":"阳春县","code":"440000",'type':'town'};
@@ -44,6 +44,8 @@ function initToolBar(cityName){
 					mapComp.drawPath(initDatas.size,initDatas.color,'staticLine');
 				}else if(drawType === 'marker'){
 					mapComp.drawPoint(initDatas.size,initDatas.color); 
+				}else if(drawType === 'distance'){
+					mapComp.drawDistance(initDatas.size,initDatas.color); 
 				}
 			}
 			if(penModel){
