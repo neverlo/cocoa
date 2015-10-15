@@ -138,10 +138,18 @@
     line-height: 29px;
 	position: absolute;
 	right: -175px;
+	cursor: pointer;
 }
 .mapTextSubInput{
 	height: 25px;
     line-height: 25px;
 	position: absolute;
 	right: -126px;
+}
+.textDelete{
+	cursor: pointer;
+	width: 29px;
+    height: 29px;
+    position: absolute;
+    left: 380px;
 }

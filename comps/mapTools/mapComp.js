@@ -32,7 +32,7 @@ var mapComp = {
 	        		graphicHeight: '${size}',
 					graphicOpacity: 1,
 					externalGraphic: '${logo}',
-					labelYOffset:-20
+					labelYOffset:'${labelY}'
 				}
 		    })
 		});
@@ -63,11 +63,13 @@ var mapComp = {
 	},
 	removeLasFeature : function(){
 		var featureList = this.drawLayer.features;
-		var deleteFeature = featureList[featureList.length-1];
-		if(deleteFeature.attributes.type === 'dynamicLine'){
-			mapComp.removeDynamicLine(deleteFeature);
-		}else{
-			this.drawLayer.removeFeatures([deleteFeature]);
+		if(featureList.length > 0){
+			var deleteFeature = featureList[featureList.length-1];
+			if(deleteFeature.attributes.type === 'dynamicLine'){
+				mapComp.removeDynamicLine(deleteFeature);
+			}else{
+				this.drawLayer.removeFeatures([deleteFeature]);
+			}
 		}
 	},
 	drawPolygon : function(layerSize,layerColor){
@@ -140,7 +142,7 @@ var mapComp = {
 			'label':'',
 			'graphicWidth': gSize,
 			'graphicHeight': gSize,
-			'labelYOffset':25,
+			'labelYOffset':0,
 			'graphicOpacity': 1,
 			'externalGraphic': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAIElEQVR4AWOgCYi58P8/CI9qxqGQFEyZZjxgNKoGJQAAXkmLOVqD5tkAAAAASUVORK5CYII='
 		}, OpenLayers.Feature.Vector.style.temporary);
@@ -218,7 +220,8 @@ var mapComp = {
 							'color':'',
 							'strokeColor' : '',
 							'type' : layerType,
-							'logo' : cLogo
+							'logo' : cLogo,
+							'labelY' : '-20'
 						};	
 						
 						drawLayer.redraw();
@@ -227,29 +230,28 @@ var mapComp = {
 					} catch (error) {
 						
 					}
-				},
-				callbacks : function(pObj){
-					console.info("point call back");
 				}
 			}),
 			text: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Point,{
 				handlerOptions:drawOptions,
-				featureAdded:function(obj){//完成图形后的监听事件
-						console.info("finished text");	
-						var pSize = mapComp.layerSize*12;	
-						// var cLogo = mapComp.getPointLogo(mapComp.layerColor);	
-						obj.attributes={
-							'text':'',
-							'size':pSize,
-							'color':mapComp.layerColor,
-							'strokeColor' : '',
-							'type' : layerType,
-							'logo' : ''
-						};
-						drawLayer.redraw();
+				callbacks : {
+					// create : function(cPoint){
+					// 	console.info(cPoint);
+					// 	cPoint.attributes={
+					// 		'text':'',
+					// 		'size':'',
+					// 		'color':mapComp.layerColor,
+					// 		'strokeColor' : '',
+					// 		'type' : 'text',
+					// 		'logo' : '',
+					// 		'labelY' : '0'
+					// 	};
+					// }
+					done : function(dPoint){
+						mapComp.addText(dPoint);
 						mapComp.dragControl.activate();
 						clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
-						mapComp.addText(obj);
+					}
 				}
 			}),
             LineString: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Path,{
@@ -270,7 +272,8 @@ var mapComp = {
 						'size' : mapComp.layerSize,
 						'strokeColor' : mapComp.layerColor,
 						'type' : layerType,
-						'parent' : mapComp.parentId
+						'parent' : mapComp.parentId,
+						'labelY' : '-20'
 					};
 					drawLayer.redraw();
 					mapComp.dragControl.activate();
@@ -286,7 +289,8 @@ var mapComp = {
 						'text' : '',
 						'size' : mapComp.layerSize,
 						'strokeColor' : 'blue',
-						'type' : layerType
+						'type' : layerType,
+						'labelY' : '-20'
 					};
 					drawLayer.redraw();
 					mapComp.dragControl.activate();
@@ -302,7 +306,8 @@ var mapComp = {
 						'text' : '',
 						'size' : mapComp.layerSize,
 						'strokeColor' : 'blue',
-						'type' : layerType
+						'type' : layerType,
+						'labelY' : '-20'
 					};
 					drawLayer.redraw();
 					mapComp.dragControl.activate();
@@ -322,7 +327,8 @@ var mapComp = {
 						'text' : '',
 						'size' : arrpwSize,
 						'strokeColor' : 'blue',
-						'type' : layerType
+						'type' : layerType,
+						'labelY' : '-20'
 					};
 					drawLayer.redraw();
 					mapComp.dragControl.activate();
@@ -394,16 +400,23 @@ var mapComp = {
 		clickFeatureControl.activate();
 	},
 	addText : function(pt){
-		if(typeof(this.textDoc) !== 'undefined'){
-			if(this.textDoc){
-				T(this.textDoc).remove();
+		if(typeof(mapComp.textDoc) !== 'undefined'){
+			if(mapComp.textDoc){
+				T(mapComp.textDoc).remove();
 			}
 		}
-		var lonlat = new OpenLayers.LonLat(pt.geometry.x,pt.geometry.y);
+		var lonlat = new OpenLayers.LonLat(pt.x,pt.y);
 		var pixel = this.map.getPixelFromLonLat(lonlat);
-		var textDoc = mapTextComp.init(pixel);
+		var textDoc = mapTextComp.init(pixel,textBack);
 		this.textDoc = textDoc;
 		document.body.appendChild(textDoc);
+		function textBack(tDatas){
+			if(tDatas.type === 'submit'){
+				mapComp.addMapText(pt,tDatas.value);
+			}
+			mapComp.textDoc = null;
+			T(textDoc).remove();
+		}
 	},
 	setLayerPro : function(layerSize,layerColor,currToolType){
 		this.layerSize = layerSize;
@@ -439,6 +452,21 @@ var mapComp = {
 				console.info(error.message);
 			}
 		}
+	},
+	addMapText : function(pt,text){
+		var pSize = mapComp.layerSize*12;
+		var point = new OpenLayers.Geometry.Point(pt.x,pt.y);
+		var pointStyle = {
+			cursor : 'pointer',
+			label:text,
+			fontColor:mapComp.layerColor,
+			fontSize:pSize
+		};
+		var pointFeature = new OpenLayers.Feature.Vector(point,null, pointStyle);
+		pointFeature.attributes = {
+			'type' : 'text'
+		};
+		this.drawLayer.addFeatures([pointFeature]);
 	},
 	getPointLogo : function(color){
 		return this.logoList[color].logo;
