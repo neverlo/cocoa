@@ -66,7 +66,7 @@ var mapComp = {
 	drawPolygon : function(layerSize,layerColor){
 		//工具默认样式
 		var drawOptions =	{
-			'freehand':false
+			'freehand':true
 		};
 		var temporarystyle = OpenLayers.Util.applyDefaults({
 			pointRadius: 6,
@@ -83,9 +83,10 @@ var mapComp = {
 		this.initDraw(drawOptions,this.drawLayer,'Polygon','polygon');
 	},
 	drawPath : function(layerSize,layerColor,lineType){
+		var handS = lineType === 'dynamicLine' ? false : true;
 		//工具默认样式
 		var drawOptions =	{
-			'freehand':false
+			'freehand':handS
 		};
 		var temporarystyle = OpenLayers.Util.applyDefaults({
 			pointRadius: 6,
@@ -100,23 +101,6 @@ var mapComp = {
 		this.layerColor = layerColor;
 		this.drawLayer.styleMap.styles.temporary = new OpenLayers.Style(temporarystyle);
 		this.initDraw(drawOptions,this.drawLayer,'LineString',lineType);
-	},
-	drawDistance : function(layerSize,layerColor){
-		//工具默认样式
-		var drawOptions =	{};
-		var temporarystyle = OpenLayers.Util.applyDefaults({
-			pointRadius: 6,
-			label:'',
-			fillColor:layerColor,
-			strokeWidth: layerSize,
-			labelYOffset:25,
-		    strokeColor: 'red',
-		    graphicName: 'square'
-		}, OpenLayers.Feature.Vector.style.temporary);
-		this.layerSize = layerSize;
-		this.layerColor = layerColor;
-		this.drawLayer.styleMap.styles.temporary = new OpenLayers.Style(temporarystyle);
-		this.initDraw(drawOptions,this.drawLayer,'distance','distance');
 	},
 	drawPoint : function(layerSize,layerColor){
 		//工具默认样式
@@ -172,7 +156,7 @@ var mapComp = {
 		var drawOptions =	{
 			'graphicSize':arrpwSize,
 			'mode': 'direction',
-			 'mutiVertice':true
+			'mutiVertice':true
 		};
 		var temporarystyle = OpenLayers.Util.applyDefaults({
 			pointRadius: 6,
@@ -188,16 +172,18 @@ var mapComp = {
 		this.drawLayer.styleMap.styles.temporary = new OpenLayers.Style(temporarystyle);
 		this.initDraw(drawOptions,this.drawLayer,'arrowPolygon','arrowPolygon');
 	},
-	setLayerPro : function(layerSize,layerColor){
+	setLayerPro : function(layerSize,layerColor,currToolType){
 		this.layerSize = layerSize;
 		this.layerColor = layerColor;
 		var changeObj = this.drawLayer.styleMap.styles.temporary.defaultStyle;
 		changeObj.fillColor = layerColor;
 		changeObj.strokeWidth = layerSize;
-		changeObj.graphicHeight = layerSize*15;
-		changeObj.graphicWidth = layerSize*15;
-		var cLogo = mapComp.getPointLogo(layerColor);
-		changeObj.externalGraphic = cLogo;
+		if(currToolType === 'marker'){
+			changeObj.graphicHeight = layerSize*15;
+			changeObj.graphicWidth = layerSize*15;
+			var cLogo = mapComp.getPointLogo(layerColor);
+			changeObj.externalGraphic = cLogo;
+		}
 		if(typeof(this.arrowPolygon) !== 'undefined'){
 			var zoomValue = this.map.zoom;
 			var arrpwSize = layerSize * Math.pow(0.6,zoomValue-1);
@@ -217,7 +203,7 @@ var mapComp = {
 				handlerOptions:drawOptions,
 				featureAdded:function(obj){//完成图形后的监听事件
 					try {
-						console.info("finished");	
+						console.info("finished point");	
 						var pSize = mapComp.layerSize*15;	
 						var cLogo = mapComp.getPointLogo(mapComp.layerColor);	
 						obj.attributes={
@@ -243,7 +229,7 @@ var mapComp = {
             line: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Path,{
 				handlerOptions:drawOptions,
 				featureAdded:function(obj){//完成图形后的监听事件
-					console.info("finished");
+					console.info("finished line");
 					obj.attributes = {
 						'color' : '',
 						'text' : '',
@@ -259,7 +245,7 @@ var mapComp = {
             polygon: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Polygon,{
 				handlerOptions:drawOptions,
 				featureAdded:function(obj){//完成图形后的监听事件
-					console.info("finished");
+					console.info("finished polygon");
 					obj.attributes = {
 						'color' : mapComp.layerColor,
 						'text' : '',
@@ -275,7 +261,7 @@ var mapComp = {
 			RegularPolygon: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.RegularPolygon,{
 				handlerOptions:drawOptions,
 				featureAdded:function(obj){//完成图形后的监听事件
-					console.info("finished");
+					console.info("finished RegularPolygon");
 					obj.attributes = {
 						'color' : mapComp.layerColor,
 						'text' : '',
@@ -307,27 +293,6 @@ var mapComp = {
 					mapComp.dragControl.activate();
 					clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 				}
-			}),
-			distance: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Path,{
-				handlerOptions:drawOptions,
-				callbacks : {
-					point : function(cPoint){
-						console.info('callback');
-					}
-				},
-				featureAdded:function(obj){//完成图形后的监听事件
-					console.info("finished distance");
-					obj.attributes = {
-						'color' : '',
-						'text' : '',
-						'size' : mapComp.layerSize,
-						'strokeColor' : mapComp.layerColor,
-						'type' : layerType
-					};
-					drawLayer.redraw();
-					mapComp.dragControl.activate();
-					clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
-				}
 			})
         };
 		var polygon = '';
@@ -342,11 +307,9 @@ var mapComp = {
 		}else if(drawType === 'arrowPolygon'){
 			polygon = drawControls.arrowPolygon;
 			this.arrowPolygon = polygon;
-		}else if(drawType === 'distance'){
-			polygon = drawControls.distance;
 		}
 		
-		if(drawType !== 'Point' && drawType !== 'distance' ){
+		if(drawType !== 'Point'){
 			polygon.handler.callbacks.point = function(pt){
 				console.log(pt);
 				console.info(layerType);
@@ -361,8 +324,6 @@ var mapComp = {
 		var dragType = 'OpenLayers.Geometry.'+drawType;
 		if(drawType === 'RegularPolygon' || drawType === 'arrowPolygon'){
 			dragType = 'OpenLayers.Geometry.Polygon';
-		}else if(drawType === 'distance'){
-			dragType = 'OpenLayers.Geometry.LineString';
 		}
 		var dragControl = new OpenLayers.Control.DragFeature(drawLayer, {
 		    geometryTypes: [dragType],
@@ -414,12 +375,14 @@ var mapComp = {
 			this.clickFeatureControl.deactivate();
 		}
 	},
-	changPenModel : function(status){
-		console.info(this.layerHandler);
-		try {
-			this.layerHandler.handler.freehand = status;
-		} catch (error) {
-			console.info(error.message);
+	changPenModel : function(status,drawType){
+		if(drawType !== 'dynamicLine'){
+			console.info(this.layerHandler);
+			try {
+				this.layerHandler.handler.freehand = !status;
+			} catch (error) {
+				console.info(error.message);
+			}
 		}
 	},
 	getPointLogo : function(color){

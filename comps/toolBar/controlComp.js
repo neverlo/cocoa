@@ -1,7 +1,7 @@
 var controlComp={
 	init : function(logoList,backEvent){
         var jsonDatas = [{
-			'title':'切换画笔模式','sTitle':'取消画笔模式','value':'pen','logo':'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAnUlEQVR4AWOgOZh2P6oeiHPI0ZgDxP+huJ4UjdFA/A+sEYEnAzEjIY1+QPwbrAETR+LT6ADEX3FonIWwGVOjIRB/wKFxDRAz49KoAsSvcGjcC8RsuDTKAPFjHBpPADEXLo3cQHwNh8ZLQCxMKHSLsETLXZCL8GtEKE4E4j9Q9ktQGBBMDGi2BUA16hKXkjD9yYMQx8TompdhGklYMwBiAQ1E1n946wAAAABJRU5ErkJggg=='
+			'title':'禁用画笔模式','sTitle':'启用画笔模式','value':'pen','logo':'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAnUlEQVR4AWOgOZh2P6oeiHPI0ZgDxP+huJ4UjdFA/A+sEYEnAzEjIY1+QPwbrAETR+LT6ADEX3FonIWwGVOjIRB/wKFxDRAz49KoAsSvcGjcC8RsuDTKAPFjHBpPADEXLo3cQHwNh8ZLQCxMKHSLsETLXZCL8GtEKE4E4j9Q9ktQGBBMDGi2BUA16hKXkjD9yYMQx8TompdhGklYMwBiAQ1E1n946wAAAABJRU5ErkJggg=='
 		},{
 			'title':'撤销','sTitle':'撤销','value':'undo','logo':'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAi0lEQVR4AWPABmIu/GcG4v8MJAGE5k0gzeRoPA/SCMKkanwM0gTDpGj8DNeIwD+B+CWU3YVNUw4Q/4FrIIwXAzEXTHMDSJBEPB3FBSRqfg/SQ8iAaUC8H4hfo4n/xRpw+EIbyZAnOEMej+ZOqNxqvFGHQ3MmTJwczaVA/BCI2XDpI+QdP3IzTDwyHwDekBjYsibW8QAAAABJRU5ErkJggg=='
 		},{

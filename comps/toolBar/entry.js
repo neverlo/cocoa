@@ -2,7 +2,8 @@ function initToolBar(cityName){
 	var showColor = ['marker','dynamicLine','text','arrowPolygon','circle','regularPolygon','polygon','staticLine','distance'];
 	var currentCaseId = '';//记录当前的预案ID
 	var penModel = null;//记录当前画笔模式
-	var cityInfo = {"name":"阳春县","code":"440000",'type':'town'};
+	var currToolType = '';//记录当前使用的工具类型
+	var cityInfo = {"name":"广东省","code":"440000",'type':'province'};
 	var cityCom = cityComp.init(cityInfo,addCaseName);
 	var drawCom = drawComp.init(showColor,drawEvent);
 	var docCom = docComp.init(['document'],drawEvent);
@@ -20,12 +21,12 @@ function initToolBar(cityName){
 	function drawEvent(bDatas){
 		var drawType = bDatas.value;
 		console.info(bDatas);//点击工具类型
-		
 		if(T(bDatas.value).inArray(showColor)){
 			mapComp.clearHander();
+			currToolType = drawType;
 			//控制色板
 			var status = 'none';
-			var docListLeft = '245px';
+			var docListLeft = '300px';
 			if(bDatas.status === 'selected'){
 				status = 'block';
 				docListLeft = '304px';
@@ -44,12 +45,10 @@ function initToolBar(cityName){
 					mapComp.drawPath(initDatas.size,initDatas.color,'staticLine');
 				}else if(drawType === 'marker'){
 					mapComp.drawPoint(initDatas.size,initDatas.color); 
-				}else if(drawType === 'distance'){
-					mapComp.drawDistance(initDatas.size,initDatas.color); 
 				}
 			}
 			if(penModel){
-				mapComp.changPenModel(penModel);
+				mapComp.changPenModel(penModel,drawType);
 			}
 			documentList.style.marginLeft = docListLeft;
 			colorCom.style.display = status;
@@ -73,12 +72,12 @@ function initToolBar(cityName){
 				penStatus = true;
 			}
 			penModel = penStatus;
-			mapComp.changPenModel(penStatus);
+			mapComp.changPenModel(penStatus,currToolType);
 		}
 	}
 	
 	function colorBack(coDatas){
-		mapComp.setLayerPro(coDatas.size,coDatas.color);
+		mapComp.setLayerPro(coDatas.size,coDatas.color,currToolType);
 		console.info(coDatas);
 	}
 	var caseDiv = null;
