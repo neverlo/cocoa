@@ -425,7 +425,7 @@ var mapComp = {
 				clicklTime = window.setTimeout(function(){
 					console.info('timeout');
 					var fType = feature.attributes.type;
-					if(fType === 'point' || fType === 'polygon' || fType === 'RegularPolygon'){
+					if(fType === 'point' || fType === 'polygon' || fType === 'RegularPolygon' || fType === 'arrowPolygon'){
 						mapComp.addLayerText(feature);
 					}
 				},200);
@@ -444,7 +444,8 @@ var mapComp = {
 		var centroid = feature.geometry.getCentroid();
 		var lonlat = new OpenLayers.LonLat(centroid.x,centroid.y);
 		var pixel = mapComp.map.getPixelFromLonLat(lonlat);
-		var layerDoc = mapTextComp.init(pixel,layerBack);
+		var layerText = feature.attributes.text;
+		var layerDoc = mapTextComp.init(pixel,layerBack,layerText);
 		this.layerDoc = layerDoc;
 		document.body.appendChild(layerDoc);
 		function layerBack(tDatas){

@@ -1,10 +1,12 @@
 var mapTextComp = {
-	init : function(pixel,callBack){
+	init : function(pixel,callBack,layerText){
 		var textDoc = document.createElement('div');
 		var textInput = document.createElement('input');
 		textInput.setAttribute('type','text');
 		textInput.setAttribute('class','mapTextSubInput');
-		
+		if(typeof(layerText) !== 'undefined'){
+			textInput.value = layerText;
+		}
 		var subInput = document.createElement('button');
 		subInput.setAttribute('type','button');
 		subInput.setAttribute('class','mapTextSubButton');
