@@ -228,6 +228,14 @@ var mapComp = {
 			}),        
             line: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Path,{
 				handlerOptions:drawOptions,
+				callbacks : {
+					point : function(cPoint){
+						if(layerType === 'dynamicLine'){
+							mapComp.addLinePoint(cPoint,mapComp.layerColor);
+							mapComp.clickFeatureControl.deactivate();
+						}
+					}
+				},
 				featureAdded:function(obj){//完成图形后的监听事件
 					console.info("finished line");
 					obj.attributes = {
@@ -235,7 +243,8 @@ var mapComp = {
 						'text' : '',
 						'size' : mapComp.layerSize,
 						'strokeColor' : mapComp.layerColor,
-						'type' : layerType
+						'type' : layerType,
+						'parent' : mapComp.parentId
 					};
 					drawLayer.redraw();
 					mapComp.dragControl.activate();
@@ -309,12 +318,12 @@ var mapComp = {
 			this.arrowPolygon = polygon;
 		}
 		
-		if(drawType !== 'Point'){
-			polygon.handler.callbacks.point = function(pt){
-				console.log(pt);
-				console.info(layerType);
-			};
-		}
+		// if(drawType !== 'Point' && drawType !== 'dynamicLine'){
+		// 	polygon.handler.callbacks.point = function(pt){
+		// 		console.log(pt);
+		// 		console.info(layerType);
+		// 	};
+		// }
 		
 		this.layerHandler = polygon;
 		map.addControl(polygon);
@@ -355,7 +364,13 @@ var mapComp = {
 		    },
 		    dbClickFeature: function(feature) {
 				console.info("dbClick");
-				drawLayer.removeFeatures([feature]);
+				var feaType = feature.attributes.type;
+				if(feaType === 'dynamicLine'){
+					mapComp.removeDynamicLine(feature);
+				}else{
+					drawLayer.removeFeatures([feature]);
+				}
+				
 				dragControl.deactivate();
 				clickFeatureControl.activate();
 				mapComp.drawLayer.styleMap.styles.temporary.defaultStyle.label = '';
@@ -387,6 +402,36 @@ var mapComp = {
 	},
 	getPointLogo : function(color){
 		return this.logoList[color].logo;
+	},
+	addLinePoint : function(pt,outColor){
+		var point = new OpenLayers.Geometry.Point(pt.x,pt.y);
+		var pointStyle = {
+			pointRadius: 4,
+			fillColor:"white",
+			strokeColor:outColor,
+			cursor : 'pointer',
+			strokeWidth: 2,
+			label:''
+		};
+		var pointFeature = new OpenLayers.Feature.Vector(point,null, pointStyle);
+		var parentId = pt.parent.id;
+		pointFeature.attributes = {
+			"parent" : parentId,
+			'type' : 'dynamicLine'
+		};
+		this.parentId = parentId;
+		this.drawLayer.addFeatures([pointFeature]);
+	},
+	removeDynamicLine : function(feature){
+		var parentId = feature.attributes.parent;
+		var curFeatures = this.drawLayer.features;
+		var tempArr = [];
+		for(var key in curFeatures){
+			if(curFeatures[key].attributes.parent === parentId){
+				tempArr.push(curFeatures[key]);
+			}
+		}
+		this.drawLayer.removeFeatures(tempArr);
 	}
 };
 
