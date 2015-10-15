@@ -1,4 +1,4 @@
-function initToolBar(cityName){
+function initToolBar(cityName,saveBack){
 	var showColor = ['marker','dynamicLine','text','arrowPolygon','circle','regularPolygon','polygon','staticLine','distance'];
 	var currentCaseId = '';//记录当前的预案ID
 	var penModel = null;//记录当前画笔模式
@@ -7,7 +7,7 @@ function initToolBar(cityName){
 	var cityCom = cityComp.init(cityInfo,addCaseName);
 	var drawCom = drawComp.init(showColor,drawEvent);
 	var docCom = docComp.init(['document'],drawEvent);
-	var controlCom = controlComp.init(['pen','undo','add','delete','save'],drawEvent);
+	var controlCom = controlComp.init(['pen','undo','delete','save'],drawEvent);
 	var colorCom = colorComp.init(colorBack);
 	var documentList = docComp.createList();
 	documentList.style.display = 'none';
@@ -56,7 +56,7 @@ function initToolBar(cityName){
 			colorCom.style.display = status;
 			console.info(colorComp.getResultJson());//工具初始状态
 			
-		}else if(bDatas.value === 'document'){
+		}else if(drawType === 'document'){
 			//控制文档面板
 			var dstatus = 'none';
 			if(bDatas.status === 'selected'){
@@ -66,15 +66,22 @@ function initToolBar(cityName){
 			//当前的预案ID
 			console.info(currentCaseId);
 			// documentList.style.marginLeft = docListLeft;
-		}else if(bDatas.value === 'undo'){
+		}else if(drawType === 'undo'){
 			mapComp.removeLasFeature();
-		}else if(bDatas.value === 'pen'){//切换画笔模式
+		}else if(drawType === 'pen'){//切换画笔模式
 			var penStatus = false;
 			if(bDatas.status === 'selected'){
 				penStatus = true;
 			}
 			penModel = penStatus;
 			mapComp.changPenModel(penStatus,currToolType);
+		}else if(drawType === 'delete'){
+			mapComp.removeAllFeatures();
+		}else if(drawType === 'save'){
+			var layerJson = mapComp.saveAllFeature();
+			if(saveBack){
+				return saveBack(layerJson);
+			}
 		}
 	}
 	
