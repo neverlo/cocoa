@@ -21,6 +21,8 @@ var mapComp = {
 		var drawLayer = new OpenLayers.Layer.Vector("toolBarDraw", {
 			styleMap: new OpenLayers.StyleMap({
 		        "default": {
+					fontSize:'${size}',
+					fontColor:'${color}',
 					fillColor: '${color}',
 					fillOpacity:'0.5',
 					strokeColor: '${strokeColor}',
@@ -61,7 +63,12 @@ var mapComp = {
 	},
 	removeLasFeature : function(){
 		var featureList = this.drawLayer.features;
-		this.drawLayer.removeFeatures([featureList[featureList.length-1]]);
+		var deleteFeature = featureList[featureList.length-1];
+		if(deleteFeature.attributes.type === 'dynamicLine'){
+			mapComp.removeDynamicLine(deleteFeature);
+		}else{
+			this.drawLayer.removeFeatures([deleteFeature]);
+		}
 	},
 	drawPolygon : function(layerSize,layerColor){
 		//工具默认样式
@@ -125,6 +132,23 @@ var mapComp = {
 		this.drawLayer.styleMap.styles.temporary = new OpenLayers.Style(temporarystyle);
 		this.initDraw(drawOptions,this.drawLayer,'Point','point');
 	},
+	drawText : function(layerSize,layerColor){
+		var gSize = 12 * layerSize;
+		var drawOptions =	{};
+		var temporarystyle = OpenLayers.Util.applyDefaults({
+			'pointRadius': 6,
+			'label':'',
+			'graphicWidth': gSize,
+			'graphicHeight': gSize,
+			'labelYOffset':25,
+			'graphicOpacity': 1,
+			'externalGraphic': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAIElEQVR4AWOgCYi58P8/CI9qxqGQFEyZZjxgNKoGJQAAXkmLOVqD5tkAAAAASUVORK5CYII='
+		}, OpenLayers.Feature.Vector.style.temporary);
+		this.layerSize = layerSize;
+		this.layerColor = layerColor;
+		this.drawLayer.styleMap.styles.temporary = new OpenLayers.Style(temporarystyle);
+		this.initDraw(drawOptions,this.drawLayer,'text','text');
+	},
 	drawRegularPolygon : function(layerSize,layerColor,drawType){
 		var sides = 0;
 		if(drawType === 'RegularPolygon'){
@@ -172,24 +196,6 @@ var mapComp = {
 		this.drawLayer.styleMap.styles.temporary = new OpenLayers.Style(temporarystyle);
 		this.initDraw(drawOptions,this.drawLayer,'arrowPolygon','arrowPolygon');
 	},
-	setLayerPro : function(layerSize,layerColor,currToolType){
-		this.layerSize = layerSize;
-		this.layerColor = layerColor;
-		var changeObj = this.drawLayer.styleMap.styles.temporary.defaultStyle;
-		changeObj.fillColor = layerColor;
-		changeObj.strokeWidth = layerSize;
-		if(currToolType === 'marker'){
-			changeObj.graphicHeight = layerSize*15;
-			changeObj.graphicWidth = layerSize*15;
-			var cLogo = mapComp.getPointLogo(layerColor);
-			changeObj.externalGraphic = cLogo;
-		}
-		if(typeof(this.arrowPolygon) !== 'undefined'){
-			var zoomValue = this.map.zoom;
-			var arrpwSize = layerSize * Math.pow(0.6,zoomValue-1);
-			this.arrowPolygon.handler.graphicSize = arrpwSize;
-		}
-	},
 	/**
 	 * drawOptions 画笔样式
 	 * drawLayer 画图图层
@@ -199,7 +205,7 @@ var mapComp = {
 	initDraw : function(drawOptions, drawLayer, drawType,layerType){
 		var map = this.getMap();
 		var drawControls = {
-            point: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Point,{
+            Point: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Point,{
 				handlerOptions:drawOptions,
 				featureAdded:function(obj){//完成图形后的监听事件
 					try {
@@ -225,13 +231,33 @@ var mapComp = {
 				callbacks : function(pObj){
 					console.info("point call back");
 				}
-			}),        
-            line: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Path,{
+			}),
+			text: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Point,{
+				handlerOptions:drawOptions,
+				featureAdded:function(obj){//完成图形后的监听事件
+						console.info("finished text");	
+						var pSize = mapComp.layerSize*12;	
+						// var cLogo = mapComp.getPointLogo(mapComp.layerColor);	
+						obj.attributes={
+							'text':'',
+							'size':pSize,
+							'color':mapComp.layerColor,
+							'strokeColor' : '',
+							'type' : layerType,
+							'logo' : ''
+						};
+						drawLayer.redraw();
+						mapComp.dragControl.activate();
+						clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
+						mapComp.addText(obj);
+				}
+			}),
+            LineString: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Path,{
 				handlerOptions:drawOptions,
 				callbacks : {
 					point : function(cPoint){
 						if(layerType === 'dynamicLine'){
-							mapComp.addLinePoint(cPoint,mapComp.layerColor);
+							mapComp.addLinePoint(cPoint,mapComp.layerSize,mapComp.layerColor);
 							mapComp.clickFeatureControl.deactivate();
 						}
 					}
@@ -251,7 +277,7 @@ var mapComp = {
 					clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 				}
 			}),       
-            polygon: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Polygon,{
+            Polygon: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Polygon,{
 				handlerOptions:drawOptions,
 				featureAdded:function(obj){//完成图形后的监听事件
 					console.info("finished polygon");
@@ -304,27 +330,10 @@ var mapComp = {
 				}
 			})
         };
-		var polygon = '';
-		if(drawType === 'Polygon'){
-			polygon = drawControls.polygon;
-		}else if(drawType === 'LineString'){
-			polygon = drawControls.line;
-		}else if(drawType === 'Point'){
-			polygon = drawControls.point;
-		}else if(drawType === 'RegularPolygon'){
-			polygon = drawControls.RegularPolygon;
-		}else if(drawType === 'arrowPolygon'){
-			polygon = drawControls.arrowPolygon;
+		var polygon = drawControls[drawType];
+		if(drawType === 'arrowPolygon'){
 			this.arrowPolygon = polygon;
-		}
-		
-		// if(drawType !== 'Point' && drawType !== 'dynamicLine'){
-		// 	polygon.handler.callbacks.point = function(pt){
-		// 		console.log(pt);
-		// 		console.info(layerType);
-		// 	};
-		// }
-		
+		}	
 		this.layerHandler = polygon;
 		map.addControl(polygon);
 		polygon.activate(); 
@@ -333,6 +342,8 @@ var mapComp = {
 		var dragType = 'OpenLayers.Geometry.'+drawType;
 		if(drawType === 'RegularPolygon' || drawType === 'arrowPolygon'){
 			dragType = 'OpenLayers.Geometry.Polygon';
+		}else if(drawType === 'text'){
+			dragType = 'OpenLayers.Geometry.Point';
 		}
 		var dragControl = new OpenLayers.Control.DragFeature(drawLayer, {
 		    geometryTypes: [dragType],
@@ -370,7 +381,6 @@ var mapComp = {
 				}else{
 					drawLayer.removeFeatures([feature]);
 				}
-				
 				dragControl.deactivate();
 				clickFeatureControl.activate();
 				mapComp.drawLayer.styleMap.styles.temporary.defaultStyle.label = '';
@@ -382,6 +392,36 @@ var mapComp = {
 		this.clickFeatureControl = clickFeatureControl;
 		map.addControl(clickFeatureControl);
 		clickFeatureControl.activate();
+	},
+	addText : function(pt){
+		if(typeof(this.textDoc) !== 'undefined'){
+			if(this.textDoc){
+				T(this.textDoc).remove();
+			}
+		}
+		var lonlat = new OpenLayers.LonLat(pt.geometry.x,pt.geometry.y);
+		var pixel = this.map.getPixelFromLonLat(lonlat);
+		var textDoc = mapTextComp.init(pixel);
+		this.textDoc = textDoc;
+		document.body.appendChild(textDoc);
+	},
+	setLayerPro : function(layerSize,layerColor,currToolType){
+		this.layerSize = layerSize;
+		this.layerColor = layerColor;
+		var changeObj = this.drawLayer.styleMap.styles.temporary.defaultStyle;
+		changeObj.fillColor = layerColor;
+		changeObj.strokeWidth = layerSize;
+		if(currToolType === 'marker'){
+			changeObj.graphicHeight = layerSize*15;
+			changeObj.graphicWidth = layerSize*15;
+			var cLogo = mapComp.getPointLogo(layerColor);
+			changeObj.externalGraphic = cLogo;
+		}
+		if(typeof(this.arrowPolygon) !== 'undefined'){
+			var zoomValue = this.map.zoom;
+			var arrpwSize = layerSize * Math.pow(0.6,zoomValue-1);
+			this.arrowPolygon.handler.graphicSize = arrpwSize;
+		}
 	},
 	clearHander : function(){//取消作图
 		if(typeof(this.layerHandler) !== 'undefined'){
@@ -403,14 +443,15 @@ var mapComp = {
 	getPointLogo : function(color){
 		return this.logoList[color].logo;
 	},
-	addLinePoint : function(pt,outColor){
+	addLinePoint : function(pt,outSize,outColor){
 		var point = new OpenLayers.Geometry.Point(pt.x,pt.y);
+		var pointR = 4 * outSize;
 		var pointStyle = {
-			pointRadius: 4,
+			pointRadius: pointR,
 			fillColor:"white",
 			strokeColor:outColor,
 			cursor : 'pointer',
-			strokeWidth: 2,
+			strokeWidth: outSize,
 			label:''
 		};
 		var pointFeature = new OpenLayers.Feature.Vector(point,null, pointStyle);
@@ -458,7 +499,6 @@ OpenLayers.Handler.VerticePolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
         OpenLayers.Util.extend(this.options, newOptions);
         OpenLayers.Util.extend(this, newOptions);
     },
-    
     activate: function() {
         var activated = false;
         if(OpenLayers.Handler.Drag.prototype.activate.apply(this, arguments)) {
@@ -473,7 +513,6 @@ OpenLayers.Handler.VerticePolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
         }
         return activated;
     },
-
     deactivate: function() {
         var deactivatedstatus = false;
         if(OpenLayers.Handler.Drag.prototype.deactivate.apply(this, arguments)) {
@@ -492,7 +531,6 @@ OpenLayers.Handler.VerticePolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
         }
         return deactivatedstatus;
     },
-
     down: function(evt) {
     	this.layer.removeAllFeatures();
 	    this.fixedRadius = !!(this.radius);
@@ -512,7 +550,6 @@ OpenLayers.Handler.VerticePolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
 		    this.layer.addFeatures([this.feature], {silent: true});
 		    this.layer.drawFeature(this.feature, this.style);
     },
-
     move: function(evt) {
     	this.mouseAction='move';
         var maploc = this.layer.getLonLatFromViewPortPx(evt.xy); 
@@ -531,18 +568,15 @@ OpenLayers.Handler.VerticePolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
         this.modifyGeometry();
         this.layer.drawFeature(this.feature, this.style);
     },
-
     up: function(evt) {
         this.finalize();
         if (this.start == this.last) {
             this.callback("done", [evt.xy]);
         }
     },
-
     out: function(evt) {
         this.finalize();
     },
-
     createGeometry: function() {
     	if(this.mode =="direction"){
 	    	if(this.graphicSize ===null){
@@ -590,7 +624,6 @@ OpenLayers.Handler.VerticePolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
             this.feature.geometry =this.polygon;
         }
     },
-    
     modifyGeometry: function() {
         var angle, point,moveRadius;
         var ring = this.feature.geometry.components[0];
@@ -653,7 +686,6 @@ OpenLayers.Handler.VerticePolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
             this.angle = alpha;
         }
     },
-    
     destroyFeature: function(force) {
         if(this.layer && (force || !this.persist)) {
             this.layer.destroyFeatures();
@@ -661,27 +693,20 @@ OpenLayers.Handler.VerticePolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
         this.point = null;
         this.line =null;
     },
-
-
     cancel: function() {
         this.callback("cancel", null);
         this.finalize();
     },
-
     finalize: function() {
         this.origin = null;
         this.radius = this.options.radius;
     },
-
-
     clear: function() {
         if (this.layer) {
             this.layer.renderer.clear();
             this.layer.destroyFeatures();
         }
     },
-    
-
     callback: function (name, args) {
 		        if (this.callbacks[name]) {
 		        	if(this.radius2 >0.03){
@@ -735,7 +760,6 @@ OpenLayers.Handler.VerticePolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
 	    return points;
     			 
     	 },
-    	 
     countArrow:function(arrowStart,arrowEnd,oriAngle){
     	var arrowSta, arrowEnd2,arrowMidl;
     	var arrowPoint =[];
@@ -776,7 +800,6 @@ OpenLayers.Handler.VerticePolygon = OpenLayers.Class(OpenLayers.Handler.Drag, {
     	return arrowPoint;
     	
     },
-    
     roratePolygon:function(oriAngle,origin){
     	var ring =this.feature.geometry.components[0];
         if(oriAngle>0&&oriAngle<Math.PI/2){

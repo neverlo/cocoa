@@ -45,6 +45,8 @@ function initToolBar(cityName){
 					mapComp.drawPath(initDatas.size,initDatas.color,'staticLine');
 				}else if(drawType === 'marker'){
 					mapComp.drawPoint(initDatas.size,initDatas.color); 
+				}else if(drawType === 'text'){
+					mapComp.drawText(initDatas.size,initDatas.color); 
 				}
 			}
 			if(penModel){
