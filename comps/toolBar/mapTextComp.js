@@ -1,6 +1,9 @@
 var mapTextComp = {
-	init : function(pixel,callBack,layerText){
+	init : function(pixel,callBack,layerText,featureId){
 		var textDoc = document.createElement('div');
+		if(typeof(featureId) !== 'undefined'){
+			textDoc.setAttribute('layerId',featureId);
+		}
 		var textInput = document.createElement('input');
 		textInput.setAttribute('type','text');
 		textInput.setAttribute('class','mapTextSubInput');

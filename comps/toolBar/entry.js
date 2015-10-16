@@ -31,6 +31,7 @@ function initToolBar(cityName,saveBack){
 				status = 'block';
 				docListLeft = '304px';
 				var initDatas = colorComp.getResultJson();
+				console.info(mapComp.drawLayer);
 				if(drawType === 'polygon'){
 					mapComp.drawPolygon(initDatas.size,initDatas.color);
 				}else if(drawType === 'circle'){
@@ -77,8 +78,9 @@ function initToolBar(cityName,saveBack){
 			mapComp.changPenModel(penStatus,currToolType);
 		}else if(drawType === 'delete'){
 			mapComp.removeAllFeatures();
+			mapComp.removeDrawLayer();
 		}else if(drawType === 'save'){
-			var layerJson = mapComp.saveAllFeature();
+			var layerJson = mapComp.saveAllFeature(currentCaseId);
 			if(saveBack){
 				return saveBack(layerJson);
 			}
