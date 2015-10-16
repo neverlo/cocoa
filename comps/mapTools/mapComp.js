@@ -1,4 +1,7 @@
 var mapComp = {
+	/**
+	 * 组件参数
+	 */
 	option : {
 		logoList : {
 			'#000000':{'logo':'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAYAAAA6GuKaAAAEaUlEQVR4Ac2ZNZQjRxCGl1nMuMysZRLzjDi+0JhnZuYLTZEpMzNHZsbEnJiZ2W7XL8t7pB1pWhrJeu/XYFd9r6G6uqel1l+hUJglnU66kfQ06RPS9ySGY+ka9/Ec783V7JQT1E46l/RuMplgG+urbGpilDntZmbQDjCtqocN9HbgiGvcLz7He3gf5Url7Y2AtZGuyWQyv62tepjdYgCcbKEcypOd32EPdpWAbSWdks/nvvUsLzKdpg/OaxbswB7Z/Y7snwo/9QJWkW6Lx2PMYTWWda7q62Rup5XNz00zg25ANjzswj78wF+twCbSy5sba0wz0H2CMwAuLc4zQRSYmBLZoMvGXeuwDz/wB7+8wH2kVz1LC2VrdnZmkqXSKZbJZllSSDJ7qRVqFfkD+GspUezn6cN3rK95yvZDv99bhIXQrBaTFs/qJviFf3DIgT41FApSjXYdYwwhLBQO7gNHImFm1KnqCgzBbzgcYuCoCjibzVowmsvV3tbWxj5wIOBnOnUv7isii0nHEK0I3FgROp/PX4EYeryRQbd9H3hvb2d/YCqptZVl1PblksCiKPQR9DdG/YlN7vPtFYE3N9eYur+rrBOUW19bYUIyyXK5HI64xn0uaJNezcBD4L1SfTnr93lPhNGpCDjDVjyLBzoYQktkMj+TjbNJo6QuHHGN+3jOAw4ecElBX4NQdnzB8dEhmjhmDq4Rg5pl0umfqPz2AXa38Rw1JxeaeAB9rRT0cy675YSCeulpG10Ahs+qEJHOwXtyoZFsgUvK8Od6Tb9sw4KQhOHRCtAj6ONybYMHXFKGfysNMlnCoEMfrgDdhfc4YjZs/y5l+GdAK1TTwxw1jdAK2z9KGf6IZ4Yr9ekzK0Cfjfc4wh5sfyBl+HGeTM1k0DCaSaWjR4YreiCUAvoBKegLlhfnpYw0PE57lhckWxHQG/FYDC9zz2DFGVEozog44hr3uW0mEnFAz1fK8N7EKgQFmq1htwPAz1eTlh4KBv3/B2ikvoDOVQPdTnphYmy4mcBIHQD8bLULAYAv0eD51WzQNAUYebogCH8Tx67cJdfJGARaVW/Dofd2t1HLV/Eubg9793YaCjz3b1b3FKmLCzoWiyLWPon9DOWBEesdSPo/I5+OWvc+XGToc5fDoiiw1aRjNGv+Rv789dpliomi8JdB268IMLYlSpPIoXrv550TCPiQKtYVGFllwO8D8CVKbULesbqyrMTGzC2wr9RWrxrT/OT4SF2AMcBLE0iv0nvUY5QMfYO1Wx1mvHc4Nhu5weOplPgn74yJhCyXK+4eTTX6E8ZpGPF6mRvsNrP+v9AWbNa3l0sw8qtcV2LTBzn2n1QurzyddES5ZW93B3vWFWNxNBphaKGWZv9Ky6rHpRatWFGHQ0GOWKwseD9CFz76lJs8KOkC8PUcsVhxcD3p9cWF2WOgt7c2AHw3qV15Cv6Pom/PzU4VgVc9S6z0tbav+XTS4E7Suz7vHkPNkzRNAeEAd5MeVeoz8j8XtLpcLyynCQAAAABJRU5ErkJggg=='},
@@ -31,7 +34,8 @@ var mapComp = {
 				graphicHeight: '${size}',
 				graphicOpacity: 1,
 				externalGraphic: '${logo}',
-				labelYOffset:'${labelY}'
+				labelYOffset:'${labelY}',
+				pointRadius : '${pointRadius}'
 			}
 		}
 	},
@@ -52,14 +56,77 @@ var mapComp = {
 	getMap : function(){
 		return this.map;
 	},
-	initDrawLayer : function(){
-		//建立多边形承载器
-		var drawLayer = new OpenLayers.Layer.Vector("toolBarDraw", {
-			styleMap: new OpenLayers.StyleMap(mapComp.option.styleMap)
-		});
-		this.map.addLayer(drawLayer);
-		this.drawLayer = drawLayer;
-		this.logoList = mapComp.option.logoList;
+	initDrawLayer : function(olMap){
+		if(typeof(this.drawLayer) === 'undefined'){//反转图层时避免重复
+			//建立多边形承载器
+			var drawLayer = new OpenLayers.Layer.Vector("toolBarDraw", {
+				styleMap: new OpenLayers.StyleMap(mapComp.option.styleMap)
+			});
+			olMap.addLayer(drawLayer);
+			
+			var dragControl = new OpenLayers.Control.DragFeature(drawLayer, {
+			    onEnter: function() {
+					if(!mapComp.clickFeatureControl.active){
+						mapComp.clickFeatureControl.activate();
+					}
+					drawLayer.styleMap.styles.temporary.defaultStyle.label ='双击删除';
+			    },
+			    onLeave: function() {
+			    	drawLayer.styleMap.styles.temporary.defaultStyle.label = '';
+			    }
+			});
+			this.dragControl = dragControl;
+			olMap.addControl(dragControl);
+			dragControl.activate();
+			
+			var barClicklTime = null;
+			//增加额外监听
+			var clickFeatureControl = new (OpenLayers.Class(OpenLayers.Control, {
+			    initialize: function(polygon, options) {
+			        OpenLayers.Control.prototype.initialize.apply(this, [options]);
+			        this.layer = polygon;
+			        this.handler = new OpenLayers.Handler.Feature(
+			            this, polygon, {
+			                dblclick: this.dbClickFeature,
+							click:this.clickFeature
+			            }
+			        );
+			    },
+			    dbClickFeature: function(feature) {
+					if(barClicklTime){
+						window.clearTimeout(barClicklTime);
+					}
+					var feaType = feature.attributes.type;
+					if(feaType === 'dynamicLine' || feaType === 'dynamicLinePoint'){
+						mapComp.removeDynamicLine(feature);
+					}else{
+						drawLayer.removeFeatures([feature]);
+					}
+					mapComp.removeTextWin(feature.id);
+					dragControl.deactivate();
+					mapComp.clickFeatureControl.activate();
+					mapComp.drawLayer.styleMap.styles.temporary.defaultStyle.label = '';
+			    },
+				clickFeature:function(feature){
+					if(barClicklTime){
+						window.clearTimeout(barClicklTime);
+					}
+					barClicklTime = window.setTimeout(function(){
+						var fType = feature.attributes.type;
+						if(fType === 'Point' || fType === 'Polygon' || fType === 'RegularPolygon' || fType === 'arrowPolygon'){
+							mapComp.addLayerText(feature);
+						}
+					},200);
+				}
+			}))(drawLayer);
+			mapComp.clickFeatureControl = clickFeatureControl;
+			olMap.addControl(clickFeatureControl);
+			clickFeatureControl.activate();
+			
+			this.map = olMap;
+			this.drawLayer = drawLayer;
+			this.logoList = mapComp.option.logoList;
+		}
 	},
 	drawPolygon : function(layerSize,layerColor){
 		if(typeof(mapComp.drawLayer) !== 'undefined'){
@@ -79,7 +146,7 @@ var mapComp = {
 			this.layerSize = layerSize;
 			this.layerColor = layerColor;
 			this.drawLayer.styleMap.styles.temporary = new OpenLayers.Style(temporarystyle);
-			this.initDraw(drawOptions,this.drawLayer,'Polygon','polygon');
+			this.initDraw(drawOptions,this.drawLayer,'Polygon','Polygon');
 		}
 	},
 	drawPath : function(layerSize,layerColor,lineType){
@@ -126,7 +193,7 @@ var mapComp = {
 			this.layerSize = layerSize;
 			this.layerColor = layerColor;
 			this.drawLayer.styleMap.styles.temporary = new OpenLayers.Style(temporarystyle);
-			this.initDraw(drawOptions,this.drawLayer,'Point','point');
+			this.initDraw(drawOptions,this.drawLayer,'Point','Point');
 		}
 	},
 	drawText : function(layerSize,layerColor){
@@ -205,8 +272,7 @@ var mapComp = {
 	 * drawType 图形类型
 	 * layerType 图形属性
 	 */
-	initDraw : function(drawOptions, drawLayer, drawType,layerType){
-		var map = this.getMap();
+	initDraw : function(drawOptions, drawLayer, drawType, layerType){
 		var drawControls = {
             Point: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.Point,{
 				handlerOptions:drawOptions,
@@ -237,7 +303,7 @@ var mapComp = {
 						if(!(mapComp.dragControl.active)){
 							mapComp.dragControl.activate();
 						}
-						clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
+						mapComp.clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 					} catch (error) {
 						
 					}
@@ -251,7 +317,7 @@ var mapComp = {
 						if(mapComp.dragControl.active){
 							mapComp.dragControl.deactivate();
 						}
-						clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
+						mapComp.clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 					}
 				}
 			}),
@@ -281,12 +347,12 @@ var mapComp = {
 					if(!(mapComp.dragControl.active)){
 						mapComp.dragControl.activate();
 					}
-					clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
+					mapComp.clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 					if(layerType === 'dynamicLine'){
 						if(mapComp.dragControl.active){
 							mapComp.dragControl.deactivate();
 						}
-						clickFeatureControl.activate();
+						mapComp.clickFeatureControl.activate();
 					}
 					
 				}
@@ -305,10 +371,8 @@ var mapComp = {
 						'labelY' : '-20'
 					};
 					drawLayer.redraw();
-					if(!(mapComp.dragControl.active)){
-						mapComp.dragControl.activate();
-					}
-					clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
+					mapComp.dragControl.activate();
+					mapComp.clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 				}
 			}),
 			RegularPolygon: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.RegularPolygon,{
@@ -325,10 +389,8 @@ var mapComp = {
 						'labelY' : '-20'
 					};
 					drawLayer.redraw();
-					if(!(mapComp.dragControl.active)){
-						mapComp.dragControl.activate();
-					}
-					clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
+					mapComp.dragControl.activate();
+					mapComp.clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 				}
 			}),
 			arrowPolygon: new OpenLayers.Control.DrawFeature(drawLayer,OpenLayers.Handler.VerticePolygon,{
@@ -349,10 +411,8 @@ var mapComp = {
 						'labelY' : '-20'
 					};
 					drawLayer.redraw();
-					if(!(mapComp.dragControl.active)){
-						mapComp.dragControl.activate();
-					}
-					clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
+					mapComp.dragControl.activate();
+					mapComp.clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 				}
 			})
         };
@@ -361,22 +421,99 @@ var mapComp = {
 			this.arrowPolygon = polygon;
 		}	
 		this.layerHandler = polygon;
-		map.addControl(polygon);
+		mapComp.map.addControl(polygon);
 		polygon.activate(); 
 		
+		//添加可拖动监听
+//		var dragType = 'OpenLayers.Geometry.'+drawType;
+//		if(drawType === 'RegularPolygon' || drawType === 'arrowPolygon'){
+//			dragType = 'OpenLayers.Geometry.Polygon';
+//		}else if(drawType === 'text'){
+//			dragType = 'OpenLayers.Geometry.Point';
+//		}
+//		else if(drawType === 'staticLine'){
+//			dragType = 'OpenLayers.Geometry.LineString';
+//		}
+//		var hander = mapComp.drawLayer.styleMap.styles.temporary.defaultStyle;
+//		var dragControl = new OpenLayers.Control.DragFeature(drawLayer, {
+//		    geometryTypes: [dragType],
+//		    onEnter: function(obj) {
+//				mapComp.dragControl.activate();
+//				mapComp.clickFeatureControl.activate();
+//				hander.label ='双击删除';
+//		    },
+//		    onLeave: function(obj) {
+//				hander.label = '';
+//		    }
+//		});
+//		this.dragControl = dragControl;
+//		mapComp.map.addControl(dragControl);
+////		 dragControl.activate();
+//		if(layerType !== 'dynamicLine'){
+//			dragControl.activate();
+//		}
+//		
+//		var clicklTime = null;
+//		//增加额外监听
+//		var clickFeatureControl = new (OpenLayers.Class(OpenLayers.Control, {
+//		    initialize: function(polygon, options) {
+//		        OpenLayers.Control.prototype.initialize.apply(this, [options]);
+//		        this.layer = polygon;
+//		        this.handler = new OpenLayers.Handler.Feature(
+//		            this, polygon, {
+//		                dblclick: this.dbClickFeature,
+//						click:this.clickFeature
+//		            }
+//		        );
+//		    },
+//		    dbClickFeature: function(feature) {
+//				if(clicklTime){
+//					window.clearTimeout(clicklTime);
+//				}
+//				var feaType = feature.attributes.type;
+//				if(feaType === 'dynamicLine' || feaType === 'dynamicLinePoint'){
+//					mapComp.removeDynamicLine(feature);
+//				}else{
+//					drawLayer.removeFeatures([feature]);
+//				}
+//				mapComp.removeTextWin(feature.id);
+//				dragControl.deactivate();
+//				mapComp.clickFeatureControl.activate();
+//				mapComp.drawLayer.styleMap.styles.temporary.defaultStyle.label = '';
+//		    },
+//			clickFeature:function(feature){
+//				if(clicklTime){
+//					window.clearTimeout(clicklTime);
+//				}
+//				clicklTime = window.setTimeout(function(){
+//					var fType = feature.attributes.type;
+//					if(fType === 'point' || fType === 'polygon' || fType === 'RegularPolygon' || fType === 'arrowPolygon'){
+//						mapComp.addLayerText(feature);
+//					}
+//				},200);
+//			}
+//		}))(drawLayer);
+//		mapComp.clickFeatureControl = clickFeatureControl;
+//		mapComp.map.addControl(clickFeatureControl);
+//		clickFeatureControl.activate();
+//		console.info(mapComp.map);
+	},
+	addLayerControl : function(drawType){
 		//添加可拖动监听
 		var dragType = 'OpenLayers.Geometry.'+drawType;
 		if(drawType === 'RegularPolygon' || drawType === 'arrowPolygon'){
 			dragType = 'OpenLayers.Geometry.Polygon';
 		}else if(drawType === 'text'){
 			dragType = 'OpenLayers.Geometry.Point';
+		}else if(drawType === 'staticLine'){
+			dragType = 'OpenLayers.Geometry.LineString';
 		}
 		var hander = mapComp.drawLayer.styleMap.styles.temporary.defaultStyle;
-		var dragControl = new OpenLayers.Control.DragFeature(drawLayer, {
+		var dragControl = new OpenLayers.Control.DragFeature(mapComp.drawLayer, {
 		    geometryTypes: [dragType],
 		    onEnter: function(obj) {
-				if(!dragControl.active){
-					dragControl.activate();
+				if(!mapComp.dragControl.active){
+					mapComp.dragControl.activate();
 				}
 				if(!clickFeatureControl.active){
 					clickFeatureControl.activate();
@@ -388,11 +525,8 @@ var mapComp = {
 		    }
 		});
 		this.dragControl = dragControl;
-		map.addControl(dragControl);
-		// dragControl.activate();
-		if(layerType !== 'dynamicLine'){
-			dragControl.activate();
-		}
+		this.map.addControl(dragControl);
+		dragControl.activate();
 		
 		var clicklTime = null;
 		//增加额外监听
@@ -415,11 +549,11 @@ var mapComp = {
 				if(feaType === 'dynamicLine' || feaType === 'dynamicLinePoint'){
 					mapComp.removeDynamicLine(feature);
 				}else{
-					drawLayer.removeFeatures([feature]);
+					mapComp.drawLayer.removeFeatures([feature]);
 				}
 				mapComp.removeTextWin(feature.id);
 				dragControl.deactivate();
-				clickFeatureControl.activate();
+				mapComp.clickFeatureControl.activate();
 				mapComp.drawLayer.styleMap.styles.temporary.defaultStyle.label = '';
 		    },
 			clickFeature:function(feature){
@@ -433,9 +567,9 @@ var mapComp = {
 					}
 				},200);
 			}
-		}))(drawLayer);
+		}))(mapComp.drawLayer);
 		this.clickFeatureControl = clickFeatureControl;
-		map.addControl(clickFeatureControl);
+		mapComp.map.addControl(clickFeatureControl);
 		clickFeatureControl.activate();
 	},
 	removeTextWin : function(featureId){
@@ -599,13 +733,13 @@ var mapComp = {
 	clearHander : function(){//取消作图
 		if(typeof(this.layerHandler) !== 'undefined'){
 			this.layerHandler.deactivate();
-			this.dragControl.deactivate();
-			this.clickFeatureControl.deactivate();
+//			this.dragControl.deactivate();
+//			this.clickFeatureControl.deactivate();
 		}
 	},
 	changPenModel : function(status,drawType){
 		if(drawType !== 'dynamicLine'){
-			console.info(this.layerHandler);
+//			console.info(this.layerHandler);
 			try {
 				this.layerHandler.handler.freehand = !status;
 			} catch (error) {
@@ -672,9 +806,66 @@ var mapComp = {
 		}
 		this.drawLayer.removeFeatures(tempArr);
 	},
-	restoreLayer : function(){
-		var jsonDatas = {"point":[{"type":"point","text":"","size":15,"color":"#ed3f2b","fsize":"","fcolor":"","geometry":"POINT(113.583984375 26.6357421875)"}],"dynamicLinePoint":[{"type":"dynamicLinePoint","text":"","size":"1","color":"#ed3f2b","fsize":"","fcolor":"","geometry":"POINT(116.8798828125 28.6572265625)"},{"type":"dynamicLinePoint","text":"","size":"1","color":"#ed3f2b","fsize":"","fcolor":"","geometry":"POINT(116.4404296875 25.2294921875)"},{"type":"dynamicLinePoint","text":"","size":"1","color":"#ed3f2b","fsize":"","fcolor":"","geometry":"POINT(111.7822265625 20.0439453125)"}],"dynamicLine":[{"type":"dynamicLine","text":"","size":"1","color":"#ed3f2b","fsize":"","fcolor":"","geometry":"LINESTRING(116.8798828125 28.6572265625,116.4404296875 25.2294921875,111.7822265625 20.0439453125)"}],"text":[{"type":"text","text":"dfd","size":"1","color":"#ed3f2b","fsize":"1","fcolor":"#ed3f2b","geometry":"POINT(118.1982421875 26.591796875)"}],"arrowPolygon":[{"type":"arrowPolygon","text":"","size":0.1296,"color":"#ed3f2b","fsize":"","fcolor":"","geometry":"POLYGON((114.74831881013131 25.554202599257284,114.70480618986869 25.432125525742716,117.65751088001711 24.379676329254167,117.6139982597545 24.2575992557396,119.15561953522264 23.914490267767178,117.74453612054235 24.623830476283302,117.70102350027973 24.501753402768735,114.74831881013131 25.554202599257284))"}],"RegularPolygon":[{"type":"RegularPolygon","text":"","size":"1","color":"#96c130","fsize":"","fcolor":"","geometry":"POLYGON((121.09677033549069 27.15304624857549,120.91867959150662 27.17260980770115,120.74481290497604 27.211428396938356,120.57791225740846 27.268889823945738,120.4206097717176 27.344087887693593,120.27538620207078 27.435836669795474,120.14453181091368 27.542689237149567,120.03011025016347 27.66296046093807,119.93392601618532 27.794753592115292,119.85749599180672 27.935990174273165,119.80202552416922 28.084442822140414,119.76838941568391 28.237770348778866,119.75711812787486 28.3935546875,119.76838941568391 28.549339026221137,119.80202552416922 28.702666552859586,119.85749599180672 28.851119200726835,119.93392601618532 28.992355782884708,120.03011025016347 29.12414891406193,120.14453181091368 29.244420137850433,120.27538620207078 29.351272705204526,120.4206097717176 29.443021487306407,120.57791225740846 29.518219551054262,120.74481290497604 29.575680978061644,120.91867959150662 29.61449956729885,121.09677033549069 29.63406312642451,121.27627653950931 29.63406312642451,121.45436728349338 29.61449956729885,121.62823397002396 29.575680978061644,121.79513461759154 29.518219551054262,121.9524371032824 29.443021487306407,122.09766067292922 29.351272705204526,122.22851506408632 29.244420137850433,122.34293662483653 29.12414891406193,122.43912085881468 28.992355782884708,122.51555088319328 28.851119200726835,122.57102135083078 28.702666552859586,122.60465745931609 28.549339026221134,122.61592874712514 28.3935546875,122.60465745931609 28.237770348778866,122.57102135083078 28.084442822140414,122.51555088319328 27.935990174273165,122.43912085881468 27.794753592115292,122.34293662483653 27.66296046093807,122.22851506408632 27.542689237149567,122.09766067292922 27.435836669795474,121.9524371032824 27.344087887693593,121.79513461759154 27.268889823945738,121.62823397002396 27.211428396938356,121.45436728349338 27.17260980770115,121.27627653950931 27.15304624857549,121.09677033549069 27.15304624857549))"},{"type":"RegularPolygon","text":"","size":"1","color":"#96c130","fsize":"","fcolor":"","geometry":"POLYGON((120.3955078125 23.603515625,120.3955078125 26.2841796875,121.93359375 26.2841796875,121.93359375 23.603515625,120.3955078125 23.603515625))"}],"polygon":[{"type":"polygon","text":"","size":"1","color":"#d523c8","fsize":"","fcolor":"","geometry":"POLYGON((111.5185546875 23.2080078125,111.6064453125 23.2080078125,111.73828125 23.0322265625,112.001953125 22.8564453125,112.3095703125 22.63671875,112.6611328125 22.3291015625,112.96875 22.021484375,113.1884765625 21.845703125,113.49609375 21.58203125,113.7158203125 21.494140625,113.8916015625 21.318359375,114.111328125 21.23046875,114.375 21.142578125,114.5068359375 21.0986328125,114.814453125 21.0546875,114.9462890625 21.0107421875,115.0341796875 21.0107421875,115.166015625 21.0107421875,115.25390625 20.9228515625,115.2978515625 20.9228515625,111.5185546875 23.2080078125))"},{"type":"polygon","text":"","size":"1","color":"#d523c8","fsize":"","fcolor":"","geometry":"POLYGON((109.5849609375 28.701171875,109.453125 28.701171875,109.3212890625 28.5693359375,109.013671875 28.349609375,108.5302734375 27.822265625,108.134765625 27.3828125,107.9150390625 26.9873046875,107.9150390625 26.6796875,108.1787109375 26.3720703125,108.3544921875 26.328125,108.6181640625 26.2841796875,108.8818359375 26.2841796875,109.189453125 26.2841796875,109.4970703125 26.328125,109.9365234375 26.50390625,110.2880859375 26.767578125,110.5078125 26.9873046875,110.771484375 27.20703125,110.947265625 27.4267578125,111.0791015625 27.646484375,111.2548828125 28.0859375,111.38671875 28.4375,111.38671875 28.701171875,111.4306640625 28.9208984375,111.474609375 29.140625,111.474609375 29.3603515625,111.474609375 29.580078125,111.474609375 29.755859375,111.474609375 29.8876953125,111.4306640625 29.9755859375,111.4306640625 30.01953125,111.298828125 30.1513671875,111.2109375 30.2392578125,111.1669921875 30.2392578125,111.123046875 30.2392578125,111.03515625 30.2392578125,110.9912109375 30.2392578125,110.9033203125 30.2392578125,110.8154296875 30.2392578125,109.5849609375 28.701171875))"}],"staticLine":[{"type":"staticLine","text":"","size":"1","color":"#d523c8","fsize":"","fcolor":"","geometry":"LINESTRING(126.328125 28.5693359375,126.1962890625 28.5693359375,126.0205078125 28.5693359375,125.8447265625 28.5693359375,125.3173828125 28.349609375,124.658203125 27.4267578125,124.2626953125 26.6796875,124.04296875 25.9326171875,124.04296875 25.361328125,124.306640625 24.658203125,124.6142578125 24.2626953125,124.921875 23.8671875,125.09765625 23.6474609375,125.185546875 23.4716796875,125.2294921875 23.2958984375,125.2294921875 23.0322265625,125.2294921875 22.8564453125,124.7900390625 22.4169921875,124.21875 22.197265625,123.515625 21.9775390625,122.63671875 21.8896484375,121.669921875 21.7578125,120.7470703125 21.7138671875,119.8681640625 21.7138671875,119.3408203125 21.58203125,119.033203125 21.58203125,118.9453125 21.58203125,118.9013671875 21.58203125,118.857421875 21.58203125,118.8134765625 21.58203125,118.76953125 21.58203125,118.681640625 21.58203125,118.4619140625 21.58203125,118.2861328125 21.58203125,117.978515625 21.58203125,117.6708984375 21.58203125,117.451171875 21.4501953125,117.275390625 21.3623046875,117.2314453125 21.0986328125,117.2314453125 20.9228515625,117.2314453125 20.4833984375,117.2314453125 20.17578125,117.2314453125 19.6484375,117.2314453125 19.1650390625,117.099609375 18.6376953125,116.8359375 18.1982421875,116.4404296875 17.7587890625,115.9130859375 17.4072265625,115.2099609375 17.1875,114.3310546875 17.01171875,113.4521484375 16.8798828125,112.5732421875 16.8798828125,111.6943359375 16.8798828125,110.6396484375 16.8798828125,110.2001953125 17.0556640625,109.7607421875 17.275390625,109.4970703125 17.5390625,109.3212890625 17.802734375,109.2333984375 17.978515625,109.1455078125 18.1103515625,109.013671875 18.2421875,109.013671875 18.2861328125,108.9697265625 18.330078125,108.8818359375 18.41796875,108.837890625 18.505859375,108.75 18.681640625,108.662109375 18.857421875,108.6181640625 19.033203125,108.57421875 19.12109375,108.57421875 19.296875)"}],"zoom":5,"lon":120.20796020508,"lat":20,"caseId":""};
-		
+	restoreLayer : function(jsonDatas){
+//		var jsonDatas = {"Point":[{"type":"Point","text":"","size":15,"color":"#ed3f2b","fsize":"","fcolor":"","geometry":"POINT(113.583984375 26.6357421875)"}],"dynamicLinePoint":[{"type":"dynamicLinePoint","text":"","size":"1","color":"#ed3f2b","fsize":"","fcolor":"","geometry":"POINT(116.8798828125 28.6572265625)"},{"type":"dynamicLinePoint","text":"","size":"1","color":"#ed3f2b","fsize":"","fcolor":"","geometry":"POINT(116.4404296875 25.2294921875)"},{"type":"dynamicLinePoint","text":"","size":"1","color":"#ed3f2b","fsize":"","fcolor":"","geometry":"POINT(111.7822265625 20.0439453125)"}],"dynamicLine":[{"type":"dynamicLine","text":"","size":"1","color":"#ed3f2b","fsize":"","fcolor":"","geometry":"LINESTRING(116.8798828125 28.6572265625,116.4404296875 25.2294921875,111.7822265625 20.0439453125)"}],"text":[{"type":"text","text":"dfd","size":"1","color":"#ed3f2b","fsize":"1","fcolor":"#ed3f2b","geometry":"POINT(118.1982421875 26.591796875)"}],"arrowPolygon":[{"type":"arrowPolygon","text":"","size":0.1296,"color":"#ed3f2b","fsize":"","fcolor":"","geometry":"POLYGON((114.74831881013131 25.554202599257284,114.70480618986869 25.432125525742716,117.65751088001711 24.379676329254167,117.6139982597545 24.2575992557396,119.15561953522264 23.914490267767178,117.74453612054235 24.623830476283302,117.70102350027973 24.501753402768735,114.74831881013131 25.554202599257284))"}],"RegularPolygon":[{"type":"RegularPolygon","text":"","size":"1","color":"#96c130","fsize":"","fcolor":"","geometry":"POLYGON((121.09677033549069 27.15304624857549,120.91867959150662 27.17260980770115,120.74481290497604 27.211428396938356,120.57791225740846 27.268889823945738,120.4206097717176 27.344087887693593,120.27538620207078 27.435836669795474,120.14453181091368 27.542689237149567,120.03011025016347 27.66296046093807,119.93392601618532 27.794753592115292,119.85749599180672 27.935990174273165,119.80202552416922 28.084442822140414,119.76838941568391 28.237770348778866,119.75711812787486 28.3935546875,119.76838941568391 28.549339026221137,119.80202552416922 28.702666552859586,119.85749599180672 28.851119200726835,119.93392601618532 28.992355782884708,120.03011025016347 29.12414891406193,120.14453181091368 29.244420137850433,120.27538620207078 29.351272705204526,120.4206097717176 29.443021487306407,120.57791225740846 29.518219551054262,120.74481290497604 29.575680978061644,120.91867959150662 29.61449956729885,121.09677033549069 29.63406312642451,121.27627653950931 29.63406312642451,121.45436728349338 29.61449956729885,121.62823397002396 29.575680978061644,121.79513461759154 29.518219551054262,121.9524371032824 29.443021487306407,122.09766067292922 29.351272705204526,122.22851506408632 29.244420137850433,122.34293662483653 29.12414891406193,122.43912085881468 28.992355782884708,122.51555088319328 28.851119200726835,122.57102135083078 28.702666552859586,122.60465745931609 28.549339026221134,122.61592874712514 28.3935546875,122.60465745931609 28.237770348778866,122.57102135083078 28.084442822140414,122.51555088319328 27.935990174273165,122.43912085881468 27.794753592115292,122.34293662483653 27.66296046093807,122.22851506408632 27.542689237149567,122.09766067292922 27.435836669795474,121.9524371032824 27.344087887693593,121.79513461759154 27.268889823945738,121.62823397002396 27.211428396938356,121.45436728349338 27.17260980770115,121.27627653950931 27.15304624857549,121.09677033549069 27.15304624857549))"},{"type":"RegularPolygon","text":"","size":"1","color":"#96c130","fsize":"","fcolor":"","geometry":"POLYGON((120.3955078125 23.603515625,120.3955078125 26.2841796875,121.93359375 26.2841796875,121.93359375 23.603515625,120.3955078125 23.603515625))"}],"polygon":[{"type":"polygon","text":"","size":"1","color":"#d523c8","fsize":"","fcolor":"","geometry":"POLYGON((111.5185546875 23.2080078125,111.6064453125 23.2080078125,111.73828125 23.0322265625,112.001953125 22.8564453125,112.3095703125 22.63671875,112.6611328125 22.3291015625,112.96875 22.021484375,113.1884765625 21.845703125,113.49609375 21.58203125,113.7158203125 21.494140625,113.8916015625 21.318359375,114.111328125 21.23046875,114.375 21.142578125,114.5068359375 21.0986328125,114.814453125 21.0546875,114.9462890625 21.0107421875,115.0341796875 21.0107421875,115.166015625 21.0107421875,115.25390625 20.9228515625,115.2978515625 20.9228515625,111.5185546875 23.2080078125))"},{"type":"polygon","text":"","size":"1","color":"#d523c8","fsize":"","fcolor":"","geometry":"POLYGON((109.5849609375 28.701171875,109.453125 28.701171875,109.3212890625 28.5693359375,109.013671875 28.349609375,108.5302734375 27.822265625,108.134765625 27.3828125,107.9150390625 26.9873046875,107.9150390625 26.6796875,108.1787109375 26.3720703125,108.3544921875 26.328125,108.6181640625 26.2841796875,108.8818359375 26.2841796875,109.189453125 26.2841796875,109.4970703125 26.328125,109.9365234375 26.50390625,110.2880859375 26.767578125,110.5078125 26.9873046875,110.771484375 27.20703125,110.947265625 27.4267578125,111.0791015625 27.646484375,111.2548828125 28.0859375,111.38671875 28.4375,111.38671875 28.701171875,111.4306640625 28.9208984375,111.474609375 29.140625,111.474609375 29.3603515625,111.474609375 29.580078125,111.474609375 29.755859375,111.474609375 29.8876953125,111.4306640625 29.9755859375,111.4306640625 30.01953125,111.298828125 30.1513671875,111.2109375 30.2392578125,111.1669921875 30.2392578125,111.123046875 30.2392578125,111.03515625 30.2392578125,110.9912109375 30.2392578125,110.9033203125 30.2392578125,110.8154296875 30.2392578125,109.5849609375 28.701171875))"}],"staticLine":[{"type":"staticLine","text":"","size":"3","color":"#d523c8","fsize":"","fcolor":"","geometry":"LINESTRING(126.328125 28.5693359375,126.1962890625 28.5693359375,126.0205078125 28.5693359375,125.8447265625 28.5693359375,125.3173828125 28.349609375,124.658203125 27.4267578125,124.2626953125 26.6796875,124.04296875 25.9326171875,124.04296875 25.361328125,124.306640625 24.658203125,124.6142578125 24.2626953125,124.921875 23.8671875,125.09765625 23.6474609375,125.185546875 23.4716796875,125.2294921875 23.2958984375,125.2294921875 23.0322265625,125.2294921875 22.8564453125,124.7900390625 22.4169921875,124.21875 22.197265625,123.515625 21.9775390625,122.63671875 21.8896484375,121.669921875 21.7578125,120.7470703125 21.7138671875,119.8681640625 21.7138671875,119.3408203125 21.58203125,119.033203125 21.58203125,118.9453125 21.58203125,118.9013671875 21.58203125,118.857421875 21.58203125,118.8134765625 21.58203125,118.76953125 21.58203125,118.681640625 21.58203125,118.4619140625 21.58203125,118.2861328125 21.58203125,117.978515625 21.58203125,117.6708984375 21.58203125,117.451171875 21.4501953125,117.275390625 21.3623046875,117.2314453125 21.0986328125,117.2314453125 20.9228515625,117.2314453125 20.4833984375,117.2314453125 20.17578125,117.2314453125 19.6484375,117.2314453125 19.1650390625,117.099609375 18.6376953125,116.8359375 18.1982421875,116.4404296875 17.7587890625,115.9130859375 17.4072265625,115.2099609375 17.1875,114.3310546875 17.01171875,113.4521484375 16.8798828125,112.5732421875 16.8798828125,111.6943359375 16.8798828125,110.6396484375 16.8798828125,110.2001953125 17.0556640625,109.7607421875 17.275390625,109.4970703125 17.5390625,109.3212890625 17.802734375,109.2333984375 17.978515625,109.1455078125 18.1103515625,109.013671875 18.2421875,109.013671875 18.2861328125,108.9697265625 18.330078125,108.8818359375 18.41796875,108.837890625 18.505859375,108.75 18.681640625,108.662109375 18.857421875,108.6181640625 19.033203125,108.57421875 19.12109375,108.57421875 19.296875)"}],"zoom":5,"lon":120.20796020508,"lat":20,"caseId":""};
+		mapComp.initDrawLayer();
+		mapComp.restoreElement(jsonDatas);
+		console.info(jsonDatas);
+	},
+	restoreElement : function(pData){
+		var tempFeatures = [];
+		this.map.setCenter(new OpenLayers.LonLat(pData.lon,pData.lat),pData.zoom);
+		for(var key in pData){
+			var tempData = pData[key];
+			for(var eKey in tempData){
+				var currData = tempData[eKey];
+				if(typeof(currData.geometry) !== 'undefined'){
+					if((currData.type).indexOf('dynamicLine') == -1){
+//						console.info(currData.type);
+						var geometry = new OpenLayers.Geometry.fromWKT(currData.geometry);
+						var reFeature = new OpenLayers.Feature.Vector(geometry);
+						reFeature.attributes = {
+							'color' : currData.color,
+							'fcolor' : currData.fcolor,
+							'fsize' : currData.fsize,
+							'size' : currData.size,
+							'text' : currData.text,
+							'strokeColor': '#384163',
+							'type' : currData.type,
+							'logo' : '',
+							'labelY' : '',
+							'pointRadius' : ''
+						};
+						if(currData.type === 'point'){
+							var pSize = currData.size;
+							var cLogo = mapComp.getPointLogo(currData.color);
+							var lSize = 0;
+							if(pSize === 15){
+								lSize = 20;
+							}else if(pSize === 30){
+								lSize = 30;
+							}else{
+								lSize = 50;
+							}
+							reFeature.attributes.labelY =  lSize;
+							reFeature.attributes.logo =  cLogo;
+						}
+						tempFeatures.push(reFeature);
+//						mapComp.addLayerControl(currData.type);
+					}else{
+						// if(currData.type === 'dynamicLinePoint'){
+						// 	var pointR =  currData.size * 4;
+						// 	reFeature.attributes.strokeColor = currData.color;
+						// 	reFeature.attributes.color = 'white';
+						// 	reFeature.attributes.pointRadius = pointR;
+						// }else if(currData.type === 'dynamicLine'){
+						// 	reFeature.attributes.strokeColor = currData.color;
+						// }
+					}
+				}
+			}
+		}
+		mapComp.drawLayer.addFeatures(tempFeatures);
 	}
 };
 

@@ -1,5 +1,5 @@
 var initToolBar = {
-	init : function(cityName,saveBack){
+	init : function(olMap,cityName,saveBack){
 		var showColor = ['marker','dynamicLine','text','arrowPolygon','circle','regularPolygon','polygon','staticLine','distance'];
 		var currentCaseId = '';//记录当前的预案ID
 		var penModel = null;//记录当前画笔模式
@@ -20,6 +20,7 @@ var initToolBar = {
 		resultComp.setAttribute('class','toolBarPosition');
 		(document.body).appendChild(resultComp);
 		this.toolBar = resultComp;
+		mapComp.initDrawLayer(olMap);
 		function drawEvent(bDatas){
 			var drawType = bDatas.value;
 			console.info(bDatas);//点击工具类型
