@@ -146,7 +146,7 @@ $(function(){
 	// 	console.info('hide');
 	// }
 	mapComp.buildMap('map');
-	initToolBar('阳江市',saveEvent);
+	initToolBar.init('阳江市',saveEvent);
 	
 	function saveEvent(jsonDatas){
 		console.info(jsonDatas);

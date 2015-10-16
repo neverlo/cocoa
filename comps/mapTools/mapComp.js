@@ -417,16 +417,7 @@ var mapComp = {
 				}else{
 					drawLayer.removeFeatures([feature]);
 				}
-				if(typeof(mapComp.layerDoc) !== 'undefined'){
-					if(mapComp.layerDoc){
-						if(mapComp.layerDoc.getAttribute('layerId') === feature.id){
-							T(mapComp.layerDoc).remove();
-							mapComp.layerDoc = null;
-						}
-					}
-					
-				}
-				
+				mapComp.removeTextWin(feature.id);
 				dragControl.deactivate();
 				clickFeatureControl.activate();
 				mapComp.drawLayer.styleMap.styles.temporary.defaultStyle.label = '';
@@ -446,6 +437,22 @@ var mapComp = {
 		this.clickFeatureControl = clickFeatureControl;
 		map.addControl(clickFeatureControl);
 		clickFeatureControl.activate();
+	},
+	removeTextWin : function(featureId){
+		if(typeof(mapComp.layerDoc) !== 'undefined'){
+			if(mapComp.layerDoc){
+				if(typeof(featureId) !== 'undefined'){
+					if(mapComp.layerDoc.getAttribute('layerId') === featureId){
+						T(mapComp.layerDoc).remove();
+						mapComp.layerDoc = null;
+					}
+				}else{
+					T(mapComp.layerDoc).remove();
+					mapComp.layerDoc = null;
+				}
+			}
+			
+		}
 	},
 	addLayerText : function(feature){
 		if(typeof(mapComp.layerDoc) !== 'undefined'){
@@ -492,24 +499,26 @@ var mapComp = {
 		}
 	},
 	setLayerPro : function(layerSize,layerColor,currToolType){
-		this.layerSize = layerSize;
-		this.layerColor = layerColor;
-		var changeObj = this.drawLayer.styleMap.styles.temporary.defaultStyle;
-		changeObj.fillColor = layerColor;
-		changeObj.strokeWidth = layerSize;
-		if(currToolType === 'marker'){
-			changeObj.graphicHeight = layerSize*15;
-			changeObj.graphicWidth = layerSize*15;
-			var cLogo = mapComp.getPointLogo(layerColor);
-			changeObj.externalGraphic = cLogo;
-		}else if(currToolType === 'text'){
-			changeObj.graphicHeight = layerSize*12;
-			changeObj.graphicWidth = layerSize*12;
-		}
-		if(typeof(this.arrowPolygon) !== 'undefined'){
-			var zoomValue = this.map.zoom;
-			var arrpwSize = layerSize * Math.pow(0.6,zoomValue-1);
-			this.arrowPolygon.handler.graphicSize = arrpwSize;
+		if(typeof(mapComp.drawLayer) !== 'undefined'){
+			this.layerSize = layerSize;
+			this.layerColor = layerColor;
+			var changeObj = this.drawLayer.styleMap.styles.temporary.defaultStyle;
+			changeObj.fillColor = layerColor;
+			changeObj.strokeWidth = layerSize;
+			if(currToolType === 'marker'){
+				changeObj.graphicHeight = layerSize*15;
+				changeObj.graphicWidth = layerSize*15;
+				var cLogo = mapComp.getPointLogo(layerColor);
+				changeObj.externalGraphic = cLogo;
+			}else if(currToolType === 'text'){
+				changeObj.graphicHeight = layerSize*12;
+				changeObj.graphicWidth = layerSize*12;
+			}
+			if(typeof(this.arrowPolygon) !== 'undefined'){
+				var zoomValue = this.map.zoom;
+				var arrpwSize = layerSize * Math.pow(0.6,zoomValue-1);
+				this.arrowPolygon.handler.graphicSize = arrpwSize;
+			}
 		}
 	},
 	getDrawLayer : function(){
@@ -520,6 +529,7 @@ var mapComp = {
 			this.map.removeLayer(this.drawLayer);
 			this.clearHander();
 			this.drawLayer = 'undefined';
+			mapComp.removeTextWin();
 		}
 	},
 	saveAllFeature : function(caseId){
@@ -572,6 +582,7 @@ var mapComp = {
 			}else{
 				this.drawLayer.removeFeatures([deleteFeature]);
 			}
+			mapComp.removeTextWin(deleteFeature.id);
 		}
 	},
 	removeAllFeatures : function(){
@@ -580,6 +591,7 @@ var mapComp = {
 			var tempFea = [];
 			for(var key in featureList){
 				tempFea.push(featureList[key]);
+				mapComp.removeTextWin(featureList[key].id);
 			}
 			this.drawLayer.removeFeatures(tempFea);
 		}
