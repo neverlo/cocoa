@@ -34,7 +34,6 @@ var initToolBar = {
 					status = 'block';
 					docListLeft = '304px';
 					var initDatas = colorComp.getResultJson();
-					console.info(mapComp.drawLayer);
 					if(drawType === 'polygon'){
 						mapComp.drawPolygon(initDatas.size,initDatas.color);
 					}else if(drawType === 'circle'){
@@ -116,7 +115,9 @@ var initToolBar = {
 		}
 	},
 	close : function(){
-		T(this.toolBar).remove();
+		if(typeof(this.toolBar) !== 'undefined'){
+			T(this.toolBar).remove();
+		}
 		mapComp.removeDrawLayer();
 	}
 };

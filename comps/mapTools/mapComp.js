@@ -59,7 +59,7 @@ var mapComp = {
 	},
 	initDrawLayer : function(olMap){
 		if(typeof(this.drawLayer) === 'undefined'){//反转图层时避免重复
-			console.info('initDrawLayer');
+			// console.info('initDrawLayer');
 			//建立多边形承载器
 			var drawLayer = new OpenLayers.Layer.Vector("toolBarDraw", {
 				styleMap: new OpenLayers.StyleMap(mapComp.option.styleMap)
@@ -172,7 +172,7 @@ var mapComp = {
 				strokeWidth: layerSize,
 				labelYOffset:25,
 				strokeColor: '#384163',
-				graphicName: 'square'
+				graphicName: 'circle'
 			}, OpenLayers.Feature.Vector.style.temporary);
 			this.layerSize = layerSize;
 			this.layerColor = layerColor;
@@ -337,7 +337,7 @@ var mapComp = {
 					}
 				},
 				featureAdded:function(obj){//完成图形后的监听事件
-					console.info('finish lineString');
+					// console.info('finish lineString');
 					obj.attributes = {
 						'fcolor' : '',
 						'fsize' : '',
@@ -429,11 +429,12 @@ var mapComp = {
 		polygon.activate();
 	},
 	controlDCControl : function(){
-		mapComp.dragControl.activate();
+		mapComp.dragControl.deactivate();
 		mapComp.clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 		window.setTimeout(function(){
+			mapComp.dragControl.activate();
 			mapComp.clickFeatureControl.activate();
-		},10);
+		},20);
 	},
 	removeTextWin : function(featureId){
 		if(typeof(mapComp.layerDoc) !== 'undefined'){
@@ -527,10 +528,21 @@ var mapComp = {
 	},
 	removeDrawLayer : function(){
 		if(typeof(this.drawLayer) !== 'undefined'){
-			this.map.removeLayer(this.drawLayer);
-			this.clearHander();
-			this.drawLayer = 'undefined';
-			mapComp.removeTextWin();
+			if(typeof(mapComp.dynamicStatus) !== 'undefined'){
+				if(mapComp.dynamicStatus){
+					
+				}else{
+					this.map.removeLayer(this.drawLayer);
+					this.clearHander();
+					mapComp.removeTextWin();
+					delete this.drawLayer;
+				}
+			}else{
+				this.map.removeLayer(this.drawLayer);
+				this.clearHander();
+				mapComp.removeTextWin();
+				delete this.drawLayer;
+			}
 		}
 	},
 	saveAllFeature : function(caseId){
@@ -728,6 +740,7 @@ var mapComp = {
 			}
 		}
 		mapComp.drawLayer.addFeatures(tempFeatures);
+		mapComp.dynamicStatus = true;
 		mapComp.restoreDynamicLine(pData.dynamicLine);
 	},
 	restoreDynamicLine : function(lineArr){
@@ -763,6 +776,7 @@ var mapComp = {
 					for(var lKey in dlArr){//将动态画的线删除
 						mapComp.drawLayer.removeFeatures(dlArr[lKey]);
 					}
+					mapComp.dynamicStatus = false;
 				}
 			}
 			if(pIndex < vertices.length-1){//画线
