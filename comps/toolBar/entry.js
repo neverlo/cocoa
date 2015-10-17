@@ -117,6 +117,7 @@ var initToolBar = {
 	close : function(){
 		if(typeof(this.toolBar) !== 'undefined'){
 			T(this.toolBar).remove();
+			delete this.toolBar;
 		}
 		mapComp.removeDrawLayer();
 	}

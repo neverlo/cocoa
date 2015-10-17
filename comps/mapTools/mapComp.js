@@ -442,11 +442,11 @@ var mapComp = {
 				if(typeof(featureId) !== 'undefined'){
 					if(mapComp.layerDoc.getAttribute('layerId') === featureId){
 						T(mapComp.layerDoc).remove();
-						mapComp.layerDoc = null;
+						delete mapComp.layerDoc;
 					}
 				}else{
 					T(mapComp.layerDoc).remove();
-					mapComp.layerDoc = null;
+					delete mapComp.layerDoc;
 				}
 			}
 			
@@ -529,9 +529,7 @@ var mapComp = {
 	removeDrawLayer : function(){
 		if(typeof(this.drawLayer) !== 'undefined'){
 			if(typeof(mapComp.dynamicStatus) !== 'undefined'){
-				if(mapComp.dynamicStatus){
-					
-				}else{
+				if(!mapComp.dynamicStatus){
 					this.map.removeLayer(this.drawLayer);
 					this.clearHander();
 					mapComp.removeTextWin();
@@ -546,45 +544,47 @@ var mapComp = {
 		}
 	},
 	saveAllFeature : function(caseId){
-		var featureList = this.drawLayer.features;
-		if(featureList.length > 0){
-			var layerJson = {};
-			for(var key in featureList){
-				var lAttr = featureList[key].attributes;
-				var lText = lAttr.text;
-				var lSize = lAttr.size;
-				var lColor = lAttr.color;
-				var lFontSize = lAttr.fsize;
-				var lFontColor = lAttr.fcolor;
-				var lType = lAttr.type;
-				var lCursor = lAttr.cursor;
-				var lGeometry = featureList[key].geometry.toString();
-				var lObj = new Object({});
-				lObj.type = lType;
-				lObj.text = lText;
-				lObj.size = lSize;
-				lObj.color = lColor;
-				lObj.fsize = lFontSize;
-				lObj.fcolor = lFontColor;
-				lObj.cursor = lCursor;
-				lObj.geometry = lGeometry;
-				if(typeof(layerJson[lType]) === 'undefined'){
-					layerJson[lType] = [];
+		if(!mapComp.dynamicStatus){
+			var featureList = this.drawLayer.features;
+			if(featureList.length > 0){
+				var layerJson = {};
+				for(var key in featureList){
+					var lAttr = featureList[key].attributes;
+					var lText = lAttr.text;
+					var lSize = lAttr.size;
+					var lColor = lAttr.color;
+					var lFontSize = lAttr.fsize;
+					var lFontColor = lAttr.fcolor;
+					var lType = lAttr.type;
+					var lCursor = lAttr.cursor;
+					var lGeometry = featureList[key].geometry.toString();
+					var lObj = new Object({});
+					lObj.type = lType;
+					lObj.text = lText;
+					lObj.size = lSize;
+					lObj.color = lColor;
+					lObj.fsize = lFontSize;
+					lObj.fcolor = lFontColor;
+					lObj.cursor = lCursor;
+					lObj.geometry = lGeometry;
+					if(typeof(layerJson[lType]) === 'undefined'){
+						layerJson[lType] = [];
+					}
+					var tempArr = [];
+					tempArr = layerJson[lType];
+					tempArr.push(lObj);
+					layerJson[lType] = tempArr;
 				}
-				var tempArr = [];
-				tempArr = layerJson[lType];
-				tempArr.push(lObj);
-				layerJson[lType] = tempArr;
+				var cMapZoom = mapComp.map.zoom;
+				var cMapCenter = mapComp.map.center;
+				layerJson.zoom = cMapZoom;
+				layerJson.lon = cMapCenter.lon;
+				layerJson.lat = cMapCenter.lat;
+				layerJson.caseId = caseId;
+				// var str = JSON.stringify(layerJson);
+				// console.info(str);
+				return layerJson;
 			}
-			var cMapZoom = mapComp.map.zoom;
-			var cMapCenter = mapComp.map.center;
-			layerJson.zoom = cMapZoom;
-			layerJson.lon = cMapCenter.lon;
-			layerJson.lat = cMapCenter.lat;
-			layerJson.caseId = caseId;
-			// var str = JSON.stringify(layerJson);
-			// console.info(str);
-			return layerJson;
 		}
 		return '';
 	},
