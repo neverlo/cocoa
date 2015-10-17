@@ -433,7 +433,7 @@ var mapComp = {
 		mapComp.clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 		window.setTimeout(function(){
 			mapComp.clickFeatureControl.activate();
-		},20);
+		},10);
 	},
 	removeTextWin : function(featureId){
 		if(typeof(mapComp.layerDoc) !== 'undefined'){
@@ -686,7 +686,6 @@ var mapComp = {
 		mapComp.initDrawLayer(olMap);
 		mapComp.removeAllFeatures();
 		mapComp.restoreElement(jsonDatas);
-		console.info(jsonDatas);
 	},
 	restoreElement : function(pData){
 		var tempFeatures = [];
@@ -697,7 +696,6 @@ var mapComp = {
 				var currData = tempData[eKey];
 				if(typeof(currData.geometry) !== 'undefined'){
 					if((currData.type).indexOf('dynamicLine') == -1){
-//						console.info(currData.type);
 						var geometry = new OpenLayers.Geometry.fromWKT(currData.geometry);
 						var reFeature = new OpenLayers.Feature.Vector(geometry);
 						reFeature.attributes = {
@@ -712,36 +710,114 @@ var mapComp = {
 							'labelY' : '',
 							'pointRadius' : ''
 						};
-						if(currData.type === 'point'){
+						var cdType = currData.type;
+						if(cdType === 'Point'){
 							var pSize = currData.size;
 							var cLogo = mapComp.getPointLogo(currData.color);
-							var lSize = 0;
-							if(pSize === 15){
-								lSize = 20;
-							}else if(pSize === 30){
-								lSize = 30;
-							}else{
-								lSize = 50;
-							}
-							reFeature.attributes.labelY =  lSize;
+							var lSize = pSize === 15 ? 20 : (pSize === 30 ? 30 : 50);
+							reFeature.attributes.labelY =  -lSize;
 							reFeature.attributes.logo =  cLogo;
+						}else if(cdType === 'staticLine'){
+							reFeature.attributes.strokeColor =  currData.color;
+						}else if(cdType === 'text'){
+							reFeature.attributes.size = currData.size * 3;
 						}
 						tempFeatures.push(reFeature);
-					}else{
-						// if(currData.type === 'dynamicLinePoint'){
-						// 	var pointR =  currData.size * 4;
-						// 	reFeature.attributes.strokeColor = currData.color;
-						// 	reFeature.attributes.color = 'white';
-						// 	reFeature.attributes.pointRadius = pointR;
-						// }else if(currData.type === 'dynamicLine'){
-						// 	reFeature.attributes.strokeColor = currData.color;
-						// }
 					}
 				}
 			}
 		}
 		mapComp.drawLayer.addFeatures(tempFeatures);
-	}
+		mapComp.restoreDynamicLine(pData.dynamicLine);
+	},
+	restoreDynamicLine : function(lineArr){
+		mapComp.startLineDynamic(lineArr,0);
+	},
+	startLineDynamic : function(lineArr,index){
+		window.setTimeout(function(){
+			var tempDatas = lineArr[index];
+			var outSize =  tempDatas.size;
+			var outColor =  tempDatas.color;
+			var geometry = new OpenLayers.Geometry.fromWKT(tempDatas.geometry);
+			var vertices = geometry.getVertices();
+			mapComp.startPointDynamic(vertices,0,outSize,outColor,lineArr,index);
+		},150);
+	},
+	startPointDynamic : function(vertices,pIndex,outSize,outColor,lineArr,index){
+		window.setTimeout(function(){
+			if(pIndex <= vertices.length-1){//画点
+				var cdPoint = vertices[pIndex];
+				mapComp.addLinePoint(cdPoint,outSize,outColor);
+				var recordPoint = new OpenLayers.Geometry.Point(cdPoint.x,cdPoint.y);
+				recordPoint.attributes = {
+					'size' : outSize,
+					'strokeColor' : outColor
+				};
+				mapComp.dynamicPoints = T(mapComp.dynamicPoints).compArrRecord(cdPoint.parent.id,recordPoint);
+			}else{
+				if(index < lineArr.length-1){//表示上一个线程结束，开始画下一条线
+					mapComp.startLineDynamic(lineArr,index+1);
+				}else{
+					mapComp.drawLineByPoints(mapComp.dynamicPoints);//重画成一条完整的线
+					var dlArr = mapComp.dynamicLines;
+					for(var lKey in dlArr){//将动态画的线删除
+						mapComp.drawLayer.removeFeatures(dlArr[lKey]);
+					}
+				}
+			}
+			if(pIndex < vertices.length-1){//画线
+				mapComp.drawLineByPoint(vertices[pIndex],vertices[pIndex+1],outSize,outColor);
+			}
+			if(pIndex <= vertices.length-1){//回调
+				mapComp.startPointDynamic(vertices,pIndex+1,outSize,outColor,lineArr,index);
+			}
+		},150);
+	},
+	drawLineByPoint : function(firPoint,secPoint,outSize,outColor){
+		var fPoint = new OpenLayers.Geometry.Point(firPoint.x,firPoint.y);
+		var sPoint = new OpenLayers.Geometry.Point(secPoint.x,secPoint.y);
+		var lineLayer = new OpenLayers.Geometry.LineString([fPoint, sPoint]);
+		var pointFeature = new OpenLayers.Feature.Vector(lineLayer);
+		var parentId = firPoint.parent.id;
+		pointFeature.attributes = {
+			'fcolor' : '',
+			'fsize' : '',
+			'text' : '',
+			'size' : outSize,
+			'color' : outColor,
+			'strokeColor' : outColor,
+			"parent" : parentId,
+			'type' : 'dynamicLine',
+			'cursor' : 'pointer',
+			'labelY' : '-20'
+		};
+		this.drawLayer.addFeatures([pointFeature]);
+		mapComp.dynamicLines = T(mapComp.dynamicLines).compArrRecord(parentId,pointFeature);
+	},
+	drawLineByPoints : function(pArr){
+		var allLines = [];
+		for(var pKey in pArr){
+			var tempArr = pArr[pKey];
+			var lineLayer = new OpenLayers.Geometry.LineString(tempArr);
+			var lineFeature = new OpenLayers.Feature.Vector(lineLayer);
+			var outSize = tempArr[0].attributes.size;
+			var outColor = tempArr[0].attributes.strokeColor;
+			lineFeature.attributes = {
+				'fcolor' : '',
+				'fsize' : '',
+				'text' : '',
+				'size' : outSize,
+				'color' : outColor,
+				'strokeColor' : outColor,
+				"parent" : pKey,
+				'type' : 'dynamicLine',
+				'cursor' : 'pointer',
+				'labelY' : '-20'
+			};
+			allLines.push(lineFeature);
+		}
+		this.drawLayer.addFeatures(allLines);
+	} 
 };
 
 //画实心，空心箭头工具的控制器
