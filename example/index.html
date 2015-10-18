@@ -8,6 +8,7 @@
     <script type="text/javascript" src="openlayers/OpenLayers.js"></script>
     <script type="text/javascript" src="../min/cocoa.min.js"></script>
     <script type="text/javascript" src="entry.js"></script>
+    <script type="text/javascript" src="html2canvas.js"></script>
 </head>
 <body>
     <div id="map" style="width:800px;height:700px;border:1px solid #000;"></div>
@@ -19,6 +20,7 @@
            <button onclick="openTool()">指挥</button>
            <button onclick="redraw()">复原</button>
            <button onclick="closeTool()">关闭</button>
+           <button onclick="exportMap()">截屏</button>
         </div>
         <!--<div class="infoCount marTpad">
             <label class="EAlabel marR10">统计分析：</label>
@@ -31,6 +33,7 @@
             </div>
         </div>-->
     </div>
+    <div><canvas id="exportedImage" class="smallmap" width="512" height="256"></canvas></div>
     <div id="searchBar"></div>
     
     <!--<div style="width: 334px; height: 30px;">

@@ -46,7 +46,9 @@ var mapComp = {
 		var mapWms = new OpenLayers.Layer.WMS(
 			'basicMap',
 			'http://vmap0.tiles.osgeo.org/wms/vmap0',
-			{layers:'basic'},{}
+			{layers:'basic'},{
+				useCanvas: OpenLayers.Layer.Grid.ONECANVASPERLAYER
+			}
 		);
 		map.addControl(new OpenLayers.Control.Navigation({documentDrag: true}));
 		map.addLayer(mapWms);
