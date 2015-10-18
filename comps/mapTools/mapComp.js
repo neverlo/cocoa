@@ -734,7 +734,8 @@ var mapComp = {
 						}else if(cdType === 'staticLine'){
 							reFeature.attributes.strokeColor =  currData.color;
 						}else if(cdType === 'text'){
-							reFeature.attributes.size = currData.size * 3;
+							reFeature.attributes.size = currData.size * 12;
+							reFeature.attributes.fsize = currData.size * 12;
 						}
 						tempFeatures.push(reFeature);
 					}
