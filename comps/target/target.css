@@ -1,10 +1,3 @@
-body,div{
-	-moz-user-select: none;
-　　-webkit-user-select: none;
-　　-ms-user-select: none;
-　　-khtml-user-select: none;
-　　user-select: none;
-}
 .tempTargetPop{
 	 height:auto;
 	 overflow:hidden;
@@ -26,7 +19,7 @@ body,div{
     cursor: pointer;
     font-size:13px;
     height:26px;
-    line-height:33px;
+    line-height:36px;
     text-align:left;
     width: 100%;
     background:#ecf2fc;
@@ -48,7 +41,7 @@ body,div{
     font-weight:bold;
 }
 
-/* ��Ϣ���� */
+/* 锟斤拷息锟斤拷锟斤拷 */
 .NewsChannels{
 	width:94%;
 	height:auto;
@@ -83,7 +76,7 @@ body,div{
 	cursor:pointer;
 }
 
-/* �ֺ� */
+/* 锟街猴拷 */
 .disTarget{
 	border:1px solid #dadada;
 	width:94%;
@@ -91,7 +84,7 @@ body,div{
 	height:auto;
 	min-height:100px;
 }
-/* �ֺ����� */
+/* 锟街猴拷锟斤拷锟斤拷 */
 .disasterTypes{
 	margin:auto;
 	padding:15px 0px;
@@ -114,7 +107,7 @@ body,div{
 	width:130px;
 }
 
-/* �ֺ��ȼ� */
+/* 灾害研判*/
 .disasterGrade{
 	padding:25px 0px;
 	height:auto;
@@ -147,7 +140,7 @@ body,div{
 	cursor:pointer;
 }
 
-/* Ӱ������ */
+/* 应急调度 */
 .influenceArea{
 	/*padding:15px 0px;*/
 	height:auto;
@@ -168,8 +161,12 @@ body,div{
 }
 .influenceArea-box{
 	display: inline-block;
-    width: 480px;
+    width: 492px;
     vertical-align: top;
+    max-height:300px;
+    overflow:auto;
+    border:1px solid #dadada;
+    margin-bottom:10px;
 }
 .influenceArea-box-ul{
 	/* float:left; */
@@ -177,13 +174,14 @@ body,div{
 	overflow:hidden;
 	width:auto;
   	margin-top: 0;
+  	padding:5px;
+  	min-height:40px;
  /*	margin-left: 30px;*/
 }
 .influenceArea-box-ul-li{
 	float:left;
 	list-style:none;
-	margin-right:4px;
-/*	margin-right:-2px;*/
+	margin-right:1px;
 	margin-bottom:3px;
 /*	border-bottom: 1px solid #eee;*/
 }
@@ -195,7 +193,7 @@ body,div{
 	*display:inline;
 	height:26px;
 	line-height:26px;
-	width:72px;
+	width:88px;
 	padding-left:3px;
 	text-align:center;
 	background:url(../img/trunk/label.png) no-repeat;
@@ -210,7 +208,7 @@ body,div{
 	color:#f39c11;
 }
 
-/* ��Ϣ�� */
+/* 锟斤拷息锟斤拷 */
 .messageBox{
 	height:auto;
 	clear:both;
@@ -241,7 +239,7 @@ body,div{
 	background:#fff;
 }
 
-/* ���� */
+/* 锟斤拷锟斤拷 */
 .tempTarget-btn{
 	height:auto;
 	overflow:hidden;
@@ -260,7 +258,7 @@ body,div{
 	cursor:pointer;
 	font-size:12px;
 	background:#1f7ed0;
-	font-family:"΢���ź�";
+	font-family:"微锟斤拷锟脚猴拷";
 	border:0;
 	border-radius:5px;
 	-webkit-border-radius:5px;
@@ -285,7 +283,7 @@ body,div{
 	cursor:pointer;
 	font-size:12px;
 	background:#1f7ed0;
-	font-family:"΢���ź�";
+	font-family:"微锟斤拷锟脚猴拷";
 	border:0;
 	border-radius:5px;
 	-webkit-border-radius:5px;
@@ -296,7 +294,7 @@ body,div{
 	color:#f5b828
 }
 
-/* ������Ϣ׷�� */
+/* 锟斤拷锟斤拷锟斤拷息追锟斤拷 */
 div.inforTracking{
 	width:320px;
 	right:1px;
@@ -315,7 +313,7 @@ div.inforTracking-big .inforTracking-con{
 	height:auto;
 }
 
-/* ����� */
+/* 锟斤拷锟斤拷锟�*/
 .progress-bar{
 	margin:auto;
 	background:#1f7ed0;
@@ -327,7 +325,7 @@ div.inforTracking-big .inforTracking-con{
 .progress-bar img{
 	width:100%;
 }
-/* ׷����Ϣ�� */
+/* 追锟斤拷锟斤拷息锟斤拷 */
 .inforTracking-con{
 	height:170px;
 	overflow-y:auto;
@@ -370,7 +368,7 @@ div.inforTracking-big .inforTracking-con{
 	display:inline-block;
 }
 .inforTracking-centenBtn{ vertical-align:middle}
-/*弹出框确认按钮*/
+/*寮瑰嚭妗嗙‘璁ゆ寜閽�/
 .popBtn button{
 	background: #4089C9;
     color: #fff;
@@ -408,9 +406,10 @@ div.inforTracking-big .inforTracking-con{
 .infoCC-ul-li{
 	float:left;
 	list-style:none;
-	margin-right:20px;
+	margin-right:12px;
 	margin-bottom:3px;
 }
+
 
 
 

@@ -10,11 +10,51 @@
     <script type="text/javascript" src="entry.js"></script>
 </head>
 <body>
-    <div id="map" style="width:800px;height:700px;border:1px solid #000;"></div>
+    <!-- LsBox 雨量告警-->
+    <!--<div class="LsBox nu-LsBox" id="LsBox-warn">
+        <a class="LsBoxClose"></a>
+        <ul class="LsBox-con">
+            <li class="LsBox-left">
+                <a class="warn-icon">
+                    <img src="<%=basePath%>/resources/img/trunk/now-inform-0.png"/>
+                    <span>定位</span>
+                </a>
+                <div class="dis-warn">
+                    <p><span>大暴雨</span></p>
+                </div>
+            </li>
+            <li class="LsBox-right">
+                <p class="LsBox-warn-title dis-warn-title">阳江阳西县：<label>观测站</label></p>
+                <div class="dis-level rain-lg">
+                    <span>阈值：</span>
+                    <div class="dis-level-color">
+                        <div class="level-now yellow" style="left:-10px">
+                            <span>40</span>
+                            <a></a>
+                        </div>
+                        <ul>
+                            <li class="level-0"><label>50</label></li>
+                            <li class="level-1"><label>300</label></li>
+                            <li class="level-2"></li>
+                        </ul>
+                    </div>
+                    <span>mm</span>
+                </div>
+                <div class="lg-data lga-color">
+                    <a>发布</a>
+                    <a>详情</a>
+                </div>
+            </li>
+        </ul>
+    </div>-->
+            
+            
+            
+    <div id="map" style="width:800px;height:700px;border:1px solid #000;display:none;"></div>
     <div id='selectComp'></div>
     <div id="effectAreaComp"></div>
     <div id="demo"></div>
-    <div id="count">
+    <div id="count" style="display:none;">
        <div>
            <button onclick="openTool()">指挥</button>
            <button onclick="redraw()">复原</button>

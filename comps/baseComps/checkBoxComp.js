@@ -54,7 +54,7 @@ var checkBoxComp = {
 		}
 		this.defaultSelect = deSelectList;
 		T(boxDiv).click(function(iObj){
-			var CIobj = T(iObj).getEventTarget();
+			var cIobj = T(iObj).getEventTarget();
 			var nodeName = cIobj.nodeName;
 			var backValue = '';
 			var backText = '';

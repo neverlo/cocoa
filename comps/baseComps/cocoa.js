@@ -53,7 +53,11 @@
 			T.fn.insertAdjacentElement(this.elem,'beforeend',focusComp);
 		},
 		remove : function(){
-			(this.elem).parentNode.removeChild(this.elem);
+			if(typeof(this.elem) !== 'undefined'){
+				if(this.elem != null){
+					(this.elem).parentNode.removeChild(this.elem);
+				}
+			}
 		},
 		insertAdjacentElement : function(parsedNode,where,focusNode){//解决各浏览器的兼容问题
 			if(where === 'beforebegin'){
@@ -268,6 +272,12 @@
 				if(arry[i] === elem){
 					return true;
 				}
+			}
+			return false;
+		},
+		alive : function(){
+			if(typeof(this.elem) !== 'undefined'){
+				return true;
 			}
 			return false;
 		},

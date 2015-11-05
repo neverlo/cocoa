@@ -1,6 +1,6 @@
 var targetTrackComp = {
 	initMin : function(focusDivId,arrIDs){
-		var url = 'http://127.0.0.1:8080/dss-data/track/track!getTrackMsgById.action';
+		var url = 'http://127.0.0.1/dss-data/track/track!getTrackMsgById.action';
 		var reqDatas = {"idArray":arrIDs.toString()};
 		$.ajax({type:'GET',async:false,data:reqDatas,url:url,success:function(rDatas){
 			var trackmins = [];
@@ -17,7 +17,7 @@ var targetTrackComp = {
 			"list":[{ "value" : "1", "text" : "渠道"},{"value" : "2", "text" : "灾害"},
 			{"value" : "3", "text" : "内容"}]
 		};
-		var selectDiv = selectComp.init('100',typeDatas,typeBack);
+		var selectDiv = selectComp.init('100','24',typeDatas,typeBack);
 		T('tragetType').addComps([selectDiv]);
 		var btnDatas = {"list":[{"value":"sure","text":"确定"}]}; 
 		var tcbtn = buttonComp.init(btnDatas,'msgTrack-btn');
@@ -34,48 +34,50 @@ var targetTrackComp = {
 		
 		function btonBack(rDatas){
 			var showMsg = '';
-			if(rDatas.selectdemageType.text === ''){
-				showMsg = '请选择查询类型';
-			}else if(rDatas.selectdemageContent.text === ''){
-				showMsg = '请选择查询内容';
-			}
-			spanE.innerHTML = showMsg;
-			if(showMsg === ''){
-				var typeStr = rDatas.selectdemageType.text;
-				var contentStr = rDatas.selectdemageContent.text;
-				var filterSql = '';
-				if(typeStr === '渠道'){
-					filterSql = "receiver='"+contentStr+"'";
-				}else if(typeStr === '灾害'){
-					if(contentStr.indexOf('预警') !== -1){
-						if(contentStr.indexOf('红色') !== -1){
-							contentStr = '1';
-						}else if(contentStr.indexOf('橙色') !== -1){
-							contentStr = '2';
-						}else if(contentStr.indexOf('黄色') !== -1){
-							contentStr = '3';
-						}else if(contentStr.indexOf('蓝色') !== -1){
-							contentStr = '4';
-						}else if(contentStr.indexOf('白色') !== -1){
-							contentStr = '5';
-						}else if(contentStr.indexOf('其他') !== -1){
-							contentStr = '6';
-						}
-					}
-					filterSql = "kind_name='"+contentStr+"' or type_name = '"+contentStr+"' or warn_level = '"+contentStr+"'";
-				}else if(typeStr === '内容'){
-					filterSql = "content like '%"+contentStr+"%';";
+			if(typeof(rDatas.selectdemageType) !== 'undefined'){
+				if(rDatas.selectdemageType.text === ''){
+					showMsg = '请选择查询类型';
+				}else if(rDatas.selectdemageContent.text === ''){
+					showMsg = '请选择查询内容';
 				}
-				var url = 'http://127.0.0.1:8080/dss-data/track/track!getTrackMsgByFilter.action';
-				filterSql = encodeURI(filterSql);
-				var reqDatas = {"sql":filterSql};
-				$.getJSON(url,reqDatas,function(reData){
-					var trackmins = [];
-					for(var key in reData){
-						trackmins.push(trackComp.init(reData[key]));
+				spanE.innerHTML = showMsg;
+				if(showMsg === ''){
+					var typeStr = rDatas.selectdemageType.text;
+					var contentStr = rDatas.selectdemageContent.text;
+					var filterSql = '';
+					if(typeStr === '渠道'){
+						filterSql = "receiver='"+contentStr+"'";
+					}else if(typeStr === '灾害'){
+						if(contentStr.indexOf('预警') !== -1){
+							if(contentStr.indexOf('红色') !== -1){
+								contentStr = '1';
+							}else if(contentStr.indexOf('橙色') !== -1){
+								contentStr = '2';
+							}else if(contentStr.indexOf('黄色') !== -1){
+								contentStr = '3';
+							}else if(contentStr.indexOf('蓝色') !== -1){
+								contentStr = '4';
+							}else if(contentStr.indexOf('白色') !== -1){
+								contentStr = '5';
+							}else if(contentStr.indexOf('其他') !== -1){
+								contentStr = '6';
+							}
+						}
+						filterSql = "kind_name='"+contentStr+"' or type_name = '"+contentStr+"' or warn_level = '"+contentStr+"'";
+					}else if(typeStr === '内容'){
+						filterSql = "content like '%"+contentStr+"%';";
 					}
-					pagingComp.init(focusDivId,trackmins,6);
-				});
+					var url = 'http://127.0.0.1/dss-data/track/track!getTrackMsgByFilter.action';
+					filterSql = encodeURI(filterSql);
+					var reqDatas = {"sql":filterSql};
+					$.getJSON(url,reqDatas,function(reData){
+						var trackmins = [];
+						for(var key in reData){
+							trackmins.push(trackComp.init(reData[key]));
+						}
+						pagingComp.init(focusDivId,trackmins,6);
+					});
+				}
 			}
 		}
 		
@@ -83,17 +85,17 @@ var targetTrackComp = {
 			var tempDatas = {"cite":"请选择内容",'id' : 'demageContent',"defaultCheck" : "","list":""};
 			var reqText = rDatas.text;
 			reqText = encodeURI(reqText);
-			var url = 'http://127.0.0.1:8080/dss-data/target/target!getTypeByFilter.action';
+			var url = 'http://127.0.0.1/dss-data/target/target!getTypeByFilter.action';
 			var reqDatas = {"filter":reqText};
 			$.getJSON(url,reqDatas,function(reData){
 				tempDatas.list = reData;
 				T().clearCompsById(['tragetKind']);
-				var kindSelect = selectComp.init('100',tempDatas);
+				var kindSelect = selectComp.init('100','24',tempDatas);
 				T('tragetKind').addComps([kindSelect]);
 			});
 		}
 		
-		var url = 'http://127.0.0.1:8080/dss-data/track/track!getAllTrackMsgByCode.action';
+		var url = 'http://127.0.0.1/dss-data/track/track!getAllTrackMsgByCode.action';
 		var reqDatas = {"areaCode":cityCode};
 		$.ajax({type:'GET',data:reqDatas,url:url,success:function(rDatas){
 			var trackmins = [];

@@ -1,5 +1,6 @@
 var targetMsgComp = {
 	init : function(focusId,arrChecked,deRadio,effectAreaDatas){
+		var infoCountC = infoCountComp.init(lastPolygonVertices);
 		var cbDatas = {
 			"title" : "消息渠道：","defaultChecked" : [],
 			"list" : [{"value" : "1","text" : "短信"},
@@ -22,11 +23,11 @@ var targetMsgComp = {
 		checkBoxC.setAttribute('class','marTpad');
 		
 		var selectDatas = {"title":"灾害类型：","cite":"请选择类型",'id' : 'type',"defaultCheck" : "","list":""};
-		$.ajax({type:'GET',async:false,url:'http://127.0.0.1:8080/dss-data/target/target!getDemagesType.action',success:function(rDatas){
+		$.ajax({type:'GET',async:false,url:'http://127.0.0.1/dss-data/target/target!getDemagesType.action',success:function(rDatas){
 			selectDatas.list = rDatas;
 		}});
 		
-		var selectDiv = selectComp.init('100',selectDatas,selectBack);
+		var selectDiv = selectComp.init('100','24',selectDatas,selectBack);
 		var radioDatas = {
 			"title" : "灾害等级：","name" : "warnLevel","defaultChecked" : "6",
 			"list" : [{"value" : "1","text" : "红"},
@@ -57,7 +58,7 @@ var targetMsgComp = {
 		
 		var btnDatas = {"list":[{"value":"reset","text":"重置"},{"value":"send","text":"发送"}]}; 
 		var btn = buttonComp.init(btnDatas,'tempTarget-btn');
-		T(focusId).addComps([checkBoxC,selectDiv,radioDiv,areaDiv,spanComp,btn],btn,'send',sendBack);
+		T(focusId).addComps([infoCountC,checkBoxC,selectDiv,radioDiv,areaDiv,spanComp,btn],btn,'send',sendBack);
 		
 		var cbList = cbDatas.list;
 		for(var ckey in cbList){
@@ -85,14 +86,14 @@ var targetMsgComp = {
 		function selectBack(compDatas){
 			var kindDatas = {"cite":"请选择种类",'id' : 'kind',"defaultCheck" : "","list":""};
 			var reqDatas = {"typeCode":compDatas.value};
-			$.ajax({type:'GET',async:false,data:reqDatas,url:'http://127.0.0.1:8080/dss-data/target/target!getDemagesKindByType.action',success:function(rDatas){
+			$.ajax({type:'GET',async:false,data:reqDatas,url:'http://127.0.0.1/dss-data/target/target!getDemagesKindByType.action',success:function(rDatas){
 				kindDatas.list = rDatas;
 			}});
 			if(dKindDiv){
 				T(dKindDiv).remove();
 			}
 			if(kindDatas.list.length > 0){
-				dKindDiv = selectComp.init('100',kindDatas);
+				dKindDiv = selectComp.init('100','24',kindDatas);
 				T(dKindDiv).insertTo(selectDiv);
 			}
 		}
@@ -139,7 +140,7 @@ var targetMsgComp = {
 					}
 					demageType = datas.selecttype.value;
 					typeName = datas.selecttype.text;
-					var url = 'http://127.0.0.1:8080/dss-data/target/target!sendMsg.action';
+					var url = 'http://127.0.0.1/dss-data/target/target!sendMsg.action';
 					var msgObj = '';
 					var wayContent = '';
 					for(var bKey in datas.checkBox){

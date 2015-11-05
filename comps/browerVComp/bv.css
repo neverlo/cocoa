@@ -1,0 +1,74 @@
+*{ margin:0;padding:0;font-family:微软雅黑}
+.divUnSelect{
+	-moz-user-select: none; 
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	-khtml-user-select: none; 
+	user-select: none;
+}
+.bvDivTitle-1 {
+    width: 100%;
+    height: 24px;
+    line-height: 24px;
+    background: #1f7ed0;
+    color:#344157;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: left;
+}
+.bvclose {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAYUlEQVR4AWMgDoyCUTAK/jMw1AOxABZxAyBOoNRwASA+D8UCaIa/B+L5ID5VLSFgOOWWoBtOTUscgPg/1AIBKhuOCBbk4KK64djihOKwhxmOI072UyXs8VhuMMSz+SgYBQDmi0kF8G8+/AAAAABJRU5ErkJggg==) center 0 no-repeat;
+    cursor: pointer;
+    float: right;
+    height: 24px;
+    width: 24px;
+}
+.bvDivTitle-1 span {
+    margin-left: 5px;
+}
+
+/*****************�汾�Ƽ�********************/
+.version-box{
+	  position: absolute;
+    top:200px;
+    width: 400px;
+    left: 50%;
+    margin-left: -200px;
+    -webkitbox-shadow:0px 3px 10px 0 rgba(0,0,0,0.3);
+	-moz-box-shadow:0px 3px 10px 0 rgba(0,0,0,0.3);
+	-o-box-shadow:0px 3px 10px 0 rgba(0,0,0,0.3);
+	box-shadow:0px 3px 10px 0 rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+.version-box .bvDivTitle-1{
+  	background:#ecf2fc;
+}
+.clear{ clear:both}
+.vesion-left{
+	float:left;
+	margin-top:8px;
+}
+.vesion-right{
+	float:right;
+	width:238px;
+}
+.version-con{
+	background:#fff;
+	padding:10px 10px 25px;
+}
+.version-title{
+	color:#1F7ED0;
+	font-size:18px;
+	margin: 5px 0;
+}
+.version-option{ margin-top:10px;}
+.version-option ul{
+	margin-left: 18px;
+}
+.version-option li{
+    color: #565656;
+    font-size: 12px;
+    line-height: 20px;
+    list-style: inside none disc;
+    float: none;
+}

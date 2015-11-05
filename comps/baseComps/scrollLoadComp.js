@@ -8,8 +8,10 @@ var scroolLoadComp = {
 			ulE.onclick = function(rDatas){
 				rDatas = T(rDatas).getEventTarget();
 				var liId = (rDatas.parentNode).getAttribute('value');
+				var liAreaCode = (rDatas.parentNode).getAttribute('areaCode');
 				var result = {};
 				result.id = liId;
+				result.areaCode = liAreaCode;
 				return scroolBack(result);
 			};
 		}

@@ -60,7 +60,7 @@ var mapComp = {
 		return this.map;
 	},
 	initDrawLayer : function(olMap){
-		if(typeof(this.drawLayer) === 'undefined'){//反转图层时避免重复
+		if(typeof(mapComp.drawLayer) === 'undefined'){//反转图层时避免重复
 			// console.info('initDrawLayer');
 			//建立多边形承载器
 			var drawLayer = new OpenLayers.Layer.Vector("toolBarDraw", {
@@ -135,7 +135,7 @@ var mapComp = {
 			clickFeatureControl.activate();
 			
 			this.map = olMap;
-			this.drawLayer = drawLayer;
+			mapComp.drawLayer = drawLayer;
 			this.logoList = mapComp.option.logoList;
 		}
 	},
@@ -214,11 +214,11 @@ var mapComp = {
 			var temporarystyle = OpenLayers.Util.applyDefaults({
 				'pointRadius': 6,
 				'label':'',
-				'graphicWidth': gSize,
+				'graphicWidth': 6,
 				'graphicHeight': gSize,
 				'labelYOffset':0,
 				'graphicOpacity': 1,
-				'externalGraphic': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAIElEQVR4AWOgCYi58P8/CI9qxqGQFEyZZjxgNKoGJQAAXkmLOVqD5tkAAAAASUVORK5CYII='
+				'externalGraphic': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAtCAYAAACNpxq9AAAAIElEQVR4AWNQN7D/jw3jloABdIHhLzEqMSoxKkF6kQEACU+ns9Mm93AAAAAASUVORK5CYII='
 			}, OpenLayers.Feature.Vector.style.temporary);
 			this.layerSize = layerSize;
 			this.layerColor = layerColor;
@@ -256,7 +256,11 @@ var mapComp = {
 	drawArrowPolygon : function(layerSize,layerColor){
 		if(typeof(mapComp.drawLayer) !== 'undefined'){
 			var zoomValue = this.map.zoom;
-			var arrpwSize = layerSize * Math.pow(0.6,zoomValue-1);
+			var arrpwSize = layerSize * Math.pow(0.5,zoomValue) * 2.048 * 18553.24846554555;
+//			var mapEPSG = (this.map.getProjectionObject()).projCode;
+//			if(mapEPSG === 'EPSG:900913'){
+//				arrpwSize = 0.001*18553.24846554555*layerSize;
+//			}
 			var drawOptions =	{
 				'graphicSize':arrpwSize,
 				'mode': 'direction',
@@ -266,7 +270,7 @@ var mapComp = {
 				pointRadius: 6,
 				label:'',
 				fillColor:layerColor,
-				strokeWidth: layerSize,
+				strokeWidth: '1',
 				labelYOffset:25,
 				strokeColor: '#384163',
 				graphicName: 'square'
@@ -352,11 +356,11 @@ var mapComp = {
 						'labelY' : '-20',
 						'cursor' : 'move'
 					};
-					mapComp.controlDCControl();
+					mapComp.controlDCControl(layerType);
 					if(layerType === 'dynamicLine'){
 						obj.attributes.cursor = 'pointer';
-						mapComp.dragControl.deactivate();
-						mapComp.clickFeatureControl.activate();
+//						mapComp.dragControl.deactivate();
+//						mapComp.clickFeatureControl.activate();
 					}
 					drawLayer.redraw();
 				}
@@ -402,14 +406,19 @@ var mapComp = {
 				featureAdded:function(obj){//完成图形后的监听事件
 					var zoomValue = mapComp.map.zoom;
 					var arrowHandler = mapComp.arrowPolygon.handler;
-					var arrpwSize = mapComp.layerSize * Math.pow(0.6,zoomValue-1);
+					var arrpwSize = mapComp.layerSize * Math.pow(0.5,zoomValue) * 2.048 * 18553.24846554555;
+//					var mapEPSG = (mapComp.map.getProjectionObject()).projCode;
+//					if(mapEPSG === 'EPSG:900913'){
+//						arrpwSize = 0.001*18553.24846554555;
+//					}
+//					console.info(arrpwSize);
 					arrowHandler.graphicSize = arrpwSize;
 					obj.attributes = {
 						'fcolor' : '',
 						'fsize' : '',
 						'color' : mapComp.layerColor,
 						'text' : '',
-						'size' : arrpwSize,
+						'size' : '1',
 						'strokeColor' : '#384163',
 						'type' : layerType,
 						'labelY' : '-20',
@@ -430,12 +439,18 @@ var mapComp = {
 		mapComp.map.addControl(polygon);
 		polygon.activate();
 	},
-	controlDCControl : function(){
+	controlDCControl : function(layerType){
 		mapComp.dragControl.deactivate();
 		mapComp.clickFeatureControl.deactivate();//这两个监听需要处理，不然会引起无法删除feature的BUG
 		window.setTimeout(function(){
 			mapComp.dragControl.activate();
 			mapComp.clickFeatureControl.activate();
+			if(typeof(layerType) !== 'undefined'){
+				if(layerType === 'dynamicLine'){
+					mapComp.dragControl.deactivate();
+					mapComp.clickFeatureControl.activate();
+				}
+			}
 		},20);
 	},
 	removeTextWin : function(featureId){
@@ -512,14 +527,19 @@ var mapComp = {
 				changeObj.externalGraphic = cLogo;
 			}else if(currToolType === 'text'){
 				changeObj.graphicHeight = layerSize*12;
-				changeObj.graphicWidth = layerSize*12;
+				// changeObj.graphicWidth = 6;
 			}
 			if(currToolType === 'arrowPolygon'){
 				if(typeof(this.arrowPolygon) !== 'undefined'){
 					if(this.arrowPolygon){
 						var zoomValue = this.map.zoom;
-						var arrpwSize = layerSize * Math.pow(0.6,zoomValue-1);
+						var arrpwSize = layerSize * Math.pow(0.5,zoomValue) * 2.048 * 18553.24846554555;
+//						var mapEPSG = (mapComp.map.getProjectionObject()).projCode;
+//						if(mapEPSG === 'EPSG:900913'){
+//							arrpwSize = 0.001*18553.24846554555 * layerSize;
+//						}
 						this.arrowPolygon.handler.graphicSize = arrpwSize;
+						changeObj.strokeWidth = '1';
 					}
 				}
 			}
@@ -546,8 +566,14 @@ var mapComp = {
 		}
 	},
 	saveAllFeature : function(caseId){
-		if(!mapComp.dynamicStatus){
-			var featureList = this.drawLayer.features;
+		var saveSt = true;
+		if(typeof(mapComp.dynamicStatus) !== 'undefined'){
+			if(mapComp.dynamicStatus){
+				saveSt = false;
+			}
+		}
+		if(saveSt){
+			var featureList = mapComp.drawLayer.features;
 			if(featureList.length > 0){
 				var layerJson = {};
 				for(var key in featureList){
@@ -583,6 +609,16 @@ var mapComp = {
 				layerJson.lon = cMapCenter.lon;
 				layerJson.lat = cMapCenter.lat;
 				layerJson.caseId = caseId;
+				var titleUrl = mapComp.map.baseLayer.grid[0][0].url;
+				var mapType = '';
+				if(titleUrl.indexOf('dt') !== -1){
+					mapType = 'dt';
+				}else if(titleUrl.indexOf('dx') !== -1){
+					mapType = 'dx';
+				}else if(titleUrl.indexOf('wx') !== -1){
+					mapType = 'wx';
+				}
+				layerJson.mapType = mapType;
 				// var str = JSON.stringify(layerJson);
 				// console.info(str);
 				return layerJson;
@@ -696,12 +732,16 @@ var mapComp = {
 		}
 		this.drawLayer.removeFeatures(tempArr);
 	},
-	restoreLayer : function(olMap,jsonDatas){
+	restoreLayer : function(olMap,jsonDatas,mapCallBack){
 		mapComp.initDrawLayer(olMap);
 		mapComp.removeAllFeatures();
-		mapComp.restoreElement(jsonDatas);
+		if(typeof(mapCallBack) !== 'undefined'){
+			mapComp.restoreElement(jsonDatas,mapCallBack);
+		}else{
+			mapComp.restoreElement(jsonDatas);
+		}
 	},
-	restoreElement : function(pData){
+	restoreElement : function(pData,mapCallBack){
 		var tempFeatures = [];
 		this.map.setCenter(new OpenLayers.LonLat(pData.lon,pData.lat),pData.zoom);
 		for(var key in pData){
@@ -743,11 +783,21 @@ var mapComp = {
 			}
 		}
 		mapComp.drawLayer.addFeatures(tempFeatures);
-		mapComp.dynamicStatus = true;
+		mapComp.dynamicStatus = false;
 		mapComp.restoreDynamicLine(pData.dynamicLine);
+		if(mapCallBack){
+			var mapType = {};
+			mapType.mapType = pData.mapType;
+			return mapCallBack(mapType);
+		}
 	},
 	restoreDynamicLine : function(lineArr){
-		mapComp.startLineDynamic(lineArr,0);
+		if(typeof(lineArr) !== 'undefined'){
+			if(lineArr.length > 0){
+				mapComp.dynamicStatus = true;
+				mapComp.startLineDynamic(lineArr,0);
+			}
+		}
 	},
 	startLineDynamic : function(lineArr,index){
 		window.setTimeout(function(){

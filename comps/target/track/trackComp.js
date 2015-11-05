@@ -30,7 +30,7 @@ var trackComp = {
 		if(typeof(this.intervals) !== 'undefined'){
 			clearInterval(this.intervals);
 		}
-		var url = 'http://127.0.0.1:8080/dss-data/track/track!getTrackMsgById.action';
+		var url = 'http://127.0.0.1/dss-data/track/track!getTrackMsgById.action';
 		var parInterval = setInterval(function(){
 			var idArray = [];
 			for(var bKey in trackComp.compsRecord){

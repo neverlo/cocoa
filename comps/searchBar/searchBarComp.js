@@ -46,9 +46,9 @@ var searchBarComp = {
 			backButton.innerHTML = jsonDatas.backButton;
 			backButton.onclick = function(){
 				T(backButton).remove();
-				parentDiv.style.width = '575px';
-				searchButton.style.width = '70px';
-				searchButton.style.right = '3px';
+				parentDiv.style.width = '355px';
+				searchButton.style.width = '50px';
+				searchButton.style.right = '2px';
 				if(hideBack){
 					hideBack();
 				}
@@ -85,7 +85,7 @@ var searchBarComp = {
 		searchButton.onclick = function(){
 			if(callback){
 				if(backButton){
-					parentDiv.style.width = '600px';
+					parentDiv.style.width = '400px';
 					searchButton.style.width = '45px';
 					searchButton.style.right = '50px';
 					serchDiv.appendChild(backButton);

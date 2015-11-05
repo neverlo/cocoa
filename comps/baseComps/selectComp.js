@@ -33,11 +33,11 @@ var selectComp = {
             citeE.style.fontStyle = 'normal';
             citeE.style.paddingLeft = '4px';
             citeE.style.paddingRight = '30px';
-            citeE.style.border ='1px solid #333';
+            citeE.style.border ='1px solid #e7eaf1';
             citeE.style.overflowX = 'hidden';
             citeE.style.background = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAMCAMAAABcOc2zAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAJUExURXt7e3p6ev////MnDfwAAAADdFJOU///ANfKDUEAAAAiSURBVHjaYmBCAwzUEWCAACQVyHyIFgYGRjQzGCiyFiDAAI3WAWIk9jYnAAAAAElFTkSuQmCC) no-repeat right center';
             var ulE = T().CDE('ul');
-            ulE.style.maxHeight = '193px';
+            ulE.style.maxHeight = '182px';
             ulE.style.overflowY = 'scroll';
             citeE.onclick = function(ce){
                   ce.stopPropagation(ce);
@@ -52,9 +52,9 @@ var selectComp = {
             };
             ulE.style.margin ='-1px 0px 0px';
             ulE.style.padding = '0px';
-            ulE.style.fontSize = '13px';
+            ulE.style.fontSize = '12px';
             ulE.style.width = ulWidth + 'px';
-            ulE.style.border = '1px solid #333333';
+            ulE.style.border = '1px solid #dadada';
             ulE.style.position = 'absolute';
             ulE.style.zIndex = '20000';
             ulE.style.display = 'none';
@@ -70,7 +70,7 @@ var selectComp = {
                   liE.style.listStyle = 'none';
                   liE.style.margin = '0px';
                   liE.style.padding = '0px';
-                  liE.style.fontSize = '13px';
+                  liE.style.fontSize = '12px';
                   liE.style.width = '100%';
                   var liAE = T().CDE('span');
                   liAE.setAttribute('value',listDatas[key].value);
