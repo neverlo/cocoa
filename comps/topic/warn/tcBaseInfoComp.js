@@ -81,6 +81,7 @@ var tcBaseInfoComp = {
 		var tcRainP = document.createElement('p');
 		tcRain.appendChild(tcRainP);
 		var tcRainLabel = document.createElement('label');
+		tcRainP.appendChild(tcRainLabel);
 		var tcRainA = document.createElement('a');
 		return parentE;
 	}
