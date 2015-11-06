@@ -34,7 +34,7 @@
     position:absolute;
     right:0px;
     top:0px;
-    background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAATElEQVR4AWMAgYuOjgYMEADjKwCxAIzxH4jnwxQC8XswHyqQAFWwHipxHqQT2ah6qIL3cAk0o+7DrUBYjjAKyYp+mIICqFEwfgDINACymUEHsHjhUAAAAABJRU5ErkJggg==") no-repeat center 4px;
+    background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAATElEQVR4AWMAgYuOjgYMEADjKwCxAIzxH4jnwxQC8XswHyqQAFWwHipxHqQT2ah6qIL3cAk0o+7DrUBYjjAKyYp+mIICqFEwfgDINACymUEHsHjhUAAAAABJRU5ErkJggg==") center 4px no-repeat;
 }
 .LsBox-con{
 	width:100%;

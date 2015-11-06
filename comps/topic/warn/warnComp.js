@@ -2,31 +2,25 @@
  * 专题告警组件
  */
 var warnComp = {
-		init : function(jsondatas){
-			var templateJson = {
-				'name':'rainWarn',
-				'alive':true,
-				'datas':[{
-					'imgUrl':'http://image1.png',//图片URL
-					'warnTitle':'大暴雨',//提示文字
-					'level':'red',//总有yellow,orange,red三级
-					'name':'阳江阳西县：观测站',
-					'telephone':'',
-					'threshold':[50,100,180],//阈值
-					'currentValue':'40',//当前雨量
-					'unit':'m',//数据单位
-					'lon':'120',//经度
-					'lat':'23',//纬度
-					'beTownName':'那龙镇',//站点所属镇名称
-					'blTownCode':'441703001',//站点所属镇编码
-					'dateTime':'20150101010000'
-				}]
-			};
+		init : function(templateJson,callBack){
+			var tempDatas = templateJson.datas[0];
+			if(typeof(warnComp.parentE) !== 'undefined'){
+				if(warnComp.parentE[tempDatas.blTownCode]){
+					T(warnComp.parentE[tempDatas.blTownCode]).remove();
+					delete warnComp.parentE[tempDatas.blTownCode];
+				}
+			}
 			var parentE = document.createElement('div');
-			parentE.setAttribute('class','LsBox');
+			parentE.setAttribute('class','animated bounceInLeft LsBox');
 			var closeA = document.createElement('a');
 			closeA.setAttribute('class','LsBoxClose');
+			closeA.setAttribute('areaCode',tempDatas.blTownCode);
 			parentE.appendChild(closeA);
+			closeA.onclick = function(){
+				var codeKey = closeA.getAttribute('areaCode');
+				T(warnComp.parentE[codeKey]).remove();
+				delete warnComp.parentE[codeKey];
+			};
 			
 			var ulBox = document.createElement('ul');
 			ulBox.setAttribute('class','LsBox-con');
@@ -36,6 +30,7 @@ var warnComp = {
 			ulBoxLiL.setAttribute('class','LsBox-left');
 			
 			var ulBoxA = document.createElement('a');
+			ulBoxA.setAttribute('lon',tempDatas.lon);
 			ulBoxLiL.appendChild(ulBoxA);
 			ulBoxA.setAttribute('class','warn-icon');
 			var ulBoxAImg = document.createElement('img');
@@ -44,13 +39,24 @@ var warnComp = {
 			ulBoxSpan.innerHTML = '定位';
 			ulBoxA.appendChild(ulBoxAImg);
 			ulBoxA.appendChild(ulBoxSpan);
+			if(callBack){
+				ulBoxA.onclick = function(){
+					var uObj = {};
+					uObj.name = templateJson.name;
+					uObj.id = tempDatas.id;
+					uObj.areaCode = tempDatas.blTownCode;
+					uObj.lon = tempDatas.lon;
+					uObj.lat = tempDatas.lat;
+					return callBack(uObj);
+				};
+			}
 			
 			var ulBoxDiv = document.createElement('div');
 			ulBoxLiL.appendChild(ulBoxDiv);
 			ulBoxDiv.setAttribute('class','dis-warn');
 			var ulBoxDivP = document.createElement('p');
 			var ulBoxDivSpan = document.createElement('span');
-			ulBoxDivSpan.innerHTML = '大暴雨';
+			ulBoxDivSpan.innerHTML = tempDatas.warnTitle;
 			ulBoxDivP.appendChild(ulBoxDivSpan);
 			ulBoxDiv.appendChild(ulBoxDivP);
 			
@@ -62,7 +68,7 @@ var warnComp = {
 			ulBoxLiRP.setAttribute('class','LsBox-warn-title dis-warn-title');
 			var ulBoxLiRPSpan = document.createElement('span');
 			ulBoxLiRP.appendChild(ulBoxLiRPSpan);
-			ulBoxLiRPSpan.innerHTML = '阳江阳西县：观测站';
+			ulBoxLiRPSpan.innerHTML = tempDatas.name;
 			var ulBoxLiRPLabel = document.createElement('label');
 			ulBoxLiRP.appendChild(ulBoxLiRPLabel);
 			
@@ -82,7 +88,7 @@ var warnComp = {
 			ulBoxLiRDivY.style.left = '-10px';
 			var ulBoxLiRDivYSp = document.createElement('span');
 			ulBoxLiRDivY.appendChild(ulBoxLiRDivYSp); 
-			ulBoxLiRDivYSp.innerHTML = '40';
+			ulBoxLiRDivYSp.innerHTML = tempDatas.currentValue;
 			var ulBoxLiRDivYA = document.createElement('a');
 			ulBoxLiRDivY.appendChild(ulBoxLiRDivYA); 
 			
@@ -106,7 +112,7 @@ var warnComp = {
 			
 			var ulBoxLiRDivSpanU = document.createElement('span');
 			ulBoxLiRDiv.appendChild(ulBoxLiRDivSpanU); 
-			ulBoxLiRDivSpanU.innerHTML = 'mm';
+			ulBoxLiRDivSpanU.innerHTML = tempDatas.unit;
 			
 			var buttonDiv = document.createElement('div');
 			ulBoxLiR.appendChild(buttonDiv);
@@ -117,13 +123,7 @@ var warnComp = {
 			var buttonDivSendA = document.createElement('A');
 			buttonDiv.appendChild(buttonDivSendA);
 			buttonDivSendA.innerHTML = '发布';
-			this.parentE = parentE;
+			this.parentE = T(this.parentE).compRecord(tempDatas.blTownCode,parentE);
 			return parentE;
-		},
-		close : function(){
-			if(T(this.parentE).alive()){
-				T(this.parentE).remove();
-				delete this.parentE;
-			}
 		}
 };

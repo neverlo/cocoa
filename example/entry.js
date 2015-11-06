@@ -146,9 +146,11 @@ $(function(){
 	// 	console.info('hide');
 	// }
 	// mapComp.buildMap('map');
-	var rainWarn = warnComp.init();
-	(document.body).appendChild(rainWarn);
 });
+
+function restoreComp(){
+	topicWarn.init();
+}
 
 function openTool(){
 	initToolBar.init(mapComp.getMap(),'阳江市',saveEvent);
