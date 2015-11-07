@@ -84,5 +84,8 @@ var topicWarn = {
 		function warnBack(bObj){
 			console.info(bObj);
 		}
+		
+		var tcBaseInfo = tcBaseInfoComp.init();
+		parentE.appendChild(tcBaseInfo);
 	}
 };

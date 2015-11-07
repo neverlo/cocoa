@@ -5,15 +5,20 @@ var modelComp = {
 	init : function(templateJson){
 		var tempDatas = templateJson.datas;
 		var recordData = tempDatas[0];
+		
+		var parentE = document.createElement('div');
+		
 		if(typeof(modelComp.parentE) !== 'undefined'){
 			if(modelComp.parentE[recordData.blTownCode]){
 				T(modelComp.parentE[recordData.blTownCode]).remove();
 				delete modelComp.parentE[recordData.blTownCode];
+				T(parentE).setClass('animated bounceIn LsBox');
+			}else{
+				T(parentE).setClass('animated bounceInLeft LsBox');
 			}
+		}else{
+			T(parentE).setClass('animated bounceInLeft LsBox');
 		}
-			
-		var parentE = document.createElement('div');
-		T(parentE).setClass('animated bounceInLeft LsBox');
 		
 		var closeA = document.createElement('a');
 		T(closeA).setClass('LsBoxClose');

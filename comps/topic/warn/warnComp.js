@@ -4,14 +4,21 @@
 var warnComp = {
 		init : function(templateJson,callBack){
 			var tempDatas = templateJson.datas[0];
+			
+			var parentE = document.createElement('div');
+			
 			if(typeof(warnComp.parentE) !== 'undefined'){
 				if(warnComp.parentE[tempDatas.blTownCode]){
 					T(warnComp.parentE[tempDatas.blTownCode]).remove();
 					delete warnComp.parentE[tempDatas.blTownCode];
+					T(parentE).setClass('animated bounceIn LsBox');
+				}else{
+					T(parentE).setClass('animated bounceInLeft LsBox');
 				}
+			}else{
+				T(parentE).setClass('animated bounceInLeft LsBox');
 			}
-			var parentE = document.createElement('div');
-			parentE.setAttribute('class','animated bounceInLeft LsBox');
+			
 			var closeA = document.createElement('a');
 			closeA.setAttribute('class','LsBoxClose');
 			closeA.setAttribute('areaCode',tempDatas.blTownCode);

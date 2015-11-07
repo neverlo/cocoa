@@ -416,18 +416,99 @@ ul.Ls-ul{
 .lg-data a:hover{color:#f0a425}
 
 
+/*tc style*/
+.TyphoonInfo{
+	position: absolute;
+    top:68px;
+    right:10px;
+    z-index:2012;
+    width:auto;
+    height:auto;
+}
+.TyphoonInfo-box{
+	width:180px;
+	height:auto;
+	min-height:100px;
+	margin-bottom:10px;
+    background:rgba(255,255,255,0.9);   
+	filter:progid:DXImageTransform.Microsoft.gradient( GradientType = 0,startColorstr = '#80ffffff',endColorstr = '#80ffffff')\9;
+	-webkitbox-shadow:0px 2px 9px 0 rgba(0,0,0,0.3);
+	-moz-box-shadow:0px 2px 9px 0 rgba(0,0,0,0.3);
+	-o-box-shadow:0px 2px 9px 0 rgba(0,0,0,0.3);
+	box-shadow:0px 2px 9px 0 rgba(0,0,0,0.3);
+	position:relative;
+	border:1px solid #ccc;
+}
 
+.TyphoonInfoClose{
+	display:inline-block;
+	display:-moz-inline-stack;
+	zoom:1;
+	*display:inline;
+    cursor:pointer;
+    float:right;
+    height:16px;
+    width:16px;
+    position:absolute;
+    right:0px;
+    top:0px;
+    background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAATElEQVR4AWMAgYuOjgYMEADjKwCxAIzxH4jnwxQC8XswHyqQAFWwHipxHqQT2ah6qIL3cAk0o+7DrUBYjjAKyYp+mIICqFEwfgDINACymUEHsHjhUAAAAABJRU5ErkJggg==") center 4px no-repeat;
+}
 
+.TyphoonInfo-title{
+	font-size:16px;
+	padding:10px;
+}
+.TyphoonInfo-title label{
+	font-size:16px;
+}
+.TyphoonInfo-title a{
+	color:#1f7ed0;
+}
 
+.TyphoonInfo-list{
+	border-top:1px solid #ccc;
+	height:auto;
+	overflow:hidden;
+	padding:10px;
+	font-size:14px;
+}
+.TyphoonInfo-p{
+	line-height:22px;
+	color:#414e61;
+	font-weight:bold;
+}
+p.TyphoonInfo-p-1{
+	font-weight:normal
+}
+.TyphoonInfo-p a{color:#1f7ed0}
 
-
-
-
-
-
-
-
-
-
-
-
+.TyphoonInfo-list ul{
+	height:auto;
+	overflow:hidden;
+}
+.TyphoonInfo-list ul li{
+	cursor:pointer;
+	padding:0px 3px;
+	float:left;
+	margin:2px;
+	background:#f0f0f0;
+}
+.TyphoonInfo-btn{
+	padding-top:10px;
+	line-height:30px;
+	text-align:right;
+}
+.TyphoonInfo-btn a{
+	display:inline-block;
+	display:-moz-inline-stack;
+	zoom:1;
+	*display:inline;
+	cursor:pointer;
+	background:#414e61;
+	height:22px;
+	line-height:22px;
+	padding:0px 5px;
+	color:#fff;
+	font-size:12px;
+}
