@@ -33,7 +33,7 @@ var topicWarn = {
 			}]
 		};
 			
-		var model = modelComp.init(modelTemplateJson);
+		var model = modelComp.init(modelTemplateJson,warnBack);
 		parentE.appendChild(model);
 		
 		var warnTemplateJson = {

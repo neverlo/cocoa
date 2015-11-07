@@ -146,6 +146,7 @@ var tcBaseInfoComp = {
 			var eLi = document.createElement('li');
 			eLi.setAttribute('areaCode',cuData.areaCode);
 			eLi.setAttribute('areaName',cuData.areaName);
+			eLi.innerHTML = cuData.areaName;
 			tempEle.appendChild(eLi);
 		}
 		effectListUl.appendChild(tempEle);

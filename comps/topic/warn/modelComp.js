@@ -2,7 +2,7 @@
  * 沙盘模拟组件
  */
 var modelComp = {
-	init : function(templateJson){
+	init : function(templateJson,callBack){
 		var tempDatas = templateJson.datas;
 		var recordData = tempDatas[0];
 		
@@ -55,17 +55,46 @@ var modelComp = {
 			var label1 = document.createElement('label');
 			label1.innerHTML = tempDatas[key].name;
 			var label2 = document.createElement('label');
-			label2.innerHTML = '影响地区';
+			// label2.innerHTML = '影响地区';
 			nameSpan.appendChild(label1);
 			nameSpan.appendChild(label2);
 			
+			//影响市县
+			var effectUl = document.createElement('ul');
+			effectUl.style.display = 'none';
+			
 			var cancelA = document.createElement('a');
 			T(cancelA).setClass('simulation-btn');
-			cancelA.innerHTML = '取消';
+			cancelA.innerHTML = '模拟';
 			effectDiv.appendChild(cancelA);
-			//影响市县
+			cancelA.onclick = function(){
+				var showText = '';
+				var Ulstatus = '';
+				var buttonSelect = '';
+				var effectTitle = '';//展开后的提示标题
+				if(cancelA.innerHTML === '模拟'){
+					showText = '取消';
+					Ulstatus = 'block';
+					buttonSelect = 'selected';
+					effectTitle = '影响地区';
+				}else{
+					showText = '模拟';
+					Ulstatus = 'none';
+					buttonSelect = 'unselected';
+				}
+				cancelA.innerHTML = showText;
+				effectUl.style.display = Ulstatus;
+				label2.innerHTML = effectTitle;
+				if(callBack){
+					var uObj = {};
+					uObj.name = 'simulation';//表示模拟
+					uObj.status = buttonSelect;
+					uObj.datas = recordData;
+					return callBack(uObj);
+				}
+			}
 			
-			var effectUl = document.createElement('ul');
+			
 			T(effectUl).setClass('simulation-town');
 			parentLi.appendChild(effectUl);
 			
@@ -103,6 +132,14 @@ var modelComp = {
 			var alabel2 = document.createElement('label');
 			alabel2.innerHTML = '发布';
 			buttonLiA1.appendChild(alabel2);
+			if(callBack){
+				buttonLiA1.onclick = function(){//靶向发布事件绑定
+					var uObj = {};
+					uObj.name = 'model';
+					uObj.datas = recordData;
+					return callBack(uObj);
+				}
+			}
 			
 			var buttonLiA2 = document.createElement('a');
 			buttonLi.appendChild(buttonLiA2);
@@ -112,7 +149,7 @@ var modelComp = {
 			var br2 = document.createElement('br');
 			buttonLiA2.appendChild(br2);
 			var alabel22 = document.createElement('label');
-			alabel22.innerHTML = '发布';
+			alabel22.innerHTML = '预案';
 			buttonLiA2.appendChild(alabel22);
 		}
 		this.parentE = T(this.parentE).compRecord(recordData.blTownCode,parentE);
